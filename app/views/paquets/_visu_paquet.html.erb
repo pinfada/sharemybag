@@ -1,0 +1,35 @@
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th colspan="1"></th>
+        <th class="col-md-6">Type</th>
+        <th class="col-md-6">Poids (kg)</th>
+        <th class="col-md-6">Volume (cm3)</th>
+        <th class="col-md-6">Prix (€)</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% @paquet.each_with_index do |paquet, i| %>
+          <tr>
+            <td class="col-md-6">
+              <%= "Paquet #{i+1}" %>
+            </td>
+            <td class="col-md-6">
+              <%= paquet.type %>
+            </td>
+            <td class="col-md-6">
+              <%= paquet.poids %>
+            </td>
+            <td class="col-md-6">
+              <% volume = paquet.longueur * paquet.largeur * paquet.hauteur %>
+              <%= volume %>
+            </td>
+            <td class="col-md-6">
+              <%= paquet.prix %>
+            </td>
+          </tr>
+        <% end %>
+    </tbody>
+  </table>
+</div>

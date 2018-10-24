@@ -1,0 +1,32 @@
+<%= form_for(@booking) do |f| %>
+  <h1>Confirmez votre reservation</h1>
+
+  <%= render @vol %><br/>
+  <% if @booking.errors.any? %>
+    <div id="booking-errors">
+      <h4>
+        <%= "Please fix the following #{pluralize(@booking.errors.count, 'error')} with your input" %>
+      </h4>
+      <ul>
+        <% @booking.errors.full_messages.each do |message| %>
+          <li>
+            <%= message %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h3>
+    <%= "Information pour #{pluralize(@bagage.count, 'Bagage')}" %>
+  </h3>
+  <div>
+    <%= render 'bagages/bagage_form' %>
+    <%= hidden_field_tag(:user_id, current_user.id) %>
+    <%= hidden_field_tag(:vol_id,  current_user.vol_id) %>
+    <div class="actions">
+      <%= f.submit "Reservation", class: "btn btn-large btn-primary"  %>
+    </div>
+  </div>
+  <br >
+<% end %>

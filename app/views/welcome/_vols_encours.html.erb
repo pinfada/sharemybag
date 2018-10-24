@@ -1,0 +1,74 @@
+    <div id="map-container">
+      <div id="map-canvas" style="width: 100%; height: 100%"></div>
+    </div>
+    <h1>Liste des vols en cours</h1>
+    <br>
+    <%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>N°reservation</th>
+          <th>N°vol</th>
+          <th>Départ</th>
+          <th>Arrivee</th>
+          <th>Nb de bagages</th>
+          <th>Poids</th>
+          <th>Volume</th>
+          <th>Prix</th>
+          <th colspan="1"></th>
+        </tr>
+      </thead>
+
+      <% @coordonnees.each do |coordonnee| %>
+        <% @airport = Airport.find_by(id: coordonnee.airport_id) %>
+        <% @vol_arrivee = @airport.arriving_flights %>
+        <% @vol_depart  = @airport.departing_flights %>
+
+        <% if @vol_arrivee != nil %>
+          <% @vol_arrivee.each do |vol| %>
+            <% @reservation = vol.bookings %>
+            <% @reservation.each do |resa| %>
+                <% if resa.user_id != nil && resa.vol_id != nil%>
+                  <tbody>
+                    <tr>
+                      <% @utilisateur = User.find_by(id: resa.user_id) %>
+                      <% @ville_depart = Airport.find_by(id: vol.provenance_id) %>
+                      <% @ville_arrivee = Airport.find_by(id: vol.destination_id) %>
+                      <% @bagages = @utilisateur.bagages %>
+                      <% @bagage = @bagages.where(booking_id: resa.id, user_id: resa.user_id) %>
+                      <% nb_bagage = @bagage.count %>
+                      <% if nb_bagage > 0 %>
+                        <% volume = 0 %>
+                        <% poids = 0 %>
+                        <% prix = 0 %>
+                        <% @bagage.each do |bag| %>
+                          <% calcul_volume = bag.longueur * bag.largeur * bag.hauteur %>
+                          <% volume += calcul_volume %>
+                          <% poids += bag.poids %>
+                          <% prix += bag.prix %>
+                        <% end %>
+                        <td>
+                          <%= link_to booking_path(resa) do %>
+                            <%= @utilisateur.name  %>
+                          <% end %>
+                        </td>
+                        <td><%= resa.ref_number %></td>
+                        <td><%= vol.num_vol %></td>
+                        <td><%= @ville_depart.location %></td>
+                        <td><%= @ville_arrivee.location %></td>
+                        <td><%= nb_bagage %></td>
+                        <td><%= poids %></td>
+                        <td><%= volume %></td>
+                        <td><%= prix %></td>
+                        <td></td>
+                      <% end %>
+                    </tr>
+                  </tbody>
+                <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </table>
+    <%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>

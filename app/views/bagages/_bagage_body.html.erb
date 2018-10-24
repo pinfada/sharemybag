@@ -1,0 +1,19 @@
+<% @bagage.each_with_index do |bagage, i| %>
+  <tr>
+    <td class="col-md-6">
+      <%= link_to paquet_path do %>
+        <%= "Bagage #{i+1}" %>
+      <% end %>
+    </td>
+    <td class="col-md-6">
+      <%= bagage.poids %>
+    </td>
+    <td class="col-md-6">
+      <% volume = bagage.longueur * bagage.largeur * bagage.hauteur %>
+      <%= volume %>
+    </td>
+    <td class="col-md-6">
+      <%= bagage.prix %>
+    </td>
+  </tr>
+<% end %>

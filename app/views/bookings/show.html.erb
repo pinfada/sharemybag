@@ -1,0 +1,21 @@
+<div class="page-header">
+  <h1>Reservation</h1>
+</div>
+<h4>
+  Numéro reference de la reservation: 
+  <strong>
+    <%= "#{@booking.ref_number}" %>
+  </strong>
+</h4>
+<br/>
+<h3>
+  <%= "Information sur le vol" %>
+</h3>
+<%= render @booking.vol %>
+<br/>
+<h3>
+  <%= "Information pour #{pluralize(@bagage.count, 'Bagage')}" %>
+</h3>
+<div>
+  <%= render 'bagages/bagage_form' %>
+</div>

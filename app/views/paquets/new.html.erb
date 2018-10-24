@@ -1,0 +1,50 @@
+<% provide(:title, 'Enregistrement colis') %>
+<h1>Nouveau colis</h1>
+<h2>Faire une proposition</h2>
+
+<%= render 'form' %>
+
+<%= debug @bagage %>
+
+<!--
+<div class="row"> 
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(@paquet) do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+
+      <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">Cm</span>
+      <%= f.text_field :longueur, placeholder: 'Longueur', class: 'form-control' %>
+    </div><br/>
+
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon2">Cm</span>
+      <%= f.text_field :largeur, placeholder: 'Largeur', class: 'form-control' %>
+    </div><br/>
+
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon3">Cm</span>
+      <%= f.text_field :hauteur, placeholder: 'Hauteur', class: 'form-control' %>
+    </div><br/>
+
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon4">Kg</span>
+      <%= f.text_field :poids, placeholder: 'Poids', class: 'form-control' %>
+    </div><br/>
+
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon5">€</span>
+      <%= f.text_field :prix, placeholder: 'Prix', class: 'form-control' %>
+      <span class="input-group-addon">.00</span>
+    </div><br/>
+
+    <div class="actions">
+    <%= f.submit "valider proposition", class: "btn btn-primary"  %>
+    </div>
+
+    <% end %>
+  </div>
+</div>
+<%= link_to 'Back', paquets_path %>
+-->
+

@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<div class="page-header">
+  <h1>Colis</h1>
+</div>
+<h3>
+  <%= "Information sur le bagage" %>
+</h3>
+<%= render @bagage %>
+<br/>
+<h3>
+  <%= "Information pour #{pluralize(@paquet.count, 'Paquet')}" %>
+</h3>
+<div class="col-md-6">
+  <%= render 'visu_paquet' %>
+</div>
+
+<%= link_to 'Edit', edit_paquet_path(@paquet) %> |
+<%= link_to 'Back', paquets_path %>

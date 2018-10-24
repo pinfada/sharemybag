@@ -1,0 +1,39 @@
+<h1>
+    <strong>ENREGISTREMENT VOL</strong>
+</h1>
+
+<div class="row"> 
+  <div class="col-md-6 col-md-offset-3"> 
+    <%= form_tag(vols_path, method: 'get', role: 'form', id: 'myairports') do %>
+        <%= label_tag(:provenance_id, 'De: ') %>
+        <%= select_tag(:provenance_id, options_for_select(@airport_options, @provenance_selected), class: 'form-control') %>
+        <%= label_tag(:destination_id, 'A: ') %>
+        <%= select_tag(:destination_id, options_for_select(@airport_options, @destination_selected), class: 'form-control') %>
+        <%= label_tag(:bagages) %>
+        <%= select_tag(:bagages, options_for_select(@bagage_options, @bagage_selected), class: 'form-control') %>
+        <%= label_tag(:flight_date) %>
+        <%= select_tag(:flight_date, options_for_select(@dates, @date_selected), class: 'form-control') %>
+        <button class="btn btn-primary btn-lg" id="search_flights" name="commit" type="submit" data-confirm= "Confirmez vous cette recherche?" data-disable-with="Please wait..." }>
+            <span class="glyphicon glyphicon-search"></span>
+            Recherche vol
+        </button>
+    <% end %>
+  </div>
+</div>
+
+<% unless @matched_vols.blank? %>
+    <%= render partial: 'matching_vols', locals: {vols: @matched_vols} %>
+<% end %>
+
+<% if @matched_vols.blank? && !params[:provenance_id].blank? %>
+    <br>
+
+    <div class="row"> 
+      <div class="col-md-6 col-md-offset-3"> 
+        <div class="alert alert-danger fade in">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong>Erreur!</strong> Aucun vol ne corresponds à votre recherche.
+        </div>
+      </div>
+    </div>
+<% end %>

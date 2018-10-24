@@ -1,0 +1,50 @@
+<% provide(:title, 'Edit user') %>
+<h1>Update your profile</h1>
+
+<% bagage_count = 1 %>
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<%= form_for(@user) do |f| %>
+			<%= render 'shared/error_messages', object: f.object %>
+			<%= f.label :name %>
+			<%= f.text_field :name %>
+			<%= f.label :email %>
+			<%= f.text_field :email %>
+			<%= f.label :password %>
+			<%= f.password_field :password %>
+			<%= f.label :password_confirmation, "Confirm Password" %>
+			<%= f.password_field :password_confirmation %>
+
+        	<h1>Mise à jour des informations bagages</h1>
+        	<%= f.fields_for :bagages do |bagages_form| %>
+                <fieldset>
+                    <legend><%= "Bagage #{bagage_count}" %></legend>
+                        <div class="input-group">
+                          <span class="input-group-addon" id="basic-addon1">Cm</span>
+                          <%= bagages_form.text_field :longueur, placeholder: 'Longueur', class: 'form-control' %>
+                        </div><br/>
+                        <div class="input-group">
+                          <span class="input-group-addon" id="basic-addon2">Cm</span>
+                          <%= bagages_form.text_field :largeur, placeholder: 'Largeur', class: 'form-control' %>
+                        </div><br/>
+                        <div class="input-group">
+                          <span class="input-group-addon" id="basic-addon3">Cm</span>
+                          <%= bagages_form.text_field :hauteur, placeholder: 'Hauteur', class: 'form-control' %>
+                        </div><br/>
+                        <div class="input-group">
+                          <span class="input-group-addon" id="basic-addon4">Kg</span>
+                          <%= bagages_form.text_field :poids, placeholder: 'Poids', class: 'form-control' %>
+                        </div><br/>
+                    	<div class="input-group">
+                    		<span class="input-group-addon" id="basic-addon5">€</span>
+                    		<%= bagages_form.text_field :prix, placeholder: 'Prix', class: 'form-control' %>
+                    		<span class="input-group-addon">.00</span>
+                    	</div><br/>
+                    	<% bagage_count += 1 %>
+                </fieldset>
+            <% end %>
+			<%= f.submit "Save changes", class: "btn btn-large btn-primary" %>
+		<% end %>
+		<p><%= link_to 'Show', @user %> | <%= link_to 'Back', users_path %></p>	
+	</div>
+</div>

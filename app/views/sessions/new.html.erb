@@ -1,0 +1,35 @@
+<% provide(:title, 'Sign in') %>
+
+<div class="middlePage">
+	<div class="page-header">
+	  <h1 class="logo">ShareMyBag <small>Your luggage are worth gold!</small></h1>
+	</div>
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h1 class="panel-title">Please Sign in</h1>
+		</div>
+		<div class="panel-body">
+			<div class="row"> 
+				<div class="col-md-5" >
+					<a class="btn btn-block btn-social btn-twitter" href="/auth/twitter" >
+						<i class="fa fa-twitter"></i>Twitter
+					</a></br>
+					<a class="btn btn-block btn-social btn-facebook" href="/auth/facebook" >
+						<i class="fa fa-facebook"></i>Facebook
+					</a></br>
+					<a class="btn btn-block btn-social btn-github" href="/auth/github" >
+						<i class="fa fa-github"></i>Github
+					</a>
+				</div>
+				<div class="col-md-7" style="border-left:1px solid #ccc;height:160px"> 
+					<%= form_for(:session, url: sessions_path) do |f| %>
+						<%= f.text_field :email, placeholder: "Saisir email" %>
+						<%= f.password_field :password, placeholder: "Saisir mot de passe" %>
+						<%= f.submit "Sign in", class: "btn btn-large btn-primary" %> 
+					<% end %></br>
+					<p>New utilisateur? <%= link_to "Sign up now!", signup_path %></p>
+				</div> 
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,37 @@
+<br>
+
+<div class="row"> 
+  <div class="col-md-6 col-md-offset-3"> 
+    <div class="alert alert-success fade in">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong>Success!</strong> Un ou plusieurs vols correspondent à votre recherche.
+        <!-- Button trigger modal -->
+        <a href="#" data-toggle="modal" data-target="#myModal">
+          Selectionner un vol
+        </a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+          <%= choix_entete_vol(params[:provenance_id], params[:destination_id], params[:flight_date]) %>
+        </h4>
+      </div>
+        <%= form_tag(new_user_bagage_path(current_user), method: 'get', role: 'form') do %>
+          <div class="modal-body">
+            <%= render partial: 'option_vol', collection: vols, as: :vol %>
+            <%= hidden_field_tag(:bagages, params[:bagages]) %>
+          </div>
+          <div class="modal-footer">
+            <%= submit_tag('Choisir un vol', class: 'btn btn-primary btn-lg', id: 'choisir un vol') %>
+          </div>
+        <% end %>
+    </div>
+  </div>
+</div>

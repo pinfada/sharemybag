@@ -1,0 +1,32 @@
+<h1>Liste des aeroports</h1>
+<br>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Airport</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Description</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @airport.each do |coordonnee| %>
+      <tr>
+        <td><%= coordonnee.titre %></td>
+        <td><%= coordonnee.latitude %></td>
+        <td><%= coordonnee.longitude %></td>
+        <td><%= coordonnee.description %></td>
+        <td><%= link_to 'Show', coordonnee %></td>
+        <td><%= link_to 'Edit', edit_coordonnee_path(coordonnee) %></td>
+        <td><%= link_to 'Destroy', coordonnee, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Coordonnee', new_coordonnee_path %>

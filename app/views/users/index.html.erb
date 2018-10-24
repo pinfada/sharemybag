@@ -1,0 +1,48 @@
+<% provide(:title, 'All users') %>
+<h1>All users</h1>
+
+<%= will_paginate @users, renderer: BootstrapPagination::Rails %>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Name</th>
+      <th>Email</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= gravatar_for user%></td>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td>
+          <button type="button" class="btn btn-primary btn-sm">
+          <%= link_to 'Show', user %>
+          </button>
+        </td>
+        <% if current_user.admin? && !current_user?(user) %>
+        <td>
+          <button type="button" class="btn btn-warning btn-sm">
+          <%= link_to 'Edit', edit_user_path(user) %>
+          </button>
+        </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm">
+            <%= link_to 'Destroy', user, method: :delete,
+                                             data: { confirm: 'Are you sure?' } %>
+            </button>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<%= link_to 'New User', new_user_path %>
+
+<%= will_paginate @users, renderer: BootstrapPagination::Rails %>

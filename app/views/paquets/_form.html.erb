@@ -1,0 +1,159 @@
+<%= form_for(@paquet) do |f| %>
+  <% if @paquet.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@paquet.errors.count, "error") %> prohibited this paquet from being saved:</h2>
+
+      <ul>
+      <% @paquet.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- START --> 
+  <div class="price-box">
+
+  <div class="form-horizontal form-pricing">
+
+    <div class="price-slider">
+      <h4 class="great">Longueur</h4>
+      <span>minimum 1cm </span>
+      <div class="col-sm-12">
+        <div id="slider3"></div>
+      </div>
+    </div>
+
+    <div class="price-slider">
+      <h4 class="great">Largeur</h4>
+      <span>minimum 1cm </span>
+      <div class="col-sm-12">
+        <div id="slider4"></div>
+      </div>
+    </div>
+
+    <div class="price-slider">
+      <h4 class="great">hauteur</h4>
+      <span>minimum 1cm </span>
+      <div class="col-sm-12">
+        <div id="slider5"></div>
+      </div>
+    </div>
+
+    <div class="price-slider">
+      <h4 class="great">Poids</h4>
+      <span>Minimum 1kg </span>
+      <div class="col-sm-12">
+       <div id="slider1"></div>
+      </div>
+    </div>
+
+    <div class="price-slider">
+      <h4 class="great">Duration</h4>
+      <span>Minimum 1 day is required</span>
+      <div class="col-sm-12">
+        <div id="slider2"></div>
+      </div>
+    </div>
+
+    <div class="price-form">
+
+      <div class="form-group">
+        <label for="longueur" class="col-sm-6 control-label">Longueur: </label>
+        <span class="help-text">Choisir la longueur du paquet</span>
+        <div class="col-sm-6">
+          <!--
+          <input type="hidden" id="longueur" class="form-control">
+          -->
+          <%= f.hidden_field :longueur, id: 'longueur', class: 'form-control' %>
+          <p class="price lead" id="longueur-label"></p>
+          <span class="price">cm</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="largeur" class="col-sm-6 control-label">Largeur: </label>
+        <span class="help-text">Choisir la largeur du paquet</span>
+        <div class="col-sm-6">
+          <!--
+          <input type="hidden" id="largeur" class="form-control">
+          -->
+          <%= f.hidden_field :largeur, id: 'largeur', class: 'form-control' %>
+          <p class="price lead" id="largeur-label"></p>
+          <span class="price">cm</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="hauteur" class="col-sm-6 control-label">Hauteur: </label>
+        <span class="help-text">Choisir la Hauteur du paquet</span>
+        <div class="col-sm-6">
+          <!--
+          <input type="hidden" id="hauteur" class="form-control">
+          -->
+          <%= f.hidden_field :hauteur, id: 'hauteur', class: 'form-control' %>
+          <p class="price lead" id="hauteur-label"></p>
+          <span class="price">cm</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="Montant" class="col-sm-6 control-label">Montant (€): </label>
+        <span class="help-text">Choisir un montant</span>
+        <div class="col-sm-6">
+          <!--
+          <input type="hidden" id="Montant" class="form-control">
+          -->
+          <%= f.hidden_field :prix, id: 'Montant', class: 'form-control' %>
+          <p class="price lead" id="Montant-label"></p>
+          <span class="price">.00</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="duration" class="col-sm-6 control-label">Duration: </label>
+        <span class="help-text">Choose your commitment</span>
+        <div class="col-sm-6">
+          <input type="hidden" id="duration" class="form-control">
+          <p class="price lead" id="duration-label"></p>
+          <span class="price">days</span>
+        </div>
+      </div>
+      <hr class="style">
+
+      <div class="form-group total">
+        <label for="volume" class="col-sm-6 control-label"><strong>Volume: </strong></label>
+        <span class="help-text">(Long * Larg * Haut)</span>
+        <div class="col-sm-6">
+          <input type="hidden" id="volume" class="form-control">
+          <p class="price lead" id="volume-label"></p>
+          <span class="price">cm3</span>
+        </div>
+      </div>
+
+      <div class="form-group total">
+        <label for="total" class="col-sm-6 control-label"><strong>Total: </strong></label>
+        <span class="help-text">(Montant * Days)</span>
+        <div class="col-sm-6">
+          <input type="hidden" id="total" class="form-control">
+          <p class="price lead" id="total-label"></p>
+          <span class="price">.00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-12">
+        <%= button_tag(type: 'submit', class: "btn btn-primary btn-lg btn-block", id: 'validForm') do %>
+          <span class="glyphicon glyphicon-chevron-right pull-right" style="padding-right: 10px;"></span> Proceed
+        <% end %>
+        <!--
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Proceed <span class="glyphicon glyphicon-chevron-right pull-right" style="padding-right: 10px;"></span></button>
+        -->
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+
+<% end %>

@@ -1,0 +1,34 @@
+<div class="table-responsive">
+  <table class="table">
+    <tbody>
+      <tr>
+        <td>
+          Vol:
+          <strong>
+            <%= "#{vol_name(vol.id)}" %>
+          </strong>
+        </td>
+        <td>
+          Départ à :
+          <strong>
+            <%= "#{vol_datetime(vol.id)}" %>
+          <strong>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          De :
+          <strong>
+            <%= "#{depart(vol.id)}" %>
+          </strong>
+        </td>
+        <td>
+          A :
+          <strong>
+            <%= "#{arrivee(vol.id)}" %>
+          </strong>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
