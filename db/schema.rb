@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,6 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20181018162804) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "airports", force: :cascade do |t|
     t.string   "code"
@@ -30,10 +32,9 @@ ActiveRecord::Schema.define(version: 20181018162804) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_bagages_on_booking_id", using: :btree
+    t.index ["user_id"], name: "index_bagages_on_user_id", using: :btree
   end
-
-  add_index "bagages", ["booking_id"], name: "index_bagages_on_booking_id"
-  add_index "bagages", ["user_id"], name: "index_bagages_on_user_id"
 
   create_table "bookings", force: :cascade do |t|
     t.string   "ref_number"
@@ -41,10 +42,9 @@ ActiveRecord::Schema.define(version: 20181018162804) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_bookings_on_user_id", using: :btree
+    t.index ["vol_id"], name: "index_bookings_on_vol_id", using: :btree
   end
-
-  add_index "bookings", ["user_id"], name: "index_bookings_on_user_id"
-  add_index "bookings", ["vol_id"], name: "index_bookings_on_vol_id"
 
   create_table "coordonnees", force: :cascade do |t|
     t.string   "titre"
@@ -54,9 +54,8 @@ ActiveRecord::Schema.define(version: 20181018162804) do
     t.integer  "airport_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.index ["airport_id"], name: "index_coordonnees_on_airport_id", using: :btree
   end
-
-  add_index "coordonnees", ["airport_id"], name: "index_coordonnees_on_airport_id"
 
   create_table "identities", force: :cascade do |t|
     t.string   "provider"
@@ -64,19 +63,17 @@ ActiveRecord::Schema.define(version: 20181018162804) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_identities_on_user_id", using: :btree
   end
-
-  add_index "identities", ["user_id"], name: "index_identities_on_user_id"
 
   create_table "microposts", force: :cascade do |t|
     t.string   "content"
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id", "created_at"], name: "index_microposts_on_user_id_and_created_at", using: :btree
+    t.index ["user_id"], name: "index_microposts_on_user_id", using: :btree
   end
-
-  add_index "microposts", ["user_id", "created_at"], name: "index_microposts_on_user_id_and_created_at"
-  add_index "microposts", ["user_id"], name: "index_microposts_on_user_id"
 
   create_table "paquets", force: :cascade do |t|
     t.integer  "user_id"
@@ -88,21 +85,19 @@ ActiveRecord::Schema.define(version: 20181018162804) do
     t.integer  "hauteur"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["bagage_id"], name: "index_paquets_on_bagage_id", using: :btree
+    t.index ["user_id"], name: "index_paquets_on_user_id", using: :btree
   end
-
-  add_index "paquets", ["bagage_id"], name: "index_paquets_on_bagage_id"
-  add_index "paquets", ["user_id"], name: "index_paquets_on_user_id"
 
   create_table "relationships", force: :cascade do |t|
     t.integer  "followed_id"
     t.integer  "follower_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.index ["followed_id"], name: "index_relationships_on_followed_id", using: :btree
+    t.index ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true, using: :btree
+    t.index ["follower_id"], name: "index_relationships_on_follower_id", using: :btree
   end
-
-  add_index "relationships", ["followed_id"], name: "index_relationships_on_followed_id"
-  add_index "relationships", ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true
-  add_index "relationships", ["follower_id"], name: "index_relationships_on_follower_id"
 
   create_table "user_bookings", force: :cascade do |t|
     t.integer  "booking_id"
@@ -110,11 +105,10 @@ ActiveRecord::Schema.define(version: 20181018162804) do
     t.integer  "bagage_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["bagage_id"], name: "index_user_bookings_on_bagage_id", using: :btree
+    t.index ["booking_id"], name: "index_user_bookings_on_booking_id", using: :btree
+    t.index ["user_id"], name: "index_user_bookings_on_user_id", using: :btree
   end
-
-  add_index "user_bookings", ["bagage_id"], name: "index_user_bookings_on_bagage_id"
-  add_index "user_bookings", ["booking_id"], name: "index_user_bookings_on_booking_id"
-  add_index "user_bookings", ["user_id"], name: "index_user_bookings_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
@@ -125,9 +119,8 @@ ActiveRecord::Schema.define(version: 20181018162804) do
     t.boolean  "admin",           default: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
+    t.index ["vol_id"], name: "index_users_on_vol_id", using: :btree
   end
-
-  add_index "users", ["vol_id"], name: "index_users_on_vol_id"
 
   create_table "vols", force: :cascade do |t|
     t.string   "num_vol"
