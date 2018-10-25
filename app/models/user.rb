@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
 	end
 
 	def User.digest(token) 
-		Digest::SHA1.hexdigest(token.to_s) 
+		Digest::SHA1.hexdigest(token.to_s)[0,8]
 	end
 
 	def feed
