@@ -25,7 +25,8 @@ class User < ActiveRecord::Base
 	accepts_nested_attributes_for :bagages
 
 	def User.new_remember_token 
-		SecureRandom.urlsafe_base64 
+	#	SecureRandom.urlsafe_base64
+		SecureRandom.base64(32).first(32)
 	end
 
 	def User.digest(token) 
