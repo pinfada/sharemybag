@@ -1,5 +1,5 @@
 <% content_for(:after_js) do %>  
-  <%= javascript_include_tag "https://maps.google.com/maps/api/js?v3key=#{ENV['GGL_MAP_JS_BROWSER_API_KEY']}" %>
+  <%= javascript_include_tag "//maps.googleapis.com/maps/api/js?key=#{ENV['GGL_MAP_JS_BROWSER_API_KEY']}" %>
   <%= javascript_include_tag 'https://cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/markerclusterer/src/markerclusterer_compiled.js' %>
   <%= javascript_include_tag 'https://cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/infobox/src/infobox_packed.js' %>
 <% end %>
