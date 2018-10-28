@@ -70,6 +70,6 @@ class CoordonneesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def coordonnee_params
-      params.require(:coordonnee).permit(:description, :latitude, :longitude, :airport_id)
+      params.require(:coordonnee).permit(:titre, :description, :latitude, :longitude, :airport_id)
     end
 end

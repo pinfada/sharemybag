@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :airport do
     code "MyString"
     location "MyString"

@@ -13,7 +13,8 @@ module ApplicationHelper
 		@distance_options  = [10, 30, 60, 90]
 		@vol_options       = ['Départ', 'Arrivée']
 		@location_selected = params[:search]
-		@distance_selected = params[:distance]
+	#	@distance_selected = params[:distance]
+		@distance_selected = 30
 		@vol_selected      = params[:type_vol]
 		if params[:search].nil?
 			@coordonnees = Coordonnee.paginate(page: params[:page], :per_page => 30)
@@ -27,5 +28,6 @@ module ApplicationHelper
 			marker.lng coordonnee.longitude
 			marker.infowindow coordonnee.description
 		end
+
   	end
 end

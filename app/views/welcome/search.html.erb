@@ -1,5 +1,5 @@
 <% content_for(:after_js) do %>  
-  <%= javascript_include_tag "//maps.googleapis.com/maps/api/js?key=#{ENV['GGL_MAP_JS_BROWSER_API_KEY']}" %>
+  <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV['GGL_MAP_JS_BROWSER_API_KEY']}" %>
   <%= javascript_include_tag 'https://cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/markerclusterer/src/markerclusterer_compiled.js' %>
   <%= javascript_include_tag 'https://cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/infobox/src/infobox_packed.js' %>
 <% end %>
@@ -80,8 +80,7 @@
 <%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
 
 
-<% content_for(:after_js) do %>
-  <%= javascript_tag do %>
+<script>
     var handler = Gmaps.build('Google');
     handler.buildMap({ provider: {}, internal: {id: 'map-canvas'}}, function(){
       markers = handler.addMarkers(<%= raw @markers.to_json %>);
@@ -93,7 +92,6 @@
         handler.getMap().setZoom(14);
       }
     });
-  <% end %>
-<% end %>
+</script>
 
 <hr>

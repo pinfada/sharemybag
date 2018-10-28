@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :identity, class: 'Identitie' do
     provider "MyString"
     uid "MyString"

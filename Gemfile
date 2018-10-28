@@ -69,7 +69,7 @@ group :development, :test do
   gem 'rb-notifu'
   # library which can be used to monitor directories for changes
   #gem 'wdm'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
 end
 
 group :development do

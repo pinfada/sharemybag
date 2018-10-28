@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :vol do
     num_vol "MyString"
     date_depart "2018-10-18 16:28:04"

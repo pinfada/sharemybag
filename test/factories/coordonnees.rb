@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :coordonnee do
     titre "MyString"
     description "MyString"
