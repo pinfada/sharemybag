@@ -14,9 +14,8 @@
  *= require jquery-ui
  *= require bootstrap-social
  *= require magnific-popup
+ *= require font-awesome
  *= require_tree .
  */
-@import "font-awesome-sprockets";
-@import "font-awesome";
 @import "../../../vendor/assets/stylesheets/bootstrap/bootstrap.scss";
 @import "../../../vendor/assets/stylesheets/magnific-popup.scss";
