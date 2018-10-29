@@ -29,7 +29,7 @@ function fblogin() {
           '/auth/facebook/callback?' +
           $.param({ signed_request: response.authResponse.signedRequest })
       }
-     })
+     });
     }
-  })
-};
+  });
+}

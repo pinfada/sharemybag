@@ -1,4 +1,5 @@
 class VolsController < ApplicationController
+	before_action :signed_in_user
 	before_action :search
 	def index
 		@airport_options = Airport.all.map do |airport|
