@@ -34,7 +34,6 @@ class UsersController < ApplicationController
     @user = User.create(user_params)
       if @user.save
         sign_in @user
-  #      @user.update_attribute(:vol_id, params[:vol_id])
         flash[:success] = "Welcome to sharemybag!"
         redirect_to root_path
       else

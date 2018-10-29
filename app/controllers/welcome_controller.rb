@@ -10,6 +10,9 @@ class WelcomeController < ApplicationController
   def listevol
   end
 
+  def policy
+  end
+
   private
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   match '/contact', to: 'welcome#contact', via: 'get'
   match '/listevol', to: 'welcome#search', via: 'get'
   match '/home', to: 'welcome#home', via: 'get'
+  match '/policy', to: 'welcome#policy', via: 'get'
 
   resources :coordonnees, only:  [:index, :new, :edit, :show]
   resources :sessions, only: [:new, :create, :destroy]
