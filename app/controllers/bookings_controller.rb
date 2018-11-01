@@ -2,7 +2,8 @@ class BookingsController < ApplicationController
 	#before_action :signed_in_user, only: [:create]
 	before_action :search
 	def new
-		@bagage = current_user.bagages
+	#	@bagage = current_user.bagages
+		@bagage = Bagage.where(user_id: current_user, booking_id: nil)
 		@vol = Vol.recherche_vol_user(current_user.vol_id)
 		redirect_to root_path if @vol.nil?
 		@booking = Booking.new
@@ -12,10 +13,10 @@ class BookingsController < ApplicationController
 		@booking = Booking.new
 		if @booking.save
 			# permet de recuperer les infos bagages de l'utilisateur
-			@bagage = Bagage.find_by(current_user.id)
+			@bagage = Bagage.where(user_id: current_user.id, booking_id: nil)
 			# recuperation de l'id de l'utilisateur
 			@identifiant = Booking.where(user_id: current_user.id).pluck(:id)
-			@bagage.update_attributes(:booking_id => @identifiant.pop)
+			@bagage.update(:booking_id => @identifiant.pop)
 			@booking.update_attributes(:vol_id => current_user.vol_id, :user_id => current_user.id)
 			send_thank_you_emails(current_user)
 			
