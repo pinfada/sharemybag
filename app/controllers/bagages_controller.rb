@@ -32,7 +32,8 @@ class BagagesController < ApplicationController
     @bagage = current_user.bagages.create(bagage_params)
     if @bagage.save
       current_user.update_attribute(:vol_id, params[:vol_id])
-      redirect_to new_booking_path
+ #     redirect_to new_booking_path
+      redirect_to root_path
     else
       render :new
     end
