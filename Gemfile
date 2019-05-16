@@ -16,14 +16,18 @@ gem 'gmaps4rails'
 # gem 'therubyracer', platforms: :ruby
 gem "letter_opener", :group => :development
 
-gem 'bootstrap-sass'
 gem 'bootstrap-social-rails'
+gem 'bootstrap', '~> 4.3.1'
+gem 'glyphicons-rails'
 gem 'font-awesome-sass'
 gem 'magnific-popup-rails'
 gem 'rspec-its'
 gem 'faker', '1.2.0'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
+
+# RailsAdmin is a Rails engine that provides an easy-to-use interface for managing your data.
+gem 'rails_admin', '~> 1.3'
 
 # Gestion sécurisé des clés API
 gem 'figaro'

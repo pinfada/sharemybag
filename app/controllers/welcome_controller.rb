@@ -13,6 +13,12 @@ class WelcomeController < ApplicationController
   def policy
   end
 
+  def about
+  end
+
+  def team
+  end
+
   private
 
     # Never trust parameters from the scary internet, only allow the white list through.

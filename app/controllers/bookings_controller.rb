@@ -32,6 +32,7 @@ class BookingsController < ApplicationController
 	def show
 		if signed_in?
 			@booking = Booking.find(params[:id])
+			redirect_to root_path if @booking.nil?
 			@bagage = Bagage.where(booking_id: @booking)
 		else
 			redirect_to root_path

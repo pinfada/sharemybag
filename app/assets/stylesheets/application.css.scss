@@ -17,5 +17,7 @@
  *= require font-awesome
  *= require_tree .
  */
-@import "../../../vendor/assets/stylesheets/bootstrap/bootstrap.scss";
+@import "bootstrap";
+@import "glyphicons";
+/*@import "../../../vendor/assets/stylesheets/bootstrap/bootstrap.scss";*/
 @import "../../../vendor/assets/stylesheets/magnific-popup.scss";

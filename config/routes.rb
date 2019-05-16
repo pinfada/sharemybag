@@ -1,22 +1,23 @@
 Rails.application.routes.draw do
-  #get 'welcome/home'
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   root 'welcome#home'
   match 'auth/:provider/callback', to: 'identities#omniauth', via: [:get, :post]
-  match 'auth/failure', to: redirect('/'), via: [:get, :post]
-  match '/vol', to: 'vols#index', via: 'get'
-  match '/coordonnee', to: 'coordonnees#index', via: 'get'
-  match '/reservation', to: 'bookings#new', via: 'get'
-  match '/bagage', to: 'bagages#new', via: 'get'
-  match '/paquet', to: 'paquets#new', via: 'get'
-  match '/signup', to: 'users#new', via: 'get'
-  match '/signin', to: 'sessions#new', via: 'get'
-  match '/signout', to: 'sessions#destroy', via: 'delete'
-  match '/help', to: 'welcome#help', via: 'get'
-  match '/propos', to: 'welcome#propos', via: 'get'
-  match '/contact', to: 'welcome#contact', via: 'get'
-  match '/listevol', to: 'welcome#search', via: 'get'
-  match '/home', to: 'welcome#home', via: 'get'
-  match '/policy', to: 'welcome#policy', via: 'get'
+  match 'auth/failure',            to: redirect('/'), via: [:get, :post]
+  match '/vol',                    to: 'vols#index', via: 'get'
+  match '/coordonnee',             to: 'coordonnees#index', via: 'get'
+  match '/reservation',            to: 'bookings#new', via: 'get'
+  match '/bagage',                 to: 'bagages#new', via: 'get'
+  match '/paquet',                 to: 'paquets#new', via: 'get'
+  match '/signup',                 to: 'users#new', via: 'get'
+  match '/signin',                 to: 'sessions#new', via: 'get'
+  match '/signout',                to: 'sessions#destroy', via: 'delete'
+  match '/help',                   to: 'welcome#help', via: 'get'
+  match '/propos',                 to: 'welcome#about', via: 'get'
+  match '/contact',                to: 'welcome#contact', via: 'get'
+  match '/listevol',               to: 'welcome#search', via: 'get'
+  match '/home',                   to: 'welcome#home', via: 'get'
+  match '/policy',                 to: 'welcome#policy', via: 'get'
+  match '/team',                 to: 'welcome#team', via: 'get'
 
   resources :coordonnees, only:  [:index, :new, :edit, :show]
   resources :sessions, only: [:new, :create, :destroy]
