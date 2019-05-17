@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Blazer::Engine, at: "blazer"
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   root 'welcome#home'
   match 'auth/:provider/callback', to: 'identities#omniauth', via: [:get, :post]

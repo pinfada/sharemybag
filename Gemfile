@@ -56,6 +56,9 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem "font-awesome-rails"
 
+# Explore your data with SQL. Easily create charts and dashboards, and share them with your team.
+gem 'blazer'
+
 source 'https://rails-assets.org' do
   gem "rails-assets-underscore"
 end
