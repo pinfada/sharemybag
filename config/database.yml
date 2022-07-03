@@ -11,7 +11,7 @@ default: &default
   timeout: 5000
   template: template0
   username: ubuntu
-  password: password
+  password: password2022
 
 development:
   <<: *default
