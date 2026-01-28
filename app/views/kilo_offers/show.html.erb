@@ -1,0 +1,64 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8">
+      <h1>
+        <i class="fa fa-plane"></i>
+        <%= @kilo_offer.departure_city %>, <%= @kilo_offer.departure_country %>
+        &rarr;
+        <%= @kilo_offer.arrival_city %>, <%= @kilo_offer.arrival_country %>
+      </h1>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <h2><%= @kilo_offer.available_kg %> kg</h2>
+              <p><%= t('common.available') %></p>
+            </div>
+            <div class="col-md-4 text-center">
+              <h2><%= number_to_currency(@kilo_offer.price_per_kg, unit: "€") %></h2>
+              <p><%= t('common.per_kg') %></p>
+            </div>
+            <div class="col-md-4 text-center">
+              <h2><%= l(@kilo_offer.travel_date, format: :long) %></h2>
+              <p><%= t('common.travel_date') %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% if @kilo_offer.accepted_items.present? %>
+        <div class="card mb-3">
+          <div class="card-header"><%= t('kilo_offers.accepted_items') %></div>
+          <div class="card-body"><%= @kilo_offer.accepted_items %></div>
+        </div>
+      <% end %>
+
+      <% if @kilo_offer.restrictions.present? %>
+        <div class="card mb-3 border-warning">
+          <div class="card-header bg-warning"><%= t('kilo_offers.restrictions') %></div>
+          <div class="card-body"><%= @kilo_offer.restrictions %></div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header"><%= t('common.traveler') %></div>
+        <div class="card-body text-center">
+          <h5><%= link_to @traveler.name, user_path(@traveler) %></h5>
+          <p><i class="fa fa-star"></i> <%= @traveler.average_rating %>/5
+          (<%= @traveler.completed_transactions_count %> <%= t('common.transactions') %>)</p>
+          <% if @traveler.verified? %>
+            <span class="badge badge-primary mb-2"><i class="fa fa-check"></i> <%= t('common.verified') %></span>
+          <% end %>
+          <% if current_user.id != @traveler.id %>
+            <%= link_to t('common.send_message'),
+                conversations_path(recipient_id: @traveler.id),
+                method: :post, class: "btn btn-outline-primary btn-block mt-2" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

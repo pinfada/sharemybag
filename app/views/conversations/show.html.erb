@@ -1,0 +1,48 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <% other = @conversation.other_participant(current_user) %>
+      <h3>
+        <i class="fa fa-comments"></i>
+        <%= t('conversations.with') %> <%= link_to other.name, user_path(other) %>
+      </h3>
+
+      <% if @conversation.shipping_request %>
+        <div class="alert alert-light">
+          <%= t('conversations.about') %>:
+          <%= link_to @conversation.shipping_request.title, shipping_request_path(@conversation.shipping_request) %>
+        </div>
+      <% end %>
+
+      <div class="card mb-3" style="max-height: 500px; overflow-y: auto;" id="messages-container">
+        <div class="card-body">
+          <% @messages.each do |message| %>
+            <div class="mb-3 <%= message.sender_id == current_user.id ? 'text-right' : '' %>">
+              <div class="d-inline-block p-2 rounded <%= message.sender_id == current_user.id ? 'bg-primary text-white' : 'bg-light' %>"
+                   style="max-width: 70%;">
+                <p class="mb-0"><%= message.body %></p>
+              </div>
+              <br>
+              <small class="text-muted"><%= l(message.created_at, format: :short) %></small>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <%= form_for @message, url: conversation_messages_path(@conversation) do |f| %>
+        <div class="input-group">
+          <%= f.text_area :body, class: "form-control", rows: 2,
+              placeholder: t('conversations.type_message'), required: true %>
+          <div class="input-group-append">
+            <%= f.submit t('common.send'), class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  var container = document.getElementById('messages-container');
+  if (container) container.scrollTop = container.scrollHeight;
+</script>

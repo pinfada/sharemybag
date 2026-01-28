@@ -1,63 +1,91 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
-	<div class="navbar-inner">
-		<div class="container">
-			<a href="#" class = "navbar-brand">
-				<%= link_to "sharemybag", root_path, id: "logo" %>
-			</a>
-			<nav>
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#barre_navigation">
-        			<span class="icon-bar"></span>
-        			<span class="icon-bar"></span>
-        			<span class="icon-bar"></span>
-      			</button>
-				<div class="collapse navbar-collapse" id="barre_navigation">
-				<ul class="nav pull-left navbar-nav" style="margin: 3px;">
-					<li> <%= render 'shared/search' %> </li>
-				</ul>
-				<ul class="nav pull-right navbar-nav">
-					<li class="active"><%= link_to "Home", root_path %></li>
-					<li id="fat-menu" class="dropdown"> 
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
-							Vols <b class="caret"></b> 
-						</a> 
-						<ul class="dropdown-menu">
-							<li><%= link_to "proposer", vols_path %></li>
-						</ul>
-					</li>
-					<% if signed_in? %>
-						<li class="divider"></li> 
-						<li><%= link_to "Users", users_path %></li> 
-						<li id="fat-menu" class="dropdown"> 
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"> 
-								Account <b class="caret"></b> 
-							</a> 
-							<ul class="dropdown-menu"> 
-								<li><%= link_to "Profile", current_user %></li> 
-								<li><%= link_to "Settings", edit_user_path(current_user) %></li>
-								<% if current_user.admin == true %>
-									<li><%= link_to "Admin Dashboard", rails_admin_path %></li>
-								<% end %>
-								<li class="divider"></li> 
-								<li>
-  									<%= link_to "Twitter", "/auth/twitter" %>
-  								</li> 
-  								<li>
-  									<%= link_to "Facebook", "/auth/facebook" %>
-  								</li>
-  								<li>
-  									<%= link_to "Github", "/auth/github" %> 
-								</li>
-								<li class="divider"></li> 
-								<li> <%= link_to "Sign out", signout_path, method: "delete" %> 
-								</li> 
-							</ul> 
-						</li>
-					<% else %>
-						<li><%= link_to "Sign in", signin_path %></li>
-					<% end %>
-				</ul>
-				</div>
-			</nav>
-		</div>
-	</div>
+  <div class="navbar-inner">
+    <div class="container">
+      <a href="#" class="navbar-brand">
+        <%= link_to "ShareMyBag", root_path, id: "logo" %>
+      </a>
+      <nav>
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#barre_navigation">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="barre_navigation">
+          <ul class="nav pull-left navbar-nav" style="margin: 3px;">
+            <li><%= render 'shared/search' %></li>
+          </ul>
+          <ul class="nav pull-right navbar-nav">
+            <li class="active"><%= link_to t('nav.home'), root_path %></li>
+
+            <!-- Marketplace Dropdown -->
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <%= t('nav.marketplace') %> <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to t('nav.send_package'), shipping_requests_path %></li>
+                <li><%= link_to t('nav.offer_kilos'), kilo_offers_path %></li>
+                <li class="divider"></li>
+                <li><%= link_to t('nav.browse_flights'), vols_path %></li>
+              </ul>
+            </li>
+
+            <% if signed_in? %>
+              <!-- My Activity -->
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <%= t('nav.my_activity') %> <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><%= link_to t('nav.my_requests'), my_requests_shipping_requests_path %></li>
+                  <li><%= link_to t('nav.my_offers'), my_offers_kilo_offers_path %></li>
+                  <li><%= link_to t('nav.my_bids'), my_bids_bids_path %></li>
+                  <li class="divider"></li>
+                  <li><%= link_to t('nav.messages'), conversations_path %></li>
+                </ul>
+              </li>
+
+              <!-- Notifications -->
+              <li>
+                <%= link_to notifications_path do %>
+                  <i class="fa fa-bell"></i>
+                  <% unread = current_user.notifications.unread.count %>
+                  <% if unread > 0 %>
+                    <span class="badge badge-danger"><%= unread %></span>
+                  <% end %>
+                <% end %>
+              </li>
+
+              <li><%= link_to t('nav.users'), users_path %></li>
+
+              <!-- Account -->
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <%= t('nav.account') %> <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><%= link_to t('nav.profile'), current_user %></li>
+                  <li><%= link_to t('nav.settings'), edit_user_path(current_user) %></li>
+                  <li><%= link_to t('nav.verify_identity'), identity_verification_path %></li>
+                  <% if current_user.admin == true %>
+                    <li class="divider"></li>
+                    <li><%= link_to t('nav.admin_dashboard'), rails_admin_path %></li>
+                  <% end %>
+                  <li class="divider"></li>
+                  <li><%= link_to "Twitter", "/auth/twitter" %></li>
+                  <li><%= link_to "Facebook", "/auth/facebook" %></li>
+                  <li><%= link_to "Github", "/auth/github" %></li>
+                  <li class="divider"></li>
+                  <li><%= link_to t('nav.sign_out'), signout_path, method: "delete" %></li>
+                </ul>
+              </li>
+            <% else %>
+              <li><%= link_to t('nav.sign_in'), signin_path %></li>
+              <li><%= link_to t('nav.sign_up'), signup_path %></li>
+            <% end %>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
 </header>

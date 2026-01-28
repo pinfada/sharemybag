@@ -1,32 +1,23 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: 5
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
   template: template0
-  username: ubuntu
-  password: password2022
+  username: <%= ENV.fetch("DB_USERNAME", "ubuntu") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "") %>
 
 development:
   <<: *default
-  database: sharemybag_development
+  database: <%= ENV.fetch("DB_NAME_DEV", "sharemybag_development") %>
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: sharemybag_test
+  database: <%= ENV.fetch("DB_NAME_TEST", "sharemybag_test") %>
 
 production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
-  database: dem63ni986d5oi
-  username: jsmuxyasotieuy
-  password: <%= ENV['MYAPP_DATABASE_PASSWORD'] %>
+  database: <%= ENV.fetch("DB_NAME_PROD", "sharemybag_production") %>
+  username: <%= ENV['DB_USERNAME_PROD'] %>
+  password: <%= ENV['DB_PASSWORD_PROD'] %>

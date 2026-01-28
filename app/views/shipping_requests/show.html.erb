@@ -1,0 +1,174 @@
+<div class="container mt-4">
+  <div class="row">
+    <!-- Request Details -->
+    <div class="col-md-8">
+      <h1><%= @shipping_request.title %></h1>
+      <span class="badge badge-<%= @shipping_request.status == 'open' ? 'success' : 'info' %> mb-3">
+        <%= t("statuses.#{@shipping_request.status}") %>
+      </span>
+
+      <div class="card mb-4">
+        <div class="card-header"><%= t('shipping_requests.show.route') %></div>
+        <div class="card-body">
+          <h4>
+            <i class="fa fa-plane"></i>
+            <%= @shipping_request.departure_city %>, <%= @shipping_request.departure_country %>
+            &rarr;
+            <%= @shipping_request.arrival_city %>, <%= @shipping_request.arrival_country %>
+          </h4>
+          <p>
+            <strong><%= t('common.desired_date') %>:</strong> <%= l(@shipping_request.desired_date, format: :long) %>
+            <% if @shipping_request.deadline_date %>
+              <br><strong><%= t('common.deadline') %>:</strong> <%= l(@shipping_request.deadline_date, format: :long) %>
+            <% end %>
+          </p>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><%= t('shipping_requests.show.package_details') %></div>
+        <div class="card-body">
+          <p><strong><%= t('common.weight') %>:</strong> <%= @shipping_request.weight_kg %> kg</p>
+          <% if @shipping_request.length_cm %>
+            <p><strong><%= t('common.dimensions') %>:</strong>
+              <%= @shipping_request.length_cm %> × <%= @shipping_request.width_cm %> × <%= @shipping_request.height_cm %> cm
+            </p>
+          <% end %>
+          <% if @shipping_request.item_category %>
+            <p><strong><%= t('common.category') %>:</strong> <%= @shipping_request.item_category %></p>
+          <% end %>
+          <% if @shipping_request.description.present? %>
+            <p><strong><%= t('common.description') %>:</strong> <%= @shipping_request.description %></p>
+          <% end %>
+          <% if @shipping_request.special_instructions.present? %>
+            <p><strong><%= t('common.special_instructions') %>:</strong> <%= @shipping_request.special_instructions %></p>
+          <% end %>
+          <% if @shipping_request.max_budget_cents %>
+            <p><strong><%= t('common.max_budget') %>:</strong>
+              <%= number_to_currency(@shipping_request.max_budget_cents / 100.0, unit: "€") %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Tracking -->
+      <% if @tracking %>
+        <div class="card mb-4">
+          <div class="card-header"><%= t('tracking.title') %></div>
+          <div class="card-body">
+            <%= link_to t('tracking.view_tracking'), shipment_tracking_path(@tracking), class: "btn btn-info" %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Bids Section -->
+      <h3><%= t('bids.title') %> (<%= @bids.count %>)</h3>
+      <% @bids.each do |bid| %>
+        <div class="card mb-2 <%= bid.status == 'accepted' ? 'border-success' : '' %>">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <strong><%= bid.traveler.name %></strong>
+                <% if bid.traveler.verified? %>
+                  <span class="badge badge-primary"><i class="fa fa-check"></i> <%= t('common.verified') %></span>
+                <% end %>
+                <br>
+                <small class="text-muted">
+                  <i class="fa fa-star"></i> <%= bid.traveler.average_rating %>/5
+                  (<%= bid.traveler.completed_transactions_count %> <%= t('common.transactions') %>)
+                </small>
+              </div>
+              <div class="col-md-3">
+                <strong><%= number_to_currency(bid.price_per_kg / 100.0, unit: "€") %></strong> / kg
+                <br><%= bid.available_kg %> kg <%= t('common.available') %>
+                <br><small><%= l(bid.travel_date, format: :long) %></small>
+              </div>
+              <div class="col-md-3 text-right">
+                <span class="badge badge-<%= bid.status == 'accepted' ? 'success' : 'secondary' %>">
+                  <%= t("statuses.#{bid.status}") %>
+                </span>
+                <% if @shipping_request.sender_id == current_user.id && @shipping_request.status != "accepted" && bid.status == "pending" %>
+                  <br>
+                  <%= link_to t('bids.accept'), accept_bid_shipping_request_path(@shipping_request, bid_id: bid.id),
+                      method: :post, class: "btn btn-success btn-sm mt-1",
+                      data: { confirm: t('bids.confirm_accept') } %>
+                <% end %>
+              </div>
+            </div>
+            <% if bid.message.present? %>
+              <hr>
+              <p class="mb-0"><small><%= bid.message %></small></p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Place Bid Form -->
+      <% if current_user.id != @shipping_request.sender_id && @shipping_request.status.in?(%w[open bidding]) %>
+        <div class="card mt-4">
+          <div class="card-header"><%= t('bids.place_bid') %></div>
+          <div class="card-body">
+            <%= form_for @bid, url: shipping_request_bids_path(@shipping_request) do |f| %>
+              <div class="form-row">
+                <div class="form-group col-md-3">
+                  <%= f.label :price_per_kg_cents, t('bids.price_per_kg_cents') %>
+                  <%= f.number_field :price_per_kg_cents, class: "form-control", min: 1, required: true %>
+                </div>
+                <div class="form-group col-md-3">
+                  <%= f.label :available_kg, t('common.available_kg') %>
+                  <%= f.number_field :available_kg, class: "form-control", min: 0.1, step: 0.1, required: true %>
+                </div>
+                <div class="form-group col-md-3">
+                  <%= f.label :travel_date, t('common.travel_date') %>
+                  <%= f.date_field :travel_date, class: "form-control", required: true %>
+                </div>
+                <div class="form-group col-md-3">
+                  <%= f.label :flight_number, t('common.flight_number') %>
+                  <%= f.text_field :flight_number, class: "form-control" %>
+                </div>
+              </div>
+              <div class="form-group">
+                <%= f.label :message, t('common.message') %>
+                <%= f.text_area :message, class: "form-control", rows: 3 %>
+              </div>
+              <%= f.hidden_field :currency, value: @shipping_request.currency %>
+              <%= f.submit t('bids.submit_bid'), class: "btn btn-primary" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-header"><%= t('common.sender') %></div>
+        <div class="card-body text-center">
+          <h5><%= link_to @shipping_request.sender.name, user_path(@shipping_request.sender) %></h5>
+          <p><i class="fa fa-star"></i> <%= @shipping_request.sender.average_rating %>/5</p>
+          <% if @shipping_request.sender.verified? %>
+            <span class="badge badge-primary"><i class="fa fa-check"></i> <%= t('common.verified') %></span>
+          <% end %>
+          <% if current_user.id != @shipping_request.sender_id %>
+            <hr>
+            <%= link_to t('common.send_message'),
+                conversations_path(recipient_id: @shipping_request.sender_id, shipping_request_id: @shipping_request.id),
+                method: :post, class: "btn btn-outline-primary btn-block" %>
+          <% end %>
+        </div>
+      </div>
+
+      <% if @shipping_request.sender_id == current_user.id %>
+        <div class="card">
+          <div class="card-header"><%= t('common.actions') %></div>
+          <div class="card-body">
+            <%= link_to t('common.edit'), edit_shipping_request_path(@shipping_request), class: "btn btn-warning btn-block" %>
+            <%= link_to t('common.cancel'), shipping_request_path(@shipping_request),
+                method: :delete, class: "btn btn-danger btn-block",
+                data: { confirm: t('common.confirm_cancel') } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,33 +1,98 @@
 Rails.application.routes.draw do
   mount Blazer::Engine, at: "blazer"
   mount RailsAdmin::Engine => '/dashboard', as: 'rails_admin'
+
   root 'welcome#home'
+
+  # Authentication
   match 'auth/:provider/callback', to: 'identities#omniauth', via: [:get, :post]
   match 'auth/failure',            to: redirect('/'), via: [:get, :post]
+  match '/signup',                 to: 'users#new', via: 'get'
+  match '/signin',                 to: 'sessions#new', via: 'get'
+  match '/signout',                to: 'sessions#destroy', via: 'delete'
+
+  # Legacy routes
   match '/vol',                    to: 'vols#index', via: 'get'
   match '/coordonnee',             to: 'coordonnees#index', via: 'get'
   match '/reservation',            to: 'bookings#new', via: 'get'
   match '/bagage',                 to: 'bagages#new', via: 'get'
   match '/paquet',                 to: 'paquets#new', via: 'get'
-  match '/signup',                 to: 'users#new', via: 'get'
-  match '/signin',                 to: 'sessions#new', via: 'get'
-  match '/signout',                to: 'sessions#destroy', via: 'delete'
+  match '/listevol',               to: 'welcome#search', via: 'get'
+  match '/home',                   to: 'welcome#home', via: 'get'
+
+  # Static pages
   match '/help',                   to: 'welcome#help', via: 'get'
   match '/propos',                 to: 'welcome#about', via: 'get'
   match '/contact',                to: 'welcome#contact', via: 'get'
-  match '/listevol',               to: 'welcome#search', via: 'get'
-  match '/home',                   to: 'welcome#home', via: 'get'
   match '/policy',                 to: 'welcome#policy', via: 'get'
-  match '/team',                 to: 'welcome#team', via: 'get'
+  match '/team',                   to: 'welcome#team', via: 'get'
 
-  resources :coordonnees, only:  [:index, :new, :edit, :show]
+  # === MARKETPLACE: Shipping Requests (Reverse Auction) ===
+  resources :shipping_requests do
+    member do
+      post :accept_bid
+    end
+    collection do
+      get :my_requests
+    end
+    resources :bids, only: [:create] do
+      member do
+        patch :withdraw
+      end
+    end
+    resources :reviews, only: [:create]
+  end
+
+  # === MARKETPLACE: Kilo Offers ===
+  resources :kilo_offers do
+    collection do
+      get :my_offers
+    end
+  end
+
+  # === Bids ===
+  resources :bids, only: [] do
+    collection do
+      get :my_bids
+    end
+  end
+
+  # === Messaging ===
+  resources :conversations, only: [:index, :show, :create] do
+    resources :messages, only: [:create]
+  end
+
+  # === Notifications ===
+  resources :notifications, only: [:index] do
+    member do
+      patch :mark_as_read
+    end
+    collection do
+      patch :mark_all_as_read
+    end
+  end
+
+  # === Shipment Tracking ===
+  resources :shipment_trackings, only: [:show] do
+    member do
+      post :hand_over
+      post :mark_in_transit
+      post :deliver
+      post :confirm
+    end
+  end
+
+  # === Identity Verification ===
+  resource :identity_verification, only: [:new, :create, :show]
+
+  # Existing resources
+  resources :coordonnees, only: [:index, :new, :edit, :show]
   resources :sessions, only: [:new, :create, :destroy]
   resources :relationships, only: [:create, :destroy]
   resources :identities
   resources :microposts, only: [:create, :destroy]
-  resources :vols,  only:  :index
+  resources :vols, only: :index
   resources :bookings, only: [:new, :create, :show]
-  
   resources :paquets
 
   concern :bagageable do
@@ -39,59 +104,4 @@ Rails.application.routes.draw do
       get :following, :followers
     end
   end
-
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end

@@ -1,0 +1,235 @@
+fr:
+  # Navigation
+  nav:
+    home: "Accueil"
+    marketplace: "Marketplace"
+    send_package: "Envoyer un colis"
+    offer_kilos: "Proposer mes kilos"
+    browse_flights: "Parcourir les vols"
+    my_activity: "Mon activité"
+    my_requests: "Mes demandes"
+    my_offers: "Mes offres de kilos"
+    my_bids: "Mes propositions"
+    messages: "Messages"
+    users: "Utilisateurs"
+    account: "Compte"
+    profile: "Profil"
+    settings: "Paramètres"
+    verify_identity: "Vérifier mon identité"
+    admin_dashboard: "Admin"
+    sign_in: "Connexion"
+    sign_up: "Inscription"
+    sign_out: "Déconnexion"
+
+  # Common
+  common:
+    search: "Rechercher"
+    departure_city: "Ville de départ"
+    arrival_city: "Ville d'arrivée"
+    departure_country: "Pays de départ"
+    arrival_country: "Pays d'arrivée"
+    max_weight_kg: "Poids max (kg)"
+    min_kg: "Kg minimum"
+    weight: "Poids"
+    weight_kg: "Poids (kg)"
+    dimensions: "Dimensions"
+    category: "Catégorie"
+    description: "Description"
+    special_instructions: "Instructions spéciales"
+    max_budget: "Budget max"
+    budget: "Budget"
+    desired_date: "Date souhaitée"
+    deadline: "Date limite"
+    travel_date: "Date de voyage"
+    flight_number: "Numéro de vol"
+    flight: "Vol"
+    currency: "Devise"
+    title: "Titre"
+    select: "-- Sélectionner --"
+    posted_by: "Posté par"
+    ago: "il y a"
+    offers: "offres"
+    view_details: "Voir détails"
+    edit: "Modifier"
+    cancel: "Annuler"
+    confirm_cancel: "Êtes-vous sûr de vouloir annuler ?"
+    send_message: "Envoyer un message"
+    send: "Envoyer"
+    actions: "Actions"
+    verified: "Vérifié"
+    transactions: "transactions"
+    available: "disponible(s)"
+    available_kg: "Kilos disponibles"
+    per_kg: "par kilo"
+    message: "Message"
+    sender: "Expéditeur"
+    traveler: "Voyageur"
+    submitted: "Soumis le"
+    length_cm: "Longueur (cm)"
+    width_cm: "Largeur (cm)"
+    height_cm: "Hauteur (cm)"
+
+  # Statuses
+  statuses:
+    open: "Ouvert"
+    bidding: "En cours d'enchères"
+    accepted: "Accepté"
+    in_progress: "En cours"
+    completed: "Terminé"
+    cancelled: "Annulé"
+    pending: "En attente"
+    rejected: "Refusé"
+    withdrawn: "Retiré"
+    active: "Actif"
+    booked: "Réservé"
+    expired: "Expiré"
+
+  # Categories
+  categories:
+    documents: "Documents"
+    electronics: "Électronique"
+    clothing: "Vêtements"
+    food: "Alimentation"
+    medicine: "Médicaments"
+    other: "Autre"
+
+  # Shipping Requests
+  shipping_requests:
+    index:
+      title: "Demandes d'envoi"
+      subtitle: "Trouvez un voyageur pour transporter votre colis"
+    new:
+      title: "Nouvelle demande d'envoi"
+      subtitle: "Décrivez votre colis et les voyageurs vous feront des offres"
+    edit:
+      title: "Modifier la demande"
+    show:
+      route: "Itinéraire"
+      package_details: "Détails du colis"
+    form:
+      basic_info: "Informations de base"
+      route: "Itinéraire"
+      package: "Colis"
+      title_placeholder: "Ex: Envoi de documents à Paris"
+      description_placeholder: "Décrivez le contenu du colis..."
+    new_request: "Nouvelle demande"
+    created: "Demande d'envoi créée avec succès !"
+    updated: "Demande mise à jour."
+    cancelled: "Demande annulée."
+    bid_accepted: "Offre acceptée ! Le voyageur a été notifié."
+    my_requests:
+      title: "Mes demandes d'envoi"
+
+  # Kilo Offers
+  kilo_offers:
+    index:
+      title: "Kilos disponibles"
+      subtitle: "Des voyageurs proposent leurs kilos inutilisés"
+    new:
+      title: "Proposer mes kilos"
+      subtitle: "Monétisez vos kilos de bagage inutilisés"
+    edit:
+      title: "Modifier mon offre"
+    form:
+      details: "Détails de l'offre"
+    new_offer: "Nouvelle offre de kilos"
+    created: "Offre de kilos publiée avec succès !"
+    updated: "Offre mise à jour."
+    removed: "Offre supprimée."
+    publish: "Publier mon offre"
+    accepted_items: "Objets acceptés"
+    restrictions: "Restrictions"
+    my_offers:
+      title: "Mes offres de kilos"
+
+  # Bids
+  bids:
+    title: "Offres reçues"
+    place_bid: "Faire une offre"
+    price_per_kg_cents: "Prix par kg (centimes)"
+    submit_bid: "Soumettre mon offre"
+    accept: "Accepter"
+    confirm_accept: "Êtes-vous sûr de vouloir accepter cette offre ?"
+    created: "Offre soumise avec succès !"
+    withdrawn: "Offre retirée."
+    withdraw: "Retirer mon offre"
+    my_bids:
+      title: "Mes propositions"
+
+  # Conversations
+  conversations:
+    title: "Messages"
+    no_conversations: "Aucune conversation pour le moment."
+    with: "Conversation avec"
+    about: "À propos de"
+    type_message: "Tapez votre message..."
+
+  # Notifications
+  notifications:
+    title: "Notifications"
+    none: "Aucune notification."
+    mark_all_read: "Tout marquer comme lu"
+    bid_accepted: "Votre offre pour « %{title} » a été acceptée !"
+    new_bid: "%{name} a fait une offre sur « %{title} »"
+    new_message: "%{name} vous a envoyé un message"
+    new_review: "%{name} vous a laissé un avis (%{rating}/5)"
+    package_handed_over: "Le colis a été remis au voyageur"
+    package_in_transit: "Votre colis est en transit"
+    package_delivered: "Votre colis a été livré"
+    delivery_confirmed: "La livraison a été confirmée. Paiement libéré."
+
+  # Reviews
+  reviews:
+    created: "Avis publié avec succès !"
+
+  # Tracking
+  tracking:
+    title: "Suivi de l'envoi"
+    status_timeline: "Chronologie du statut"
+    statuses:
+      created: "Créé"
+      paid: "Payé"
+      handed_over: "Remis"
+      in_transit: "En transit"
+      delivered: "Livré"
+      confirmed: "Confirmé"
+      disputed: "En litige"
+    handover_code: "Code de remise"
+    delivery_code: "Code de livraison"
+    handover_instructions: "Communiquez ce code au voyageur lors de la remise du colis."
+    delivery_instructions: "Le destinataire doit saisir ce code pour confirmer la livraison."
+    enter_code: "Entrez le code"
+    confirm_handover: "Confirmer la remise"
+    confirm_delivery: "Confirmer la livraison"
+    confirm_receipt: "Confirmer la réception"
+    confirm_receipt_warning: "En confirmant, le paiement sera libéré au voyageur."
+    mark_in_transit_btn: "Marquer en transit"
+    handed_over: "Remise confirmée !"
+    in_transit: "Marqué en transit."
+    delivered: "Livraison confirmée !"
+    confirmed: "Réception confirmée ! Paiement libéré."
+    invalid_code: "Code invalide."
+    view_tracking: "Voir le suivi"
+    waiting_confirmation: "En attente de la confirmation du destinataire."
+    completed: "Livraison terminée avec succès !"
+
+  # Identity Verification
+  identity_verifications:
+    title: "Vérification d'identité"
+    subtitle: "Vérifiez votre identité pour inspirer confiance et accéder à toutes les fonctionnalités."
+    status_title: "Statut de la vérification"
+    document_type: "Type de document"
+    passport: "Passeport"
+    id_card: "Carte d'identité"
+    driver_license: "Permis de conduire"
+    document_front: "Recto du document"
+    document_back: "Verso du document"
+    selfie: "Selfie de vérification"
+    upload_url_placeholder: "URL de l'image"
+    selfie_placeholder: "URL du selfie avec le document"
+    submit: "Soumettre ma vérification"
+    submitted: "Vérification soumise ! Nous examinerons votre demande."
+    status_pending: "En attente de vérification"
+    status_reviewing: "En cours d'examen"
+    status_verified: "Identité vérifiée"
+    status_rejected: "Vérification refusée"
