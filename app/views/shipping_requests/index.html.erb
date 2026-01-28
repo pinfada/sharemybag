@@ -1,0 +1,75 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-12">
+      <h1><%= t('shipping_requests.index.title') %></h1>
+      <p class="lead"><%= t('shipping_requests.index.subtitle') %></p>
+
+      <!-- Search Filters -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <%= form_tag shipping_requests_path, method: :get, class: "form-inline" do %>
+            <div class="form-group mr-2 mb-2">
+              <%= text_field_tag :departure_city, params[:departure_city],
+                  class: "form-control", placeholder: t('common.departure_city') %>
+            </div>
+            <div class="form-group mr-2 mb-2">
+              <%= text_field_tag :arrival_city, params[:arrival_city],
+                  class: "form-control", placeholder: t('common.arrival_city') %>
+            </div>
+            <div class="form-group mr-2 mb-2">
+              <%= number_field_tag :max_weight, params[:max_weight],
+                  class: "form-control", placeholder: t('common.max_weight_kg'), min: 0, step: 0.1 %>
+            </div>
+            <div class="form-group mr-2 mb-2">
+              <%= date_field_tag :date_from, params[:date_from], class: "form-control" %>
+            </div>
+            <%= submit_tag t('common.search'), class: "btn btn-primary mb-2" %>
+          <% end %>
+        </div>
+      </div>
+
+      <%= link_to t('shipping_requests.new_request'), new_shipping_request_path, class: "btn btn-success mb-3" %>
+
+      <!-- Requests List -->
+      <% @shipping_requests.each do |request| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-8">
+                <h5 class="card-title">
+                  <%= link_to request.title, shipping_request_path(request) %>
+                  <span class="badge badge-<%= request.status == 'open' ? 'success' : 'info' %>">
+                    <%= t("statuses.#{request.status}") %>
+                  </span>
+                </h5>
+                <p class="card-text">
+                  <i class="fa fa-plane"></i>
+                  <strong><%= request.departure_city %>, <%= request.departure_country %></strong>
+                  &rarr;
+                  <strong><%= request.arrival_city %>, <%= request.arrival_country %></strong>
+                </p>
+                <p class="card-text">
+                  <i class="fa fa-weight"></i> <%= request.weight_kg %> kg
+                  &bull;
+                  <i class="fa fa-calendar"></i> <%= l(request.desired_date, format: :long) %>
+                  <% if request.max_budget_cents %>
+                    &bull;
+                    <i class="fa fa-money"></i> <%= t('common.budget') %>: <%= number_to_currency(request.max_budget_cents / 100.0, unit: request.currency) %>
+                  <% end %>
+                </p>
+              </div>
+              <div class="col-md-4 text-right">
+                <p><small class="text-muted"><%= t('common.posted_by') %> <%= request.sender.name %></small></p>
+                <p><small class="text-muted"><%= time_ago_in_words(request.created_at) %> <%= t('common.ago') %></small></p>
+                <p><span class="badge badge-secondary"><%= request.bids.count %> <%= t('common.offers') %></span></p>
+                <%= link_to t('common.view_details'), shipping_request_path(request), class: "btn btn-outline-primary btn-sm" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <%= will_paginate @shipping_requests, renderer: BootstrapPagination::Rails %>
+    </div>
+  </div>
+</div>

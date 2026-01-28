@@ -1,23 +1,223 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  nav:
+    home: "Home"
+    marketplace: "Marketplace"
+    send_package: "Send a package"
+    offer_kilos: "Offer my kilos"
+    browse_flights: "Browse flights"
+    my_activity: "My Activity"
+    my_requests: "My requests"
+    my_offers: "My kilo offers"
+    my_bids: "My bids"
+    messages: "Messages"
+    users: "Users"
+    account: "Account"
+    profile: "Profile"
+    settings: "Settings"
+    verify_identity: "Verify identity"
+    admin_dashboard: "Admin"
+    sign_in: "Sign in"
+    sign_up: "Sign up"
+    sign_out: "Sign out"
+
+  common:
+    search: "Search"
+    departure_city: "Departure city"
+    arrival_city: "Arrival city"
+    departure_country: "Departure country"
+    arrival_country: "Arrival country"
+    max_weight_kg: "Max weight (kg)"
+    min_kg: "Min kg"
+    weight: "Weight"
+    weight_kg: "Weight (kg)"
+    dimensions: "Dimensions"
+    category: "Category"
+    description: "Description"
+    special_instructions: "Special instructions"
+    max_budget: "Max budget"
+    budget: "Budget"
+    desired_date: "Desired date"
+    deadline: "Deadline"
+    travel_date: "Travel date"
+    flight_number: "Flight number"
+    flight: "Flight"
+    currency: "Currency"
+    title: "Title"
+    select: "-- Select --"
+    posted_by: "Posted by"
+    ago: "ago"
+    offers: "offers"
+    view_details: "View details"
+    edit: "Edit"
+    cancel: "Cancel"
+    confirm_cancel: "Are you sure you want to cancel?"
+    send_message: "Send a message"
+    send: "Send"
+    actions: "Actions"
+    verified: "Verified"
+    transactions: "transactions"
+    available: "available"
+    available_kg: "Available kilos"
+    per_kg: "per kilo"
+    message: "Message"
+    sender: "Sender"
+    traveler: "Traveler"
+    submitted: "Submitted"
+    length_cm: "Length (cm)"
+    width_cm: "Width (cm)"
+    height_cm: "Height (cm)"
+
+  statuses:
+    open: "Open"
+    bidding: "Bidding"
+    accepted: "Accepted"
+    in_progress: "In progress"
+    completed: "Completed"
+    cancelled: "Cancelled"
+    pending: "Pending"
+    rejected: "Rejected"
+    withdrawn: "Withdrawn"
+    active: "Active"
+    booked: "Booked"
+    expired: "Expired"
+
+  categories:
+    documents: "Documents"
+    electronics: "Electronics"
+    clothing: "Clothing"
+    food: "Food"
+    medicine: "Medicine"
+    other: "Other"
+
+  shipping_requests:
+    index:
+      title: "Shipping Requests"
+      subtitle: "Find a traveler to carry your package"
+    new:
+      title: "New Shipping Request"
+      subtitle: "Describe your package and travelers will bid on it"
+    edit:
+      title: "Edit Request"
+    show:
+      route: "Route"
+      package_details: "Package Details"
+    form:
+      basic_info: "Basic Information"
+      route: "Route"
+      package: "Package"
+      title_placeholder: "e.g. Send documents to London"
+      description_placeholder: "Describe the package contents..."
+    new_request: "New request"
+    created: "Shipping request created successfully!"
+    updated: "Request updated."
+    cancelled: "Request cancelled."
+    bid_accepted: "Bid accepted! The traveler has been notified."
+    my_requests:
+      title: "My Shipping Requests"
+
+  kilo_offers:
+    index:
+      title: "Available Kilos"
+      subtitle: "Travelers offering their unused luggage space"
+    new:
+      title: "Offer My Kilos"
+      subtitle: "Monetize your unused luggage weight"
+    edit:
+      title: "Edit My Offer"
+    form:
+      details: "Offer Details"
+    new_offer: "New kilo offer"
+    created: "Kilo offer published successfully!"
+    updated: "Offer updated."
+    removed: "Offer removed."
+    publish: "Publish my offer"
+    accepted_items: "Accepted items"
+    restrictions: "Restrictions"
+    my_offers:
+      title: "My Kilo Offers"
+
+  bids:
+    title: "Bids Received"
+    place_bid: "Place a Bid"
+    price_per_kg_cents: "Price per kg (cents)"
+    submit_bid: "Submit my bid"
+    accept: "Accept"
+    confirm_accept: "Are you sure you want to accept this bid?"
+    created: "Bid submitted successfully!"
+    withdrawn: "Bid withdrawn."
+    withdraw: "Withdraw bid"
+    my_bids:
+      title: "My Bids"
+
+  conversations:
+    title: "Messages"
+    no_conversations: "No conversations yet."
+    with: "Conversation with"
+    about: "About"
+    type_message: "Type your message..."
+
+  notifications:
+    title: "Notifications"
+    none: "No notifications."
+    mark_all_read: "Mark all as read"
+    bid_accepted: "Your bid for '%{title}' has been accepted!"
+    new_bid: "%{name} placed a bid on '%{title}'"
+    new_message: "%{name} sent you a message"
+    new_review: "%{name} left you a review (%{rating}/5)"
+    package_handed_over: "Package has been handed over to the traveler"
+    package_in_transit: "Your package is in transit"
+    package_delivered: "Your package has been delivered"
+    delivery_confirmed: "Delivery confirmed. Payment released."
+
+  reviews:
+    created: "Review posted successfully!"
+
+  tracking:
+    title: "Shipment Tracking"
+    status_timeline: "Status Timeline"
+    statuses:
+      created: "Created"
+      paid: "Paid"
+      handed_over: "Handed over"
+      in_transit: "In transit"
+      delivered: "Delivered"
+      confirmed: "Confirmed"
+      disputed: "Disputed"
+    handover_code: "Handover code"
+    delivery_code: "Delivery code"
+    handover_instructions: "Share this code with the traveler when handing over the package."
+    delivery_instructions: "The recipient must enter this code to confirm delivery."
+    enter_code: "Enter code"
+    confirm_handover: "Confirm handover"
+    confirm_delivery: "Confirm delivery"
+    confirm_receipt: "Confirm receipt"
+    confirm_receipt_warning: "By confirming, payment will be released to the traveler."
+    mark_in_transit_btn: "Mark in transit"
+    handed_over: "Handover confirmed!"
+    in_transit: "Marked as in transit."
+    delivered: "Delivery confirmed!"
+    confirmed: "Receipt confirmed! Payment released."
+    invalid_code: "Invalid code."
+    view_tracking: "View tracking"
+    waiting_confirmation: "Waiting for recipient confirmation."
+    completed: "Delivery completed successfully!"
+
+  identity_verifications:
+    title: "Identity Verification"
+    subtitle: "Verify your identity to build trust and access all features."
+    status_title: "Verification Status"
+    document_type: "Document type"
+    passport: "Passport"
+    id_card: "ID Card"
+    driver_license: "Driver's License"
+    document_front: "Document front"
+    document_back: "Document back"
+    selfie: "Verification selfie"
+    upload_url_placeholder: "Image URL"
+    selfie_placeholder: "Selfie URL holding your document"
+    submit: "Submit verification"
+    submitted: "Verification submitted! We will review your request."
+    status_pending: "Pending verification"
+    status_reviewing: "Under review"
+    status_verified: "Identity verified"
+    status_rejected: "Verification rejected"

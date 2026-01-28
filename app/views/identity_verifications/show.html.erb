@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h1><i class="fa fa-id-card"></i> <%= t('identity_verifications.status_title') %></h1>
+
+      <div class="card mt-3">
+        <div class="card-body">
+          <% case @verification.status %>
+          <% when "pending" %>
+            <span class="badge badge-warning badge-pill" style="font-size: 1.2em;">
+              <i class="fa fa-clock-o"></i> <%= t('identity_verifications.status_pending') %>
+            </span>
+          <% when "under_review" %>
+            <span class="badge badge-info badge-pill" style="font-size: 1.2em;">
+              <i class="fa fa-search"></i> <%= t('identity_verifications.status_reviewing') %>
+            </span>
+          <% when "verified" %>
+            <span class="badge badge-success badge-pill" style="font-size: 1.2em;">
+              <i class="fa fa-check-circle"></i> <%= t('identity_verifications.status_verified') %>
+            </span>
+          <% when "rejected" %>
+            <span class="badge badge-danger badge-pill" style="font-size: 1.2em;">
+              <i class="fa fa-times-circle"></i> <%= t('identity_verifications.status_rejected') %>
+            </span>
+            <% if @verification.rejection_reason.present? %>
+              <p class="mt-3 text-danger"><%= @verification.rejection_reason %></p>
+            <% end %>
+          <% end %>
+
+          <p class="mt-3">
+            <strong><%= t('identity_verifications.document_type') %>:</strong>
+            <%= t("identity_verifications.#{@verification.document_type}") %>
+          </p>
+          <p><strong><%= t('common.submitted') %>:</strong> <%= l(@verification.created_at, format: :long) %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

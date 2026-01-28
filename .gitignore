@@ -16,5 +16,20 @@
 !/log/.keep
 /tmp
 
-# Ignore application configuration
+# Ignore application configuration (secrets)
 /config/application.yml
+/config/secrets.yml
+
+# Environment files
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

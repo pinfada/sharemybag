@@ -1,0 +1,31 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1><i class="fa fa-bell"></i> <%= t('notifications.title') %></h1>
+    <% if @notifications.any? { |n| !n.read? } %>
+      <%= link_to t('notifications.mark_all_read'), mark_all_as_read_notifications_path,
+          method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+    <% end %>
+  </div>
+
+  <% if @notifications.empty? %>
+    <div class="alert alert-info"><%= t('notifications.none') %></div>
+  <% else %>
+    <div class="list-group">
+      <% @notifications.each do |notification| %>
+        <div class="list-group-item <%= notification.read? ? '' : 'list-group-item-warning' %>">
+          <div class="d-flex justify-content-between">
+            <p class="mb-0"><%= notification.message %></p>
+            <div>
+              <small class="text-muted"><%= time_ago_in_words(notification.created_at) %> <%= t('common.ago') %></small>
+              <% unless notification.read? %>
+                <%= link_to mark_as_read_notification_path(notification), method: :patch, class: "ml-2" do %>
+                  <i class="fa fa-check"></i>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

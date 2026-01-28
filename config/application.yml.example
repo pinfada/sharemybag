@@ -1,0 +1,40 @@
+# Figaro environment variables template
+# Copy this file to config/application.yml and fill in the values
+# NEVER commit config/application.yml to version control
+
+# Database
+DB_USERNAME: "ubuntu"
+DB_PASSWORD: "your_secure_password_here"
+DB_NAME_DEV: "sharemybag_development"
+DB_NAME_TEST: "sharemybag_test"
+DB_NAME_PROD: "sharemybag_production"
+DB_USERNAME_PROD: ""
+DB_PASSWORD_PROD: ""
+
+# Rails
+SECRET_KEY_BASE: "generate_with_rake_secret"
+
+# OAuth providers
+TWITTER_API_KEY: ""
+TWITTER_API_SECRET: ""
+GITHUB_CLIENT_ID: ""
+GITHUB_CLIENT_SECRET: ""
+FACEBOOK_APP_ID: ""
+FACEBOOK_APP_SECRET: ""
+
+# Google Maps
+GGL_MAP_JS_BROWSER_API_KEY: ""
+
+# Email (production)
+SMTP_HOST: ""
+SMTP_PORT: "587"
+SMTP_USERNAME: ""
+SMTP_PASSWORD: ""
+SMTP_DOMAIN: ""
+
+# Stripe (payments)
+STRIPE_PUBLISHABLE_KEY: ""
+STRIPE_SECRET_KEY: ""
+
+# Gitpod
+GITPOD_DB_PASSWORD: "changeme"

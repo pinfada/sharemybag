@@ -1,0 +1,42 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h1><i class="fa fa-id-card"></i> <%= t('identity_verifications.title') %></h1>
+      <p class="lead"><%= t('identity_verifications.subtitle') %></p>
+
+      <%= form_for @verification, url: identity_verification_path do |f| %>
+        <%= render 'shared/error_messages', object: @verification %>
+
+        <div class="form-group">
+          <%= f.label :document_type, t('identity_verifications.document_type') %>
+          <%= f.select :document_type,
+              options_for_select([
+                [t('identity_verifications.passport'), 'passport'],
+                [t('identity_verifications.id_card'), 'id_card'],
+                [t('identity_verifications.driver_license'), 'driver_license']
+              ]), {}, class: "form-control", required: true %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :document_front_url, t('identity_verifications.document_front') %>
+          <%= f.text_field :document_front_url, class: "form-control",
+              placeholder: t('identity_verifications.upload_url_placeholder') %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :document_back_url, t('identity_verifications.document_back') %>
+          <%= f.text_field :document_back_url, class: "form-control",
+              placeholder: t('identity_verifications.upload_url_placeholder') %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :selfie_url, t('identity_verifications.selfie') %>
+          <%= f.text_field :selfie_url, class: "form-control",
+              placeholder: t('identity_verifications.selfie_placeholder') %>
+        </div>
+
+        <%= f.submit t('identity_verifications.submit'), class: "btn btn-primary btn-lg btn-block" %>
+      <% end %>
+    </div>
+  </div>
+</div>

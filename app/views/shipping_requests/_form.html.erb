@@ -1,0 +1,110 @@
+<%= form_for @shipping_request do |f| %>
+  <%= render 'shared/error_messages', object: @shipping_request %>
+
+  <div class="card mb-3">
+    <div class="card-header"><%= t('shipping_requests.form.basic_info') %></div>
+    <div class="card-body">
+      <div class="form-group">
+        <%= f.label :title, t('common.title') %>
+        <%= f.text_field :title, class: "form-control", required: true,
+            placeholder: t('shipping_requests.form.title_placeholder') %>
+      </div>
+      <div class="form-group">
+        <%= f.label :description, t('common.description') %>
+        <%= f.text_area :description, class: "form-control", rows: 3,
+            placeholder: t('shipping_requests.form.description_placeholder') %>
+      </div>
+      <div class="form-group">
+        <%= f.label :item_category, t('common.category') %>
+        <%= f.select :item_category,
+            options_for_select([
+              [t('categories.documents'), 'documents'],
+              [t('categories.electronics'), 'electronics'],
+              [t('categories.clothing'), 'clothing'],
+              [t('categories.food'), 'food'],
+              [t('categories.medicine'), 'medicine'],
+              [t('categories.other'), 'other']
+            ], @shipping_request.item_category),
+            { include_blank: t('common.select') }, class: "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header"><%= t('shipping_requests.form.route') %></div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <%= f.label :departure_city, t('common.departure_city') %>
+          <%= f.text_field :departure_city, class: "form-control", required: true %>
+        </div>
+        <div class="form-group col-md-6">
+          <%= f.label :departure_country, t('common.departure_country') %>
+          <%= f.text_field :departure_country, class: "form-control", required: true %>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <%= f.label :arrival_city, t('common.arrival_city') %>
+          <%= f.text_field :arrival_city, class: "form-control", required: true %>
+        </div>
+        <div class="form-group col-md-6">
+          <%= f.label :arrival_country, t('common.arrival_country') %>
+          <%= f.text_field :arrival_country, class: "form-control", required: true %>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <%= f.label :desired_date, t('common.desired_date') %>
+          <%= f.date_field :desired_date, class: "form-control", required: true %>
+        </div>
+        <div class="form-group col-md-6">
+          <%= f.label :deadline_date, t('common.deadline') %>
+          <%= f.date_field :deadline_date, class: "form-control" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header"><%= t('shipping_requests.form.package') %></div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <%= f.label :weight_kg, t('common.weight_kg') %>
+          <%= f.number_field :weight_kg, class: "form-control", min: 0.1, step: 0.1, required: true %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= f.label :max_budget_cents, t('common.max_budget') %> (cents)
+          <%= f.number_field :max_budget_cents, class: "form-control", min: 0 %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= f.label :currency, t('common.currency') %>
+          <%= f.select :currency,
+              options_for_select(%w[EUR USD GBP XOF XAF], @shipping_request.currency || "EUR"),
+              {}, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <%= f.label :length_cm, t('common.length_cm') %>
+          <%= f.number_field :length_cm, class: "form-control", min: 0, step: 0.1 %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= f.label :width_cm, t('common.width_cm') %>
+          <%= f.number_field :width_cm, class: "form-control", min: 0, step: 0.1 %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= f.label :height_cm, t('common.height_cm') %>
+          <%= f.number_field :height_cm, class: "form-control", min: 0, step: 0.1 %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :special_instructions, t('common.special_instructions') %>
+        <%= f.text_area :special_instructions, class: "form-control", rows: 2 %>
+      </div>
+    </div>
+  </div>
+
+  <%= f.submit class: "btn btn-primary btn-lg btn-block" %>
+<% end %>

@@ -1,0 +1,19 @@
+<div class="container mt-4">
+  <h1><%= t('kilo_offers.my_offers.title') %></h1>
+  <%= link_to t('kilo_offers.new_offer'), new_kilo_offer_path, class: "btn btn-success mb-3" %>
+
+  <% @kilo_offers.each do |offer| %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>
+          <%= offer.departure_city %> &rarr; <%= offer.arrival_city %>
+          <span class="badge badge-<%= offer.status == 'active' ? 'success' : 'secondary' %>"><%= t("statuses.#{offer.status}") %></span>
+        </h5>
+        <p><%= offer.available_kg %> kg &bull; <%= number_to_currency(offer.price_per_kg, unit: "€") %>/kg &bull; <%= l(offer.travel_date, format: :short) %></p>
+        <%= link_to t('common.edit'), edit_kilo_offer_path(offer), class: "btn btn-sm btn-warning" %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= will_paginate @kilo_offers, renderer: BootstrapPagination::Rails %>
+</div>

@@ -1,0 +1,37 @@
+<div class="container mt-4">
+  <h1><i class="fa fa-envelope"></i> <%= t('conversations.title') %></h1>
+
+  <% if @conversations.empty? %>
+    <div class="alert alert-info"><%= t('conversations.no_conversations') %></div>
+  <% else %>
+    <div class="list-group">
+      <% @conversations.each do |conversation| %>
+        <% other = conversation.other_participant(current_user) %>
+        <% unread = conversation.unread_count(current_user) %>
+        <%= link_to conversation_path(conversation),
+            class: "list-group-item list-group-item-action #{'list-group-item-light font-weight-bold' if unread > 0}" do %>
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="mb-1"><%= other.name %>
+                <% if other.verified? %>
+                  <span class="badge badge-primary"><i class="fa fa-check"></i></span>
+                <% end %>
+              </h5>
+              <% if conversation.last_message %>
+                <p class="mb-1 text-muted"><%= truncate(conversation.last_message.body, length: 80) %></p>
+              <% end %>
+            </div>
+            <div class="text-right">
+              <% if unread > 0 %>
+                <span class="badge badge-danger badge-pill"><%= unread %></span>
+              <% end %>
+              <small class="text-muted"><%= time_ago_in_words(conversation.updated_at) %></small>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= will_paginate @conversations, renderer: BootstrapPagination::Rails %>
+</div>

@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <h1><%= t('bids.my_bids.title') %></h1>
+
+  <% @bids.each do |bid| %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>
+          <%= link_to bid.shipping_request.title, shipping_request_path(bid.shipping_request) %>
+          <span class="badge badge-<%= bid.status == 'accepted' ? 'success' : bid.status == 'rejected' ? 'danger' : 'secondary' %>">
+            <%= t("statuses.#{bid.status}") %>
+          </span>
+        </h5>
+        <p>
+          <%= number_to_currency(bid.price_per_kg / 100.0, unit: "€") %>/kg
+          &bull; <%= bid.available_kg %> kg
+          &bull; <%= l(bid.travel_date, format: :short) %>
+        </p>
+        <% if bid.status == "pending" %>
+          <%= link_to t('bids.withdraw'), withdraw_shipping_request_bid_path(bid.shipping_request, bid),
+              method: :patch, class: "btn btn-sm btn-outline-danger" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= will_paginate @bids, renderer: BootstrapPagination::Rails %>
+</div>

@@ -1,0 +1,23 @@
+<div class="container mt-4">
+  <h1><%= t('shipping_requests.my_requests.title') %></h1>
+  <%= link_to t('shipping_requests.new_request'), new_shipping_request_path, class: "btn btn-success mb-3" %>
+
+  <% @shipping_requests.each do |request| %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>
+          <%= link_to request.title, shipping_request_path(request) %>
+          <span class="badge badge-<%= request.status == 'open' ? 'success' : 'info' %>"><%= t("statuses.#{request.status}") %></span>
+        </h5>
+        <p>
+          <%= request.departure_city %> &rarr; <%= request.arrival_city %>
+          &bull; <%= request.weight_kg %> kg
+          &bull; <%= l(request.desired_date, format: :short) %>
+          &bull; <%= request.bids.count %> <%= t('common.offers') %>
+        </p>
+      </div>
+    </div>
+  <% end %>
+
+  <%= will_paginate @shipping_requests, renderer: BootstrapPagination::Rails %>
+</div>

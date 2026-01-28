@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <h1><i class="fa fa-truck"></i> <%= t('tracking.title') %></h1>
+  <p class="lead">
+    <%= link_to @tracking.shipping_request.title, shipping_request_path(@tracking.shipping_request) %>
+  </p>
+
+  <!-- Status Timeline -->
+  <div class="card mb-4">
+    <div class="card-header"><%= t('tracking.status_timeline') %></div>
+    <div class="card-body">
+      <div class="d-flex justify-content-between">
+        <% @timeline.each do |step| %>
+          <div class="text-center" style="flex: 1;">
+            <div class="rounded-circle d-inline-block <%= step[:reached] ? 'bg-success' : 'bg-secondary' %> text-white"
+                 style="width: 40px; height: 40px; line-height: 40px;">
+              <% if step[:reached] %>
+                <i class="fa fa-check"></i>
+              <% end %>
+            </div>
+            <br>
+            <small class="<%= step[:reached] ? 'font-weight-bold' : 'text-muted' %>">
+              <%= t("tracking.statuses.#{step[:status]}") %>
+            </small>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="card">
+    <div class="card-header"><%= t('common.actions') %></div>
+    <div class="card-body">
+      <% if @tracking.status == "created" || @tracking.status == "paid" %>
+        <h5><%= t('tracking.handover_code') %>: <code><%= @tracking.handover_code %></code></h5>
+        <p class="text-muted"><%= t('tracking.handover_instructions') %></p>
+        <%= form_tag hand_over_shipment_tracking_path(@tracking), method: :post, class: "form-inline" do %>
+          <%= text_field_tag :code, nil, class: "form-control mr-2", placeholder: t('tracking.enter_code') %>
+          <%= submit_tag t('tracking.confirm_handover'), class: "btn btn-primary" %>
+        <% end %>
+
+      <% elsif @tracking.status == "handed_over" %>
+        <%= link_to t('tracking.mark_in_transit_btn'), mark_in_transit_shipment_tracking_path(@tracking),
+            method: :post, class: "btn btn-info" %>
+
+      <% elsif @tracking.status == "in_transit" %>
+        <h5><%= t('tracking.delivery_code') %>: <code><%= @tracking.delivery_code %></code></h5>
+        <p class="text-muted"><%= t('tracking.delivery_instructions') %></p>
+        <%= form_tag deliver_shipment_tracking_path(@tracking), method: :post, class: "form-inline" do %>
+          <%= text_field_tag :code, nil, class: "form-control mr-2", placeholder: t('tracking.enter_code') %>
+          <%= submit_tag t('tracking.confirm_delivery'), class: "btn btn-success" %>
+        <% end %>
+
+      <% elsif @tracking.status == "delivered" %>
+        <% if current_user.id == @tracking.shipping_request.sender_id %>
+          <%= link_to t('tracking.confirm_receipt'), confirm_shipment_tracking_path(@tracking),
+              method: :post, class: "btn btn-success btn-lg",
+              data: { confirm: t('tracking.confirm_receipt_warning') } %>
+        <% else %>
+          <div class="alert alert-info"><%= t('tracking.waiting_confirmation') %></div>
+        <% end %>
+
+      <% elsif @tracking.status == "confirmed" %>
+        <div class="alert alert-success">
+          <i class="fa fa-check-circle"></i> <%= t('tracking.completed') %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
