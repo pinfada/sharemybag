@@ -1,4 +1,4 @@
-class CreateBookings < ActiveRecord::Migration
+class CreateBookings < ActiveRecord::Migration[5.0]
   def change
     create_table :bookings do |t|
       t.string :ref_number
