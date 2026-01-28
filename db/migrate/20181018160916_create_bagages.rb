@@ -1,4 +1,4 @@
-class CreateBagages < ActiveRecord::Migration
+class CreateBagages < ActiveRecord::Migration[5.0]
   def change
     create_table :bagages do |t|
       t.integer :poids

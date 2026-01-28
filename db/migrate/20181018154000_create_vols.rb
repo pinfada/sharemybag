@@ -1,4 +1,4 @@
-class CreateVols < ActiveRecord::Migration
+class CreateVols < ActiveRecord::Migration[5.0]
   def change
     create_table :vols do |t|
       t.string :num_vol
