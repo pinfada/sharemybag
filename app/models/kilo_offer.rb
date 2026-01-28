@@ -12,7 +12,7 @@ class KiloOffer < ActiveRecord::Base
 
   validate :travel_date_in_future, on: :create
 
-  scope :active, -> { where(status: "active") }
+  scope :active, -> { where(status: "active").where("travel_date >= ?", Date.today) }
   scope :by_route, ->(from, to) { where(departure_city: from, arrival_city: to) }
   scope :by_date, ->(date) { where("travel_date >= ?", date) }
   scope :by_min_weight, ->(weight) { where("available_kg >= ?", weight) }

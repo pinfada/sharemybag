@@ -10,16 +10,32 @@ class ConversationsController < ApplicationController
 
   def show
     @conversation = Conversation.find(params[:id])
-    redirect_to root_url unless participant?(@conversation)
+    unless participant?(@conversation)
+      flash[:error] = I18n.t('common.unauthorized', default: "Unauthorized")
+      redirect_to root_url and return
+    end
     @messages = @conversation.messages.chronological
     @messages.where.not(sender_id: current_user.id).unread.update_all(read: true)
     @message = Message.new
   end
 
   def create
-    recipient = User.find(params[:recipient_id])
-    @conversation = Conversation.find_by(sender_id: [current_user.id, recipient.id],
-                                         recipient_id: [current_user.id, recipient.id])
+    recipient = User.find_by(id: params[:recipient_id])
+    unless recipient
+      flash[:error] = I18n.t('common.user_not_found', default: "User not found")
+      redirect_to root_url and return
+    end
+
+    if recipient.id == current_user.id
+      flash[:error] = I18n.t('conversations.cannot_message_self', default: "Cannot message yourself")
+      redirect_to root_url and return
+    end
+
+    @conversation = Conversation.where(
+      "(sender_id = :me AND recipient_id = :them) OR (sender_id = :them AND recipient_id = :me)",
+      me: current_user.id, them: recipient.id
+    ).first
+
     unless @conversation
       @conversation = Conversation.create!(
         sender: current_user,

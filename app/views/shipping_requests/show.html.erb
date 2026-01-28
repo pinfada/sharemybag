@@ -131,7 +131,7 @@
                 <%= f.label :message, t('common.message') %>
                 <%= f.text_area :message, class: "form-control", rows: 3 %>
               </div>
-              <%= f.hidden_field :currency, value: "EUR" %>
+              <%= f.hidden_field :currency, value: @shipping_request.currency %>
               <%= f.submit t('bids.submit_bid'), class: "btn btn-primary" %>
             <% end %>
           </div>

@@ -23,7 +23,10 @@ class Review < ActiveRecord::Base
   end
 
   def transaction_must_be_completed
-    unless shipping_request&.status == "completed"
+    tracking = shipping_request&.shipment_tracking
+    is_completed = shipping_request&.status == "completed" ||
+                   tracking&.status == "confirmed"
+    unless is_completed
       errors.add(:base, "Can only review completed transactions")
     end
   end

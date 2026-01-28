@@ -1,97 +1,60 @@
-<% content_for(:after_js) do %>  
+<% content_for(:after_js) do %>
   <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV['GGL_MAP_JS_BROWSER_API_KEY']}" %>
-  <%= javascript_include_tag 'https://cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/markerclusterer/src/markerclusterer_compiled.js' %>
-  <%= javascript_include_tag 'https://cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/infobox/src/infobox_packed.js' %>
 <% end %>
 
-<div id="map-container">
-  <div id="map-canvas"></div>
-</div>
-<h1>Liste des vols en cours</h1>
-<br>
-<%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>Nom</th>
-      <th>N°reservation</th>
-      <th>N°vol</th>
-      <th>Départ</th>
-      <th>Arrivee</th>
-      <th>Nb de bagages</th>
-      <th>Poids</th>
-      <th>Volume</th>
-      <th>Prix</th>
-      <th colspan="1"></th>
-    </tr>
-  </thead>
+<div class="container mt-4">
+  <div id="map-container">
+    <div id="map-canvas" style="height: 300px;"></div>
+  </div>
 
-  <% @coordonnees.each do |coordonnee| %>
-    <% @airport = Airport.find_by(id: coordonnee.airport_id) %>
-    <% @vol_arrivee = @airport.arriving_flights %>
-    <% @vol_depart  = @airport.departing_flights %>
+  <h1 class="mt-4"><%= t('search.title', default: 'Available flights') %></h1>
 
-    <% if @vol_arrivee != nil %>
-      <% @vol_arrivee.each do |vol| %>
-        <% @reservation = vol.bookings %>
-        <% @reservation.each do |resa| %>
-            <% if resa.user_id != nil && resa.vol_id != nil%>
-              <tbody>
-                <tr>
-                  <% @utilisateur = User.find_by(id: resa.user_id) %>
-                  <% @ville_depart = Airport.find_by(id: vol.provenance_id) %>
-                  <% @ville_arrivee = Airport.find_by(id: vol.destination_id) %>
-                  <% @bagages = @utilisateur.bagages %>
-                  <% @bagage = @bagages.where(booking_id: resa.id, user_id: resa.user_id) %>
-                  <% nb_bagage = @bagage.count %>
-                  <% if nb_bagage > 0 %>
-                    <% volume = 0 %>
-                    <% poids = 0 %>
-                    <% prix = 0 %>
-                    <% @bagage.each do |bag| %>
-                      <% calcul_volume = bag.longueur * bag.largeur * bag.hauteur %>
-                      <% volume += calcul_volume %>
-                      <% poids += bag.poids %>
-                      <% prix += bag.prix %>
-                    <% end %>
-                    <td>
-                      <%= link_to booking_path(resa) do %>
-                        <%= @utilisateur.name  %>
-                      <% end %>
-                    </td>
-                    <td><%= resa.ref_number %></td>
-                    <td><%= vol.num_vol %></td>
-                    <td><%= @ville_depart.location %></td>
-                    <td><%= @ville_arrivee.location %></td>
-                    <td><%= nb_bagage %></td>
-                    <td><%= poids %></td>
-                    <td><%= volume %></td>
-                    <td><%= prix %></td>
-                    <td></td>
-                  <% end %>
-                </tr>
-              </tbody>
-            <% end %>
-        <% end %>
+  <%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th><%= t('search.name', default: 'Name') %></th>
+        <th><%= t('search.ref', default: 'Ref #') %></th>
+        <th><%= t('search.flight_number', default: 'Flight #') %></th>
+        <th><%= t('search.departure', default: 'Departure') %></th>
+        <th><%= t('search.arrival', default: 'Arrival') %></th>
+        <th><%= t('search.nb_bagages', default: 'Bags') %></th>
+        <th><%= t('search.weight', default: 'Weight') %></th>
+        <th><%= t('search.volume', default: 'Volume') %></th>
+        <th><%= t('search.price', default: 'Price') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @flights_data.each do |data| %>
+        <tr>
+          <td><%= link_to data[:user].name, booking_path(data[:booking]) %></td>
+          <td><%= data[:booking].ref_number %></td>
+          <td><%= data[:vol].num_vol %></td>
+          <td><%= data[:departure]&.location %></td>
+          <td><%= data[:arrival]&.location %></td>
+          <td><%= data[:nb_bagages] %></td>
+          <td><%= data[:poids] %> kg</td>
+          <td><%= data[:volume] %> cm&sup3;</td>
+          <td><%= number_to_currency(data[:prix], unit: "\u20AC") %></td>
+        </tr>
       <% end %>
-    <% end %>
-  <% end %>
-</table>
-<%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
+    </tbody>
+  </table>
 
+  <%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
+</div>
 
 <script>
-    var handler = Gmaps.build('Google');
-    handler.buildMap({ provider: {}, internal: {id: 'map-canvas'}}, function(){
-      markers = handler.addMarkers(<%= json_escape(@markers.to_json).html_safe %>);
-      handler.bounds.extendWith(markers);
-      handler.fitMapToBounds();
-      if (markers.length == 0) {
-        handler.getMap().setZoom(2);
-      } else if (markers.length == 1) {
-        handler.getMap().setZoom(14);
-      }
-    });
+  var handler = Gmaps.build('Google');
+  handler.buildMap({ provider: {}, internal: {id: 'map-canvas'}}, function(){
+    markers = handler.addMarkers(<%= json_escape(@markers.to_json).html_safe %>);
+    handler.bounds.extendWith(markers);
+    handler.fitMapToBounds();
+    if (markers.length == 0) {
+      handler.getMap().setZoom(2);
+    } else if (markers.length == 1) {
+      handler.getMap().setZoom(14);
+    }
+  });
 </script>
-
-<hr>

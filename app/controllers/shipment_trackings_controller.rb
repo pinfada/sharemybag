@@ -1,6 +1,9 @@
 class ShipmentTrackingsController < ApplicationController
   before_action :signed_in_user
   before_action :set_tracking
+  before_action :authorize_participant
+  before_action :authorize_traveler, only: [:hand_over, :mark_in_transit, :deliver]
+  before_action :authorize_sender, only: [:confirm]
 
   def show
     @timeline = @tracking.status_timeline
@@ -55,5 +58,28 @@ class ShipmentTrackingsController < ApplicationController
 
   def set_tracking
     @tracking = ShipmentTracking.find(params[:id])
+  end
+
+  def authorize_participant
+    sender_id = @tracking.shipping_request.sender_id
+    traveler_id = @tracking.traveler_id
+    unless current_user.id == sender_id || current_user.id == traveler_id
+      flash[:error] = I18n.t('common.unauthorized', default: "Unauthorized")
+      redirect_to root_url
+    end
+  end
+
+  def authorize_traveler
+    unless current_user.id == @tracking.traveler_id
+      flash[:error] = I18n.t('common.unauthorized', default: "Unauthorized")
+      redirect_to root_url
+    end
+  end
+
+  def authorize_sender
+    unless current_user.id == @tracking.shipping_request.sender_id
+      flash[:error] = I18n.t('common.unauthorized', default: "Unauthorized")
+      redirect_to root_url
+    end
   end
 end

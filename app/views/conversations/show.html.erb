@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <%= form_for Message.new, url: conversation_messages_path(@conversation) do |f| %>
+      <%= form_for @message, url: conversation_messages_path(@conversation) do |f| %>
         <div class="input-group">
           <%= f.text_area :body, class: "form-control", rows: 2,
               placeholder: t('conversations.type_message'), required: true %>

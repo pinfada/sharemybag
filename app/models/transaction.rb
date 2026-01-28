@@ -11,14 +11,19 @@ class Transaction < ActiveRecord::Base
   validates :traveler_payout_cents, presence: true, numericality: { greater_than: 0 }
   validates :currency, presence: true
   validates :status, presence: true, inclusion: { in: %w[pending paid escrow released refunded disputed] }
+  validates :shipping_request_id, uniqueness: { message: "already has a transaction" }
+  validates :bid_id, uniqueness: { message: "already used for a transaction" }
 
   scope :pending, -> { where(status: "pending") }
   scope :in_escrow, -> { where(status: "escrow") }
   scope :completed, -> { where(status: "released") }
 
   def self.create_from_bid(bid)
+    return nil unless bid.status == "accepted"
+    return nil if exists?(shipping_request_id: bid.shipping_request_id)
+
     amount = bid.total_price_cents
-    fee = (amount * PLATFORM_FEE_RATE).to_i
+    fee = (amount * PLATFORM_FEE_RATE).round
     payout = amount - fee
 
     create!(

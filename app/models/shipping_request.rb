@@ -16,7 +16,7 @@ class ShippingRequest < ActiveRecord::Base
   validate :desired_date_in_future, on: :create
 
   scope :open, -> { where(status: "open") }
-  scope :active, -> { where(status: %w[open bidding]) }
+  scope :active, -> { where(status: %w[open bidding]).where("desired_date >= ?", Date.today) }
   scope :by_route, ->(from, to) { where(departure_city: from, arrival_city: to) }
   scope :by_date, ->(date) { where("desired_date >= ?", date) }
   scope :by_max_weight, ->(weight) { where("weight_kg <= ?", weight) }
