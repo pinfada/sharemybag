@@ -1,0 +1,84 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to "My Offers", my_offers_kilo_offers_path %></li>
+          <li class="breadcrumb-item"><%= link_to @verification.kilo_offer.departure_city + " → " + @verification.kilo_offer.arrival_city, kilo_offer_path(@verification.kilo_offer) %></li>
+          <li class="breadcrumb-item active">Flight Verification</li>
+        </ol>
+      </nav>
+
+      <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0"><i class="fas fa-plane me-2"></i>Flight Verification</h4>
+          <% case @verification.status %>
+          <% when 'verified' %>
+            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Verified</span>
+          <% when 'rejected' %>
+            <span class="badge bg-danger"><i class="fas fa-times-circle me-1"></i>Rejected</span>
+          <% when 'pending' %>
+            <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Pending</span>
+          <% when 'manual_review' %>
+            <span class="badge bg-info"><i class="fas fa-search me-1"></i>Under Review</span>
+          <% when 'expired' %>
+            <span class="badge bg-secondary"><i class="fas fa-calendar-times me-1"></i>Expired</span>
+          <% end %>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Flight Number:</strong>
+              <span class="ms-2"><%= @verification.flight_number %></span>
+            </div>
+            <div class="col-md-6">
+              <strong>Airline:</strong>
+              <span class="ms-2"><%= @verification.airline_code || 'N/A' %></span>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Departure:</strong>
+              <span class="ms-2"><%= @verification.departure_airport %></span>
+            </div>
+            <div class="col-md-6">
+              <strong>Arrival:</strong>
+              <span class="ms-2"><%= @verification.arrival_airport %></span>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Date:</strong>
+              <span class="ms-2"><%= @verification.departure_date&.strftime("%d/%m/%Y") %></span>
+            </div>
+            <div class="col-md-6">
+              <strong>Source:</strong>
+              <span class="ms-2"><%= @verification.verification_source&.capitalize || 'N/A' %></span>
+            </div>
+          </div>
+
+          <% if @verification.verified_at %>
+            <div class="alert alert-success">
+              <i class="fas fa-check-circle me-2"></i>
+              Verified on <%= @verification.verified_at.strftime("%d/%m/%Y at %H:%M") %>
+            </div>
+          <% end %>
+
+          <% if @verification.rejection_reason.present? %>
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              <strong>Rejection reason:</strong> <%= @verification.rejection_reason %>
+            </div>
+          <% end %>
+
+          <% if @verification.fraud_flags.present? && @verification.fraud_flags.any? %>
+            <div class="alert alert-warning">
+              <i class="fas fa-shield-alt me-2"></i>
+              <strong>Flags:</strong> <%= @verification.fraud_flags.join(', ') %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

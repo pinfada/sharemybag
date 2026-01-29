@@ -10,6 +10,8 @@ class ShipmentTracking < ActiveRecord::Base
 
   before_create :generate_codes
 
+  has_one :delivery_confirmation, dependent: :destroy
+
   scope :active, -> { where.not(status: %w[confirmed disputed]) }
 
   def hand_over!

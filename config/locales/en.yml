@@ -221,3 +221,65 @@ en:
     status_reviewing: "Under review"
     status_verified: "Identity verified"
     status_rejected: "Verification rejected"
+    already_verified: "Your identity is already verified."
+
+  # Payments (US001)
+  payments:
+    success: "Payment completed successfully! Funds are held in escrow."
+    cancelled: "Payment was cancelled."
+    error: "Payment error: %{message}"
+    traveler_account_not_ready: "The traveler's payment account is not yet ready. Please try again later."
+    kyc_required: "Identity verification required for this transaction amount. Please verify your identity first."
+    checkout_title: "Secure Payment"
+    commission_info: "A 15%% platform fee is included."
+    escrow_info: "Funds are held securely until delivery is confirmed."
+
+  # Stripe Accounts (US001)
+  stripe_accounts:
+    onboarding_complete: "Your payment account is set up and ready to receive payments!"
+    onboarding_incomplete: "Your account setup is not yet complete. Please finish the onboarding process."
+    onboarding_error: "Account setup error: %{message}"
+    no_account: "You don't have a payment account yet."
+
+  # Flight Verifications (US002)
+  flight_verifications:
+    verified: "Flight verified successfully!"
+    rejected: "Flight verification rejected: %{reason}"
+    manual_review: "Your flight is under manual review. We'll notify you once verified."
+    missing_info: "Please provide a flight number or upload your ticket."
+
+  # Delivery Confirmations (US003)
+  delivery_confirmations:
+    otp_sent: "Confirmation code sent via %{channel}."
+    otp_resent: "A new confirmation code has been sent."
+    confirmed: "Delivery confirmed successfully! Funds will be released."
+    generate_title: "Generate OTP Code"
+    verify_title: "Verify Delivery Code"
+    enter_code: "Enter the 6-digit code"
+    code_placeholder: "000000"
+    remaining_attempts: "Remaining attempts"
+    code_expires: "Code expires at"
+
+  # Disputes (US005)
+  disputes:
+    opened: "Dispute opened successfully. The other party has been notified."
+    evidence_added: "Evidence submitted successfully."
+    message_sent: "Message sent."
+    escalated: "Dispute escalated to mediation team."
+    resolved: "Dispute resolved."
+    closed: "Dispute closed."
+    types:
+      non_delivered: "Package not delivered"
+      damaged: "Package damaged"
+      wrong_content: "Wrong or missing content"
+      excessive_delay: "Excessive delay"
+      other: "Other"
+
+  # Mailers
+  mailers:
+    otp:
+      subject: "ShareMyBag - Your delivery confirmation code"
+    dispute:
+      opened_subject: "Dispute #%{id} opened"
+      resolved_subject: "Dispute #%{id} resolved"
+      escalated_subject: "Dispute #%{id} escalated"

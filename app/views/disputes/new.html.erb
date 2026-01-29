@@ -1,0 +1,57 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to "Shipping Request", shipping_request_path(@shipping_request) %></li>
+          <li class="breadcrumb-item active">Open Dispute</li>
+        </ol>
+      </nav>
+
+      <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+          <h4 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Open a Dispute</h4>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Before opening a dispute:</strong> Please try to resolve the issue directly with the other party via messaging.
+            Disputes should be opened within 48 hours of delivery.
+          </div>
+
+          <%= form_tag(disputes_path, method: :post) do %>
+            <input type="hidden" name="shipping_request_id" value="<%= @shipping_request.id %>">
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Dispute Type <span class="text-danger">*</span></label>
+              <select name="dispute[dispute_type]" class="form-select" required>
+                <option value="">Select the type of issue...</option>
+                <option value="non_delivered">Package not delivered</option>
+                <option value="damaged">Package damaged</option>
+                <option value="wrong_content">Wrong or missing content</option>
+                <option value="excessive_delay">Excessive delay</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Title <span class="text-danger">*</span></label>
+              <input type="text" name="dispute[title]" class="form-control" placeholder="Brief summary of the issue" maxlength="200" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Description <span class="text-danger">*</span></label>
+              <textarea name="dispute[description]" class="form-control" rows="5" placeholder="Describe the issue in detail. Include dates, circumstances, and any relevant information..." maxlength="5000" required></textarea>
+              <div class="form-text">Be as detailed as possible. You can add evidence (photos, documents) after opening the dispute.</div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <%= link_to "Cancel", shipping_request_path(@shipping_request), class: "btn btn-outline-secondary" %>
+              <button type="submit" class="btn btn-danger"><i class="fas fa-gavel me-2"></i>Open Dispute</button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,6 +5,7 @@ class ShippingRequest < ActiveRecord::Base
   has_many :reviews, dependent: :destroy
   has_one :shipment_tracking, dependent: :destroy
   has_one :transaction, dependent: :destroy
+  has_many :disputes, dependent: :destroy
 
   validates :title, presence: true, length: { maximum: 100 }
   validates :weight_kg, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 50 }

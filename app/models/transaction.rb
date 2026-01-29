@@ -4,7 +4,10 @@ class Transaction < ActiveRecord::Base
   belongs_to :sender, class_name: "User"
   belongs_to :traveler, class_name: "User"
 
-  PLATFORM_FEE_RATE = 0.10
+  PLATFORM_FEE_RATE = 0.15
+
+  has_many :payment_audit_logs, dependent: :destroy
+  has_many :disputes, dependent: :destroy
 
   validates :amount_cents, presence: true, numericality: { greater_than: 0 }
   validates :platform_fee_cents, presence: true, numericality: { greater_than_or_equal_to: 0 }
