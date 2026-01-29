@@ -41,6 +41,13 @@ Rails.application.routes.draw do
       end
     end
     resources :reviews, only: [:create]
+
+    # === Security & Compliance ===
+    resource :customs_declaration, only: [:new, :create, :show]
+    resource :compliance, only: [], controller: 'compliance' do
+      get :checklist
+      post :submit_checklist
+    end
   end
 
   # === MARKETPLACE: Kilo Offers ===
@@ -80,10 +87,67 @@ Rails.application.routes.draw do
       post :deliver
       post :confirm
     end
+    # === OTP Delivery Confirmation (US003) ===
+    resource :delivery_confirmation, only: [] do
+      post :generate
+      post :verify
+      post :resend
+    end
+
+    # === Chain of Custody (Security) ===
+    resources :handling_events, only: [:index, :create]
   end
 
-  # === Identity Verification ===
+  # === Identity Verification (US004 - KYC) ===
   resource :identity_verification, only: [:new, :create, :show]
+
+  # === Payments (US001 - Stripe Connect) ===
+  resources :payments, only: [] do
+    member do
+      post :checkout
+      get :success
+      get :cancel
+      get :status
+    end
+  end
+
+  # === Stripe Connect Account (US001) ===
+  resource :stripe_account, only: [] do
+    get :onboarding
+    get :return_from_onboarding, path: 'return'
+    get :refresh
+    get :dashboard
+    get :status
+  end
+
+  # === Stripe Webhooks ===
+  namespace :webhooks do
+    post 'stripe', to: 'stripe#create'
+  end
+
+  # === Flight Verification (US002) ===
+  resources :kilo_offers, only: [] do
+    resource :flight_verification, only: [:show, :create]
+  end
+
+  # === Disputes (US005) ===
+  resources :disputes do
+    member do
+      post :add_evidence
+      post :add_message
+      post :escalate
+      post :resolve
+      post :close
+    end
+  end
+
+  # Admin Disputes Dashboard
+  get 'admin/disputes', to: 'disputes#admin_index', as: :admin_disputes
+
+  # === Admin Compliance Review ===
+  get 'admin/compliance', to: 'compliance#admin_review', as: :admin_compliance_review
+  post 'admin/compliance/:id/approve', to: 'compliance#approve', as: :admin_compliance_approve
+  post 'admin/compliance/:id/reject', to: 'compliance#reject', as: :admin_compliance_reject
 
   # Existing resources
   resources :coordonnees, only: [:index, :new, :edit, :show]

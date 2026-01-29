@@ -63,6 +63,14 @@ class ShippingRequestsController < ApplicationController
 
   def accept_bid
     bid = @shipping_request.bids.find(params[:bid_id])
+
+    # KYC check for high-value transactions
+    kyc_service = KycVerificationService.new(current_user)
+    if kyc_service.kyc_required?(bid.total_price_cents)
+      flash[:error] = I18n.t('payments.kyc_required', default: "Identity verification required for this transaction amount. Please verify your identity first.")
+      redirect_to new_identity_verification_path and return
+    end
+
     @shipping_request.accept_bid!(bid)
 
     transaction = Transaction.create_from_bid(bid)
@@ -75,7 +83,13 @@ class ShippingRequestsController < ApplicationController
       I18n.t('notifications.bid_accepted', title: @shipping_request.title))
 
     flash[:success] = I18n.t('shipping_requests.bid_accepted')
-    redirect_to @shipping_request
+
+    # Redirect to payment if transaction was created
+    if transaction
+      redirect_to checkout_payment_path(transaction)
+    else
+      redirect_to @shipping_request
+    end
   end
 
   def my_requests

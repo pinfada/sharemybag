@@ -44,6 +44,19 @@ gem 'omniauth-github', '~> 2.0'
 # Security
 gem 'rack-attack'
 
+# Payment
+gem 'stripe', '~> 10.0'
+gem 'money-rails', '~> 1.15'
+
+# SMS (OTP delivery)
+gem 'twilio-ruby', '~> 6.0'
+
+# HTTP client (Amadeus API)
+gem 'faraday', '~> 2.0'
+
+# Background jobs
+gem 'sidekiq', '~> 7.0'
+
 # Database tools
 gem 'activerecord-reset-pk-sequence'
 

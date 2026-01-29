@@ -1,0 +1,233 @@
+<div class="container mt-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><%= link_to "Disputes", disputes_path %></li>
+      <li class="breadcrumb-item active">Dispute #<%= @dispute.id %></li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <!-- Main content -->
+    <div class="col-md-8">
+      <div class="card shadow mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0"><%= @dispute.title %></h4>
+          <% status_class = case @dispute.status
+             when 'opened' then 'warning'
+             when 'under_review', 'evidence_requested' then 'info'
+             when 'escalated', 'mediation' then 'danger'
+             when 'resolved', 'closed' then 'success'
+             when 'rejected' then 'dark'
+             else 'secondary'
+             end %>
+          <span class="badge bg-<%= status_class %> fs-6"><%= @dispute.status.humanize %></span>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-4"><strong>Type:</strong> <%= @dispute.dispute_type.humanize %></div>
+            <div class="col-md-4"><strong>Priority:</strong> <%= @dispute.priority.capitalize %></div>
+            <div class="col-md-4"><strong>Open since:</strong> <%= @dispute.days_open %> days</div>
+          </div>
+          <hr>
+          <h5>Description</h5>
+          <p><%= simple_format(@dispute.description) %></p>
+
+          <% if @dispute.resolution_type.present? %>
+            <div class="alert alert-info mt-3">
+              <h5><i class="fas fa-gavel me-2"></i>Resolution</h5>
+              <p><strong>Decision:</strong> <%= @dispute.resolution_display %></p>
+              <% if @dispute.resolution_notes.present? %>
+                <p><strong>Notes:</strong> <%= @dispute.resolution_notes %></p>
+              <% end %>
+              <p class="text-muted mb-0">Resolved on <%= @dispute.resolved_at&.strftime("%d/%m/%Y at %H:%M") %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Evidence -->
+      <div class="card shadow mb-4">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="fas fa-folder-open me-2"></i>Evidence (<%= @evidences.count %>)</h5>
+        </div>
+        <div class="card-body">
+          <% if @evidences.any? %>
+            <% @evidences.each do |evidence| %>
+              <div class="d-flex align-items-start mb-3 p-3 bg-light rounded">
+                <div class="me-3">
+                  <% icon = case evidence.evidence_type
+                     when 'photo' then 'fa-image'
+                     when 'video' then 'fa-video'
+                     when 'document' then 'fa-file-alt'
+                     when 'message' then 'fa-comment'
+                     else 'fa-paperclip'
+                     end %>
+                  <i class="fas <%= icon %> fa-2x text-muted"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <strong><%= evidence.submitted_by.name %></strong>
+                  <span class="text-muted ms-2"><%= evidence.created_at.strftime("%d/%m/%Y %H:%M") %></span>
+                  <span class="badge bg-secondary ms-2"><%= evidence.evidence_type.humanize %></span>
+                  <% if evidence.description.present? %>
+                    <p class="mb-1 mt-1"><%= evidence.description %></p>
+                  <% end %>
+                  <% if evidence.file_url.present? %>
+                    <%= link_to "View file", evidence.file_url, target: "_blank", class: "btn btn-sm btn-outline-primary" %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted">No evidence submitted yet.</p>
+          <% end %>
+
+          <% if @dispute.can_add_evidence? %>
+            <hr>
+            <h6>Add Evidence</h6>
+            <%= form_tag(add_evidence_dispute_path(@dispute), method: :post) do %>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <select name="evidence[evidence_type]" class="form-select" required>
+                    <option value="">Select type...</option>
+                    <option value="photo">Photo</option>
+                    <option value="video">Video</option>
+                    <option value="document">Document</option>
+                    <option value="message">Message/Screenshot</option>
+                  </select>
+                </div>
+                <div class="col-md-8">
+                  <input type="url" name="evidence[file_url]" class="form-control" placeholder="File URL" required>
+                </div>
+                <div class="col-12">
+                  <textarea name="evidence[description]" class="form-control" rows="2" placeholder="Description..."></textarea>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary"><i class="fas fa-upload me-2"></i>Submit Evidence</button>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="card shadow mb-4">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="fas fa-comments me-2"></i>Discussion</h5>
+        </div>
+        <div class="card-body">
+          <% @messages.each do |message| %>
+            <div class="d-flex mb-3 <%= message.is_internal? ? 'border-start border-warning border-3 ps-3' : '' %>">
+              <div class="flex-grow-1">
+                <strong><%= message.sender.name %></strong>
+                <% if message.is_internal? %>
+                  <span class="badge bg-warning text-dark ms-1">Internal</span>
+                <% end %>
+                <span class="text-muted ms-2"><%= message.created_at.strftime("%d/%m/%Y %H:%M") %></span>
+                <p class="mb-0 mt-1"><%= simple_format(message.body) %></p>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @dispute.active? %>
+            <hr>
+            <%= form_tag(add_message_dispute_path(@dispute), method: :post) do %>
+              <div class="mb-3">
+                <textarea name="body" class="form-control" rows="3" placeholder="Write a message..." required></textarea>
+              </div>
+              <% if current_user.admin? %>
+                <div class="form-check mb-3">
+                  <input type="checkbox" name="is_internal" value="true" class="form-check-input" id="internalNote">
+                  <label class="form-check-label" for="internalNote">Internal note (only visible to mediators)</label>
+                </div>
+              <% end %>
+              <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2"></i>Send</button>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-md-4">
+      <div class="card shadow mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Details</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Shipping Request:</strong><br>
+            <%= link_to @dispute.shipping_request.title, shipping_request_path(@dispute.shipping_request) %>
+          </p>
+          <p><strong>Amount:</strong><br>
+            <%= @dispute.transaction.amount %> <%= @dispute.transaction.currency %>
+          </p>
+          <p><strong>Opened by:</strong><br>
+            <%= @dispute.opened_by.name %>
+          </p>
+          <p><strong>Date opened:</strong><br>
+            <%= @dispute.created_at.strftime("%d/%m/%Y %H:%M") %>
+          </p>
+          <% if @dispute.assigned_to.present? %>
+            <p><strong>Assigned to:</strong><br>
+              <%= @dispute.assigned_to.name %>
+            </p>
+          <% end %>
+          <% if @dispute.auto_escalate_at.present? && @dispute.active? %>
+            <p><strong>Auto-escalation:</strong><br>
+              <%= @dispute.auto_escalate_at.strftime("%d/%m/%Y %H:%M") %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <% if current_user.admin? && @dispute.active? %>
+        <div class="card shadow mb-4">
+          <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Admin Actions</h5>
+          </div>
+          <div class="card-body">
+            <% unless @dispute.status == 'escalated' %>
+              <%= form_tag(escalate_dispute_path(@dispute), method: :post, class: "mb-3") do %>
+                <button type="submit" class="btn btn-warning w-100"><i class="fas fa-arrow-up me-2"></i>Escalate</button>
+              <% end %>
+            <% end %>
+
+            <hr>
+            <h6>Resolve Dispute</h6>
+            <%= form_tag(resolve_dispute_path(@dispute), method: :post) do %>
+              <div class="mb-2">
+                <select name="resolution_type" class="form-select" required>
+                  <option value="">Select resolution...</option>
+                  <option value="full_refund">Full Refund</option>
+                  <option value="partial_refund">Partial Refund</option>
+                  <option value="no_refund">No Refund (Traveler wins)</option>
+                  <option value="compensation">Compensation</option>
+                  <option value="rejected">Reject Dispute</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <input type="number" name="resolution_amount_cents" class="form-control" placeholder="Amount (cents)" min="0">
+              </div>
+              <div class="mb-2">
+                <textarea name="resolution_notes" class="form-control" rows="2" placeholder="Resolution notes..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-success w-100"><i class="fas fa-gavel me-2"></i>Resolve</button>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @dispute.active? && (current_user.id == @dispute.opened_by_id || current_user.admin?) %>
+        <div class="card shadow">
+          <div class="card-body">
+            <%= form_tag(close_dispute_path(@dispute), method: :post) do %>
+              <button type="submit" class="btn btn-outline-danger w-100" onclick="return confirm('Are you sure you want to close this dispute?')">
+                <i class="fas fa-times me-2"></i>Close Dispute
+              </button>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -2,6 +2,7 @@ class KiloOffer < ActiveRecord::Base
   belongs_to :traveler, class_name: "User"
   belongs_to :vol, optional: true
   has_many :bids, dependent: :nullify
+  has_one :flight_verification, dependent: :destroy
 
   validates :departure_city, :departure_country, :arrival_city, :arrival_country, presence: true
   validates :travel_date, presence: true

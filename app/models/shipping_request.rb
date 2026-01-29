@@ -5,6 +5,18 @@ class ShippingRequest < ActiveRecord::Base
   has_many :reviews, dependent: :destroy
   has_one :shipment_tracking, dependent: :destroy
   has_one :transaction, dependent: :destroy
+  has_many :disputes, dependent: :destroy
+  has_one :customs_declaration, dependent: :destroy
+  has_one :compliance_checklist, dependent: :destroy
+  has_many :security_screenings, dependent: :destroy
+
+  def contains_dangerous_goods?
+    contains_dangerous_goods == true
+  end
+
+  def compliance_cleared?
+    compliance_status == "cleared"
+  end
 
   validates :title, presence: true, length: { maximum: 100 }
   validates :weight_kg, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 50 }

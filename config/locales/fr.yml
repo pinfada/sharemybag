@@ -233,3 +233,88 @@ fr:
     status_reviewing: "En cours d'examen"
     status_verified: "Identité vérifiée"
     status_rejected: "Vérification refusée"
+    already_verified: "Votre identité est déjà vérifiée."
+
+  # Paiements (US001)
+  payments:
+    success: "Paiement effectué avec succès ! Les fonds sont en séquestre."
+    cancelled: "Le paiement a été annulé."
+    error: "Erreur de paiement : %{message}"
+    traveler_account_not_ready: "Le compte de paiement du voyageur n'est pas encore prêt. Veuillez réessayer plus tard."
+    kyc_required: "Vérification d'identité requise pour ce montant. Veuillez vérifier votre identité d'abord."
+    checkout_title: "Paiement sécurisé"
+    commission_info: "Une commission de 15%% est incluse."
+    escrow_info: "Les fonds sont conservés en séquestre jusqu'à confirmation de la livraison."
+
+  # Comptes Stripe (US001)
+  stripe_accounts:
+    onboarding_complete: "Votre compte de paiement est configuré et prêt à recevoir des paiements !"
+    onboarding_incomplete: "La configuration de votre compte n'est pas encore terminée. Veuillez finaliser le processus."
+    onboarding_error: "Erreur de configuration : %{message}"
+    no_account: "Vous n'avez pas encore de compte de paiement."
+
+  # Vérification de vol (US002)
+  flight_verifications:
+    verified: "Vol vérifié avec succès !"
+    rejected: "Vérification du vol refusée : %{reason}"
+    manual_review: "Votre vol est en cours de vérification manuelle. Nous vous notifierons une fois vérifié."
+    missing_info: "Veuillez fournir un numéro de vol ou télécharger votre billet."
+
+  # Confirmation de livraison (US003)
+  delivery_confirmations:
+    otp_sent: "Code de confirmation envoyé par %{channel}."
+    otp_resent: "Un nouveau code de confirmation a été envoyé."
+    confirmed: "Livraison confirmée avec succès ! Les fonds seront libérés."
+    generate_title: "Générer un code OTP"
+    verify_title: "Vérifier le code de livraison"
+    enter_code: "Entrez le code à 6 chiffres"
+    code_placeholder: "000000"
+    remaining_attempts: "Tentatives restantes"
+    code_expires: "Le code expire à"
+
+  # Litiges (US005)
+  disputes:
+    opened: "Litige ouvert avec succès. L'autre partie a été notifiée."
+    evidence_added: "Preuve soumise avec succès."
+    message_sent: "Message envoyé."
+    escalated: "Litige escaladé à l'équipe de médiation."
+    resolved: "Litige résolu."
+    closed: "Litige fermé."
+    types:
+      non_delivered: "Colis non livré"
+      damaged: "Colis endommagé"
+      wrong_content: "Contenu incorrect ou manquant"
+      excessive_delay: "Retard excessif"
+      other: "Autre"
+
+  # Sécurité & Conformité
+  customs:
+    title: "Déclaration douanière"
+    subtitle: "Obligatoire pour les envois internationaux. Veuillez déclarer tous les articles avec précision."
+    not_required: "La déclaration douanière n'est pas requise pour cet itinéraire."
+    submitted: "Déclaration douanière soumise et validée."
+    duty_warning: "La valeur dépasse le seuil de franchise douanière."
+
+  compliance:
+    title: "Sécurité & Conformité"
+    passed: "Tous les contrôles de conformité sont passés ! Votre envoi est autorisé."
+    failed: "Certains contrôles de conformité ont échoué. Veuillez examiner les problèmes ci-dessous."
+    run_checks: "Lancer tous les contrôles de conformité"
+
+  handling_events:
+    title: "Chaîne de traçabilité"
+    created: "Événement de manutention enregistré."
+
+  security:
+    prohibited_items: "Articles interdits"
+    iata_warning: "Les articles suivants sont strictement interdits dans le transport aérien conformément à la réglementation IATA DGR."
+    attestation_required: "Vous devez attester que votre envoi ne contient aucun article interdit."
+
+  # Mailers
+  mailers:
+    otp:
+      subject: "ShareMyBag - Votre code de confirmation de livraison"
+    dispute:
+      opened_subject: "Litige #%{id} ouvert"
+      resolved_subject: "Litige #%{id} résolu"
+      escalated_subject: "Litige #%{id} escaladé"

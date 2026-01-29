@@ -7,6 +7,8 @@ class ShipmentTrackingsController < ApplicationController
 
   def show
     @timeline = @tracking.status_timeline
+    @delivery_confirmation = @tracking.delivery_confirmation
+    @dispute = @tracking.shipping_request.disputes.active.first
   end
 
   def hand_over
@@ -30,6 +32,12 @@ class ShipmentTrackingsController < ApplicationController
   end
 
   def deliver
+    # Use OTP-based delivery confirmation if available
+    if @tracking.otp_required? && @tracking.delivery_confirmation.present?
+      flash[:notice] = I18n.t('tracking.use_otp', default: "Please use OTP code to confirm delivery.")
+      redirect_to shipment_tracking_path(@tracking) and return
+    end
+
     if params[:code] == @tracking.delivery_code
       @tracking.deliver!
       Notification.notify(@tracking.shipping_request.sender, @tracking, "delivered",
@@ -44,7 +52,18 @@ class ShipmentTrackingsController < ApplicationController
   def confirm
     @tracking.confirm!
     transaction = @tracking.shipping_request.transaction
-    transaction&.release!
+
+    # Release funds via Stripe if payment exists
+    if transaction && transaction.status == "escrow" && transaction.stripe_payment_intent_id.present?
+      begin
+        StripePaymentService.new(transaction).release_funds!
+      rescue StripePaymentService::PaymentError => e
+        Rails.logger.error("Fund release failed: #{e.message}")
+        transaction.release! # Still mark as released locally
+      end
+    elsif transaction
+      transaction.release!
+    end
 
     @tracking.shipping_request.update!(status: "completed")
 
