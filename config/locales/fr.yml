@@ -287,6 +287,29 @@ fr:
       excessive_delay: "Retard excessif"
       other: "Autre"
 
+  # Sécurité & Conformité
+  customs:
+    title: "Déclaration douanière"
+    subtitle: "Obligatoire pour les envois internationaux. Veuillez déclarer tous les articles avec précision."
+    not_required: "La déclaration douanière n'est pas requise pour cet itinéraire."
+    submitted: "Déclaration douanière soumise et validée."
+    duty_warning: "La valeur dépasse le seuil de franchise douanière."
+
+  compliance:
+    title: "Sécurité & Conformité"
+    passed: "Tous les contrôles de conformité sont passés ! Votre envoi est autorisé."
+    failed: "Certains contrôles de conformité ont échoué. Veuillez examiner les problèmes ci-dessous."
+    run_checks: "Lancer tous les contrôles de conformité"
+
+  handling_events:
+    title: "Chaîne de traçabilité"
+    created: "Événement de manutention enregistré."
+
+  security:
+    prohibited_items: "Articles interdits"
+    iata_warning: "Les articles suivants sont strictement interdits dans le transport aérien conformément à la réglementation IATA DGR."
+    attestation_required: "Vous devez attester que votre envoi ne contient aucun article interdit."
+
   # Mailers
   mailers:
     otp:

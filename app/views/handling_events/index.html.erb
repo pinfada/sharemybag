@@ -1,0 +1,111 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h2><i class="fa-solid fa-link"></i> <%= I18n.t('handling_events.title', default: "Chain of Custody") %></h2>
+
+      <div class="alert alert-<%= @chain_verification[:valid] ? 'success' : 'danger' %> mb-4">
+        <strong>Chain Integrity:</strong>
+        <% if @chain_verification[:valid] %>
+          <i class="fa-solid fa-shield-halved"></i> All <%= @chain_verification[:events] %> events verified — chain is intact.
+        <% else %>
+          <i class="fa-solid fa-triangle-exclamation"></i> Chain integrity compromised! <%= @chain_verification[:broken_links].size %> broken link(s) detected.
+        <% end %>
+      </div>
+
+      <div class="timeline">
+        <% @events.each_with_index do |event, index| %>
+          <div class="card mb-3 <%= event.anomaly_detected? ? 'border-danger' : '' %>">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <span class="badge bg-primary"><%= event.event_type.titleize %></span>
+                  <% if event.anomaly_detected? %>
+                    <span class="badge bg-danger">Anomaly</span>
+                  <% end %>
+                  <% if event.seal_number.present? %>
+                    <span class="badge bg-<%= event.seal_intact? ? 'success' : 'danger' %>">
+                      Seal #<%= event.seal_number %> <%= event.seal_intact? ? '✓' : '✗ BROKEN' %>
+                    </span>
+                  <% end %>
+                </div>
+                <small class="text-muted"><%= event.created_at.strftime("%d/%m/%Y %H:%M") %></small>
+              </div>
+
+              <% if event.location.present? %>
+                <p class="mt-2 mb-1"><i class="fa-solid fa-location-dot"></i> <%= event.location %></p>
+              <% end %>
+
+              <% if event.actor.present? %>
+                <p class="mb-1"><i class="fa-solid fa-user"></i> <%= event.actor.name %></p>
+              <% end %>
+
+              <% if event.notes.present? %>
+                <p class="mb-1"><%= event.notes %></p>
+              <% end %>
+
+              <% if event.photo_url.present? %>
+                <div class="mt-2">
+                  <img src="<%= event.photo_url %>" class="img-thumbnail" style="max-height: 150px" alt="Event photo">
+                </div>
+              <% end %>
+
+              <div class="mt-2">
+                <small class="text-muted font-monospace">Hash: <%= event.content_hash[0..15] %>...</small>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @events.empty? %>
+        <div class="text-center text-muted py-5">
+          <i class="fa-solid fa-inbox fa-3x mb-3"></i>
+          <p>No handling events recorded yet.</p>
+        </div>
+      <% end %>
+
+      <% if current_user.id == @tracking.traveler_id || current_user.admin? %>
+        <div class="card mt-4">
+          <div class="card-header"><h5 class="mb-0">Record New Event</h5></div>
+          <div class="card-body">
+            <%= form_with(model: HandlingEvent.new, url: shipment_tracking_handling_events_path(@tracking), method: :post) do |f| %>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <%= f.label :event_type, class: "form-label" %>
+                  <%= f.select :event_type,
+                      HandlingEvent::EVENT_TYPES.map { |t| [t.titleize, t] },
+                      { prompt: "-- Select event type --" }, class: "form-select" %>
+                </div>
+                <div class="col-md-6">
+                  <%= f.label :location, class: "form-label" %>
+                  <%= f.text_field :location, class: "form-control", placeholder: "e.g., CDG Airport Terminal 2E" %>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <%= f.label :seal_number, "Seal Number", class: "form-label" %>
+                  <%= f.text_field :seal_number, class: "form-control", placeholder: "Tamper-evident seal #" %>
+                </div>
+                <div class="col-md-6">
+                  <%= f.label :barcode_scanned, "Barcode", class: "form-label" %>
+                  <%= f.text_field :barcode_scanned, class: "form-control", placeholder: "Scan package barcode" %>
+                </div>
+              </div>
+              <div class="mb-3">
+                <%= f.label :notes, class: "form-label" %>
+                <%= f.text_area :notes, class: "form-control", rows: 2, placeholder: "Additional notes..." %>
+              </div>
+              <div class="mb-3">
+                <%= f.label :photo_url, "Photo URL", class: "form-label" %>
+                <%= f.text_field :photo_url, class: "form-control", placeholder: "URL of event photo" %>
+              </div>
+              <div class="d-grid">
+                <%= f.submit "Record Event", class: "btn btn-primary" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

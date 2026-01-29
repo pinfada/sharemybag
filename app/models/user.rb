@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
   has_one :identity_verification, dependent: :destroy
   has_many :flight_verifications, dependent: :destroy
   has_many :disputes_opened, class_name: "Dispute", foreign_key: "opened_by_id"
+  has_many :security_screenings, dependent: :destroy
   has_many :transactions_as_sender, class_name: "Transaction", foreign_key: "sender_id"
   has_many :transactions_as_traveler, class_name: "Transaction", foreign_key: "traveler_id"
 

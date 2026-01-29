@@ -1,0 +1,121 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h2><i class="fa-solid fa-shield-halved"></i> <%= I18n.t('compliance.title', default: "Security & Compliance Checklist") %></h2>
+      <p class="text-muted">All checks must pass before your shipment can proceed.</p>
+
+      <% if @errors.present? %>
+        <div class="alert alert-danger">
+          <h6><i class="fa-solid fa-circle-xmark"></i> Issues Found:</h6>
+          <ul class="mb-0">
+            <% @errors.each do |error| %>
+              <li><%= error %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <% if @warnings.present? %>
+        <div class="alert alert-warning">
+          <h6><i class="fa-solid fa-triangle-exclamation"></i> Warnings:</h6>
+          <ul class="mb-0">
+            <% @warnings.each do |warning| %>
+              <li><%= warning %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Compliance Progress: <%= @checklist&.compliance_percentage || 0 %>%</h5>
+        </div>
+        <div class="card-body">
+          <div class="progress mb-3" style="height: 25px">
+            <div class="progress-bar <%= (@checklist&.compliance_percentage || 0) == 100 ? 'bg-success' : 'bg-warning' %>"
+                 style="width: <%= @checklist&.compliance_percentage || 0 %>%">
+              <%= @checklist&.compliance_percentage || 0 %>%
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sender Attestations -->
+      <div class="card mb-3">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="fa-solid fa-user-check"></i> Sender Declarations</h5>
+        </div>
+        <div class="card-body">
+          <% ComplianceChecklist::SENDER_ATTESTATIONS.each do |attr| %>
+            <div class="d-flex align-items-center mb-2">
+              <% if @checklist&.send(attr) %>
+                <i class="fa-solid fa-circle-check text-success me-2"></i>
+              <% else %>
+                <i class="fa-regular fa-circle text-muted me-2"></i>
+              <% end %>
+              <span><%= attr.to_s.humanize %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Security Checks -->
+      <div class="card mb-3">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0"><i class="fa-solid fa-lock"></i> Security Checks</h5>
+        </div>
+        <div class="card-body">
+          <% ComplianceChecklist::SECURITY_CHECKS.each do |attr| %>
+            <div class="d-flex align-items-center mb-2">
+              <% if @checklist&.send(attr) %>
+                <i class="fa-solid fa-circle-check text-success me-2"></i>
+              <% else %>
+                <i class="fa-regular fa-circle text-muted me-2"></i>
+              <% end %>
+              <span><%= attr.to_s.humanize %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Airline Checks -->
+      <div class="card mb-3">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0"><i class="fa-solid fa-plane"></i> Airline Policy Compliance</h5>
+        </div>
+        <div class="card-body">
+          <% ComplianceChecklist::AIRLINE_CHECKS.each do |attr| %>
+            <div class="d-flex align-items-center mb-2">
+              <% if @checklist&.send(attr) %>
+                <i class="fa-solid fa-circle-check text-success me-2"></i>
+              <% else %>
+                <i class="fa-regular fa-circle text-muted me-2"></i>
+              <% end %>
+              <span><%= attr.to_s.humanize %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <% if @customs_required %>
+        <div class="alert alert-info">
+          <i class="fa-solid fa-passport"></i>
+          <strong>Customs declaration required.</strong>
+          <% if @shipping_request.customs_declaration %>
+            Status: <span class="badge bg-<%= @shipping_request.customs_declaration.status == 'validated' ? 'success' : 'warning' %>">
+              <%= @shipping_request.customs_declaration.status.titleize %>
+            </span>
+          <% else %>
+            <%= link_to "File customs declaration", new_shipping_request_customs_declaration_path(@shipping_request), class: "btn btn-sm btn-outline-primary" %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= form_with(url: submit_compliance_shipping_request_path(@shipping_request), method: :post) do %>
+        <div class="d-grid">
+          <%= submit_tag I18n.t('compliance.run_checks', default: "Run All Compliance Checks"), class: "btn btn-success btn-lg" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

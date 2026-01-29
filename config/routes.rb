@@ -41,6 +41,13 @@ Rails.application.routes.draw do
       end
     end
     resources :reviews, only: [:create]
+
+    # === Security & Compliance ===
+    resource :customs_declaration, only: [:new, :create, :show]
+    resource :compliance, only: [], controller: 'compliance' do
+      get :checklist
+      post :submit_checklist
+    end
   end
 
   # === MARKETPLACE: Kilo Offers ===
@@ -86,6 +93,9 @@ Rails.application.routes.draw do
       post :verify
       post :resend
     end
+
+    # === Chain of Custody (Security) ===
+    resources :handling_events, only: [:index, :create]
   end
 
   # === Identity Verification (US004 - KYC) ===
@@ -133,6 +143,11 @@ Rails.application.routes.draw do
 
   # Admin Disputes Dashboard
   get 'admin/disputes', to: 'disputes#admin_index', as: :admin_disputes
+
+  # === Admin Compliance Review ===
+  get 'admin/compliance', to: 'compliance#admin_review', as: :admin_compliance_review
+  post 'admin/compliance/:id/approve', to: 'compliance#approve', as: :admin_compliance_approve
+  post 'admin/compliance/:id/reject', to: 'compliance#reject', as: :admin_compliance_reject
 
   # Existing resources
   resources :coordonnees, only: [:index, :new, :edit, :show]

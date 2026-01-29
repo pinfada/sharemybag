@@ -1,0 +1,131 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h2><i class="fa-solid fa-passport"></i> <%= I18n.t('customs.title', default: "Customs Declaration") %></h2>
+      <p class="text-muted"><%= I18n.t('customs.subtitle', default: "Required for international shipments. Please declare all items accurately.") %></p>
+
+      <div class="alert alert-info">
+        <strong><i class="fa-solid fa-route"></i> Route:</strong>
+        <%= @shipping_request.departure_city %>, <%= @shipping_request.departure_country %> →
+        <%= @shipping_request.arrival_city %>, <%= @shipping_request.arrival_country %>
+      </div>
+
+      <%= form_with(model: @declaration, url: shipping_request_customs_declaration_path(@shipping_request), method: :post) do |f| %>
+        <% if @declaration.errors.any? %>
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              <% @declaration.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Item Descriptions</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <%= f.label :item_descriptions, "Describe all items in detail", class: "form-label" %>
+              <%= f.text_area :item_descriptions, class: "form-control", rows: 4,
+                  placeholder: "e.g., 2x cotton shirts, 1x laptop charger, 3x books..." %>
+              <div class="form-text">List each item with quantity and description. Be specific.</div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <%= f.label :total_declared_value_cents, "Total declared value (cents)", class: "form-label" %>
+                <%= f.number_field :total_declared_value_cents, class: "form-control", min: 0 %>
+              </div>
+              <div class="col-md-6 mb-3">
+                <%= f.label :currency, "Currency", class: "form-label" %>
+                <%= f.select :currency, %w[EUR USD GBP XOF XAF], {}, class: "form-select" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :purpose, "Purpose of shipment", class: "form-label" %>
+              <%= f.select :purpose,
+                  [["Personal use", "personal"], ["Commercial", "commercial"], ["Gift", "gift"],
+                   ["Sample", "sample"], ["Repair/Return", "repair"]],
+                  { prompt: "-- Select --" }, class: "form-select" %>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="fa-solid fa-triangle-exclamation"></i> Content Declaration</h5>
+          </div>
+          <div class="card-body">
+            <p class="text-muted">Check all that apply:</p>
+            <div class="row">
+              <% [
+                [:contains_food, "Food or perishable items", "fa-utensils"],
+                [:contains_plants, "Plants, seeds, or soil", "fa-seedling"],
+                [:contains_animal_products, "Animal products (leather, fur, ivory)", "fa-paw"],
+                [:contains_medicine, "Medicines or pharmaceuticals", "fa-pills"],
+                [:contains_electronics, "Electronics with batteries", "fa-microchip"],
+                [:contains_currency, "Cash or monetary instruments", "fa-money-bill"]
+              ].each do |field, label, icon| %>
+                <div class="col-md-6 mb-2">
+                  <div class="form-check">
+                    <%= f.check_box field, class: "form-check-input" %>
+                    <%= f.label field, class: "form-check-label" do %>
+                      <i class="fa-solid <%= icon %>"></i> <%= label %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <% if @prohibited_items.any? %>
+          <div class="card mb-4 border-danger">
+            <div class="card-header bg-danger text-white">
+              <h5 class="mb-0"><i class="fa-solid fa-ban"></i> Prohibited Items (IATA DGR)</h5>
+            </div>
+            <div class="card-body">
+              <p>The following items are <strong>strictly prohibited</strong> in air transport:</p>
+              <div class="row">
+                <% @prohibited_items.group_by(&:category).each do |category, items| %>
+                  <div class="col-md-6 mb-3">
+                    <strong><%= category.titleize %></strong>
+                    <ul class="mb-0">
+                      <% items.first(5).each do |item| %>
+                        <li class="text-danger"><%= item.name %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="card mb-4 border-dark">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0"><i class="fa-solid fa-file-signature"></i> Sender Attestation</h5>
+          </div>
+          <div class="card-body">
+            <div class="form-check mb-3">
+              <%= f.check_box :sender_attestation, class: "form-check-input" %>
+              <%= f.label :sender_attestation, class: "form-check-label" do %>
+                <strong>I hereby declare</strong> that the information provided is accurate and complete.
+                I confirm that this shipment does not contain any prohibited, restricted, or dangerous goods
+                as defined by IATA Dangerous Goods Regulations and applicable customs laws.
+                I accept full liability for any false declaration.
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-grid">
+          <%= f.submit "Submit Customs Declaration", class: "btn btn-primary btn-lg" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

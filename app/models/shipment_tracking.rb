@@ -11,6 +11,7 @@ class ShipmentTracking < ActiveRecord::Base
   before_create :generate_codes
 
   has_one :delivery_confirmation, dependent: :destroy
+  has_many :handling_events, dependent: :destroy
 
   scope :active, -> { where.not(status: %w[confirmed disputed]) }
 
