@@ -1,16 +1,5 @@
-/* mixins, variables, etc. */
-$gray-Dark: #333;
-$gray-Darker: #222;
-$gray: #555;
-$gray-Light: #777;
-$gray-Lighter: #eee;
-$gray-Medium-Light: #eaeaea;
-
-@mixin box_sizing {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
+// Import global variables
+@import "variables";
 
 /* universal */
 
@@ -56,7 +45,7 @@ h2 {
   margin-bottom: 30px;
   text-align: center;
   font-weight: normal;
-  color: $gray-Light;
+  color: $gray-light;
 }
 
 p {
@@ -117,7 +106,7 @@ footer {
 aside {
   section {
     padding: 10px 0;
-    border-top: 1px solid $gray-Lighter;
+    border-top: 1px solid $gray-lighter;
     &:first-child {
       border: 0;
       padding-top: 0;
@@ -147,7 +136,7 @@ aside {
   a {
     float: left;
     padding: 0 10px;
-    border-left: 1px solid $gray-Lighter;
+    border-left: 1px solid $gray-lighter;
     color: gray;
     &:first-child {
       padding-left: 0;
@@ -177,7 +166,7 @@ input, textarea, select, .uneditable-input {
   border: 1px solid #bbb;
   width: 100%;
   margin-bottom: 15px;
-  @include box_sizing;
+  @include box-sizing();
 }
 
 input {
@@ -204,9 +193,9 @@ input {
   li {
     overflow: auto;
     padding: 10px 0;
-    border-top: 1px solid $gray-Lighter;
+    border-top: 1px solid $gray-lighter;
     &:last-child {
-      border-bottom: 1px solid $gray-Lighter;
+      border-bottom: 1px solid $gray-lighter;
     }
   }
 }
@@ -218,7 +207,7 @@ input {
   float: left;
   width: 100%;
   margin-top: 45px;
-  @include box_sizing;
+  @include box-sizing();
 }
 
 /* microposts */
@@ -238,7 +227,7 @@ input {
   display: block;
 }
 .timestamp {
-  color: $gray-Light;
+  color: $gray-light;
 }
 .gravatar {
   float: left;

@@ -1,0 +1,109 @@
+// ========================================
+// ShareMyBag - Font Awesome Overrides
+// ========================================
+
+// Font Awesome sizing utilities
+.fa-xs {
+  font-size: 0.75em;
+}
+
+.fa-sm {
+  font-size: 0.875em;
+}
+
+.fa-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -.0667em;
+}
+
+.fa-xl {
+  font-size: 1.5em;
+}
+
+.fa-2x {
+  font-size: 2em;
+}
+
+.fa-3x {
+  font-size: 3em;
+}
+
+.fa-4x {
+  font-size: 4em;
+}
+
+.fa-5x {
+  font-size: 5em;
+}
+
+// Icon with text spacing
+.fa-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+// Icon colors
+.fa-primary {
+  color: $primary;
+}
+
+.fa-secondary {
+  color: $secondary;
+}
+
+.fa-success {
+  color: $success;
+}
+
+.fa-danger {
+  color: $danger;
+}
+
+.fa-warning {
+  color: $warning;
+}
+
+.fa-info {
+  color: $info;
+}
+
+.fa-muted {
+  color: $text-muted;
+}
+
+// Icon backgrounds
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $gray-100;
+  border-radius: $radius-full;
+
+  &.icon-primary {
+    background: $primary-50;
+    color: $primary;
+  }
+
+  &.icon-success {
+    background: rgba($success, 0.1);
+    color: $success;
+  }
+
+  &.icon-danger {
+    background: rgba($danger, 0.1);
+    color: $danger;
+  }
+
+  &.icon-warning {
+    background: rgba($warning, 0.1);
+    color: $warning;
+  }
+
+  &.icon-info {
+    background: rgba($info, 0.1);
+    color: $info;
+  }
+}

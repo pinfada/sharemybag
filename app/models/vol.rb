@@ -2,7 +2,7 @@ class Vol < ActiveRecord::Base
 	belongs_to :provenance,   class_name: "Airport"
 	belongs_to :destination,   class_name: "Airport"
 	has_many   :bookings,     dependent: :destroy
-	has_and_belongs_to_many   :users
+	has_many   :users  # Relation simple one-to-many au lieu de many-to-many
 
 	validates :num_vol, presence: true
 	validates :date_depart,    presence: true

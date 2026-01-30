@@ -1,0 +1,245 @@
+// =============================================
+// Global Variables and Mixins
+// =============================================
+
+// Brand Colors
+$primary-color: #1abc9c;
+$primary-dark: darken($primary-color, 10%);
+$primary-light: lighten($primary-color, 10%);
+
+$secondary-color: #f39c12;
+$secondary-dark: darken($secondary-color, 10%);
+$secondary-light: lighten($secondary-color, 10%);
+
+$success-color: #27ae60;
+$danger-color: #e74c3c;
+$warning-color: #f1c40f;
+$info-color: #3498db;
+
+// Neutral Colors
+$dark: #212529;
+$gray-darker: #222;
+$gray-dark: #333;
+$gray: #555;
+$gray-light: #777;
+$gray-lighter: #eee;
+$gray-medium-light: #eaeaea;
+
+$white: #ffffff;
+$black: #000000;
+$overlay-dark: #080d15;
+$text-light: #f5f5f5;
+
+// Typography
+$font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-size-base: 14px;
+$line-height-base: 1.5;
+
+// Spacing (using px for Bootstrap compatibility)
+$spacer: 16px;
+$spacer-xs: 4px;
+$spacer-sm: 8px;
+$spacer-md: 16px;
+$spacer-lg: 24px;
+$spacer-xl: 48px;
+
+// Breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+// Layout
+$header-height: 76px;
+$footer-min-height: 300px;
+$container-max-width: 1200px;
+
+// Borders
+$border-radius: 6px;
+$border-radius-lg: 8px;
+$border-radius-xl: 16px;
+$border-radius-pill: 500px;
+
+// Shadows
+$shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+$shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+$shadow-xl: 0 1.5rem 4rem rgba(0, 0, 0, 0.2);
+
+// Transitions
+$transition-base: all 0.3s ease-in-out;
+$transition-fast: all 0.15s ease-in-out;
+$transition-slow: all 0.5s ease-in-out;
+
+// Z-index
+$zindex-dropdown: 1000;
+$zindex-navbar: 1030;
+$zindex-modal-backdrop: 1040;
+$zindex-modal: 1050;
+$zindex-popover: 1060;
+$zindex-tooltip: 1070;
+
+// =============================================
+// Mixins
+// =============================================
+
+// Box Sizing
+@mixin box-sizing($type: border-box) {
+  -webkit-box-sizing: $type;
+  -moz-box-sizing: $type;
+  box-sizing: $type;
+}
+
+// Transition
+@mixin transition($properties...) {
+  -webkit-transition: $properties;
+  -moz-transition: $properties;
+  -ms-transition: $properties;
+  -o-transition: $properties;
+  transition: $properties;
+}
+
+// Transform
+@mixin transform($transforms...) {
+  -webkit-transform: $transforms;
+  -moz-transform: $transforms;
+  -ms-transform: $transforms;
+  -o-transform: $transforms;
+  transform: $transforms;
+}
+
+// Flexbox Center
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Absolute Center
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Truncate Text
+@mixin truncate($width: 100%) {
+  width: $width;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Gradient Background
+@mixin gradient-bg($start-color, $end-color, $angle: 135deg) {
+  background: linear-gradient($angle, $start-color 0%, $end-color 100%);
+}
+
+// Button Variant
+@mixin button-variant($bg-color, $text-color: $white) {
+  background-color: $bg-color;
+  border-color: $bg-color;
+  color: $text-color;
+
+  &:hover {
+    background-color: darken($bg-color, 10%);
+    border-color: darken($bg-color, 10%);
+    color: $text-color;
+  }
+
+  &:focus,
+  &:active {
+    background-color: darken($bg-color, 15%);
+    border-color: darken($bg-color, 15%);
+    color: $text-color;
+    box-shadow: 0 0 0 0.2rem rgba($bg-color, 0.5);
+  }
+
+  &:disabled {
+    background-color: lighten($bg-color, 20%);
+    border-color: lighten($bg-color, 20%);
+    opacity: 0.65;
+  }
+}
+
+// Media Query Mixins
+@mixin media-xs {
+  @media (max-width: #{$breakpoint-xs - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-sm {
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-md {
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-lg {
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-xl {
+  @media (max-width: #{$breakpoint-xl - 1px}) {
+    @content;
+  }
+}
+
+// Card Style
+@mixin card($padding: $spacer-lg) {
+  background: $white;
+  border-radius: $border-radius-lg;
+  padding: $padding;
+  box-shadow: $shadow;
+  @include transition($transition-base);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+// Glass Effect
+@mixin glass-effect($bg-opacity: 0.1, $blur: 10px) {
+  background-color: rgba(255, 255, 255, $bg-opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+// Text Shadow
+@mixin text-shadow($x: 2px, $y: 2px, $blur: 4px, $color: rgba(0, 0, 0, 0.5)) {
+  text-shadow: $x $y $blur $color;
+}
+
+// Overlay
+@mixin overlay($opacity: 0.5) {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, $opacity);
+    z-index: 1;
+  }
+
+  > * {
+    position: relative;
+    z-index: 2;
+  }
+}

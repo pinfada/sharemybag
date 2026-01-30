@@ -1,23 +1,144 @@
 /*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
- * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any styles
- * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
- * file per style scope.
- *
- *= require_self
- *= require jquery-ui
- *= require bootstrap-social
- *= require magnific-popup
- *= require font-awesome
- *= require_tree .
+ * ShareMyBag - Application Stylesheet
+ * This is a manifest file that'll be compiled into application.css
  */
+
+// ========================================
+// 1. Bootstrap Framework (OBLIGATOIRE)
+// ========================================
 @import "bootstrap";
-@import "glyphicons";
-/*@import "../../../vendor/assets/stylesheets/bootstrap/bootstrap.scss";*/
+@import "bootstrap/glyphicons";
+
+// ========================================
+// 2. Variables de Configuration
+// ========================================
+@import "config/colors";
+@import "config/typography";
+@import "config/spacing";
+@import "config/index";
+
+// ========================================
+// 3. Composants Custom
+// ========================================
+@import "components/buttons";
+@import "components/cards";
+@import "components/forms";
+@import "components/navbar";
+@import "components/hero";
+@import "components/alerts";
+@import "components/badges";
+@import "components/modals";
+@import "components/tables";
+@import "components/pagination";
+@import "components/index";
+
+// ========================================
+// 4. Pages Spécifiques
+// ========================================
+@import "pages/home";
+@import "pages/auth";
+@import "pages/profile";
+@import "pages/shipping";
+
+// ========================================
+// 5. Styles Legacy (existants)
+// ========================================
+@import "custom";
+@import "footer";
+@import "fancy";
+@import "hero_headers";
+@import "home_modern";
+
+// ========================================
+// 6. Vendor
+// ========================================
 @import "../../../vendor/assets/stylesheets/magnific-popup.scss";
+
+// ========================================
+// 7. Overrides et Corrections
+// ========================================
+
+// Corrections pour Bootstrap 3 avec nos variables
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+
+  &:hover {
+    background-color: $primary-dark;
+    border-color: $primary-dark;
+  }
+}
+
+.btn-success {
+  background-color: $success;
+  border-color: $success;
+}
+
+.btn-danger {
+  background-color: $danger;
+  border-color: $danger;
+}
+
+.btn-warning {
+  background-color: $warning;
+  border-color: $warning;
+}
+
+.btn-info {
+  background-color: $info;
+  border-color: $info;
+}
+
+// Classes utilitaires additionnelles
+.text-primary { color: $primary !important; }
+.text-success { color: $success !important; }
+.text-danger { color: $danger !important; }
+.text-warning { color: $warning !important; }
+.text-info { color: $info !important; }
+
+.bg-primary { background-color: $primary !important; }
+.bg-success { background-color: $success !important; }
+.bg-danger { background-color: $danger !important; }
+.bg-warning { background-color: $warning !important; }
+.bg-info { background-color: $info !important; }
+
+// Hover effects
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+}
+
+// Icon circles (pour les templates)
+.icon-circle {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f8f9fa;
+
+  &.icon-primary {
+    background: rgba($primary, 0.1);
+    color: $primary;
+  }
+
+  &.icon-success {
+    background: rgba($success, 0.1);
+    color: $success;
+  }
+
+  &.icon-info {
+    background: rgba($info, 0.1);
+    color: $info;
+  }
+
+  &.icon-warning {
+    background: rgba($warning, 0.1);
+    color: $warning;
+  }
+}

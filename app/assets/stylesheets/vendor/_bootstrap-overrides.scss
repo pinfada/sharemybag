@@ -1,0 +1,322 @@
+// ========================================
+// ShareMyBag - Bootstrap Overrides
+// ========================================
+// Ce fichier assure la compatibilité avec Bootstrap existant
+// tout en appliquant notre nouveau système de design
+
+// Variables Bootstrap overrides
+$enable-rounded: true;
+$enable-shadows: true;
+$enable-gradients: true;
+$enable-transitions: true;
+$enable-reduced-motion: true;
+$enable-grid-classes: true;
+
+// Typography overrides
+.h1, h1 { @extend h1; }
+.h2, h2 { @extend h2; }
+.h3, h3 { @extend h3; }
+.h4, h4 { @extend h4; }
+.h5, h5 { @extend h5; }
+.h6, h6 { @extend h6; }
+
+// Bootstrap button compatibility
+.btn-default {
+  @extend .btn-secondary;
+}
+
+// Bootstrap alert compatibility
+.alert-error {
+  @extend .alert-danger;
+}
+
+// Bootstrap panel compatibility
+.panel {
+  @extend .card;
+
+  .panel-heading {
+    @extend .card-header;
+  }
+
+  .panel-body {
+    @extend .card-body;
+  }
+
+  .panel-footer {
+    @extend .card-footer;
+  }
+}
+
+// Bootstrap well compatibility
+.well {
+  padding: $spacing-5;
+  background: $gray-50;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+}
+
+// Bootstrap label compatibility
+.label {
+  @extend .badge;
+
+  &-default {
+    @extend .badge-secondary;
+  }
+
+  &-primary {
+    @extend .badge-primary;
+  }
+
+  &-success {
+    @extend .badge-success;
+  }
+
+  &-info {
+    @extend .badge-info;
+  }
+
+  &-warning {
+    @extend .badge-warning;
+  }
+
+  &-danger {
+    @extend .badge-danger;
+  }
+}
+
+// Bootstrap thumbnail compatibility
+.thumbnail {
+  display: block;
+  padding: $spacing-2;
+  background: $white;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: $radius-md;
+  }
+
+  .caption {
+    padding: $spacing-3;
+    color: $text-primary;
+  }
+}
+
+// Bootstrap nav tabs compatibility
+.nav-tabs {
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  flex-wrap: wrap;
+
+  .nav-item {
+    margin-bottom: -1px;
+  }
+
+  .nav-link {
+    border: 1px solid transparent;
+    border-radius: $radius-lg $radius-lg 0 0;
+    padding: $spacing-3 $spacing-4;
+    color: $text-secondary;
+    text-decoration: none;
+
+    &:hover {
+      border-color: $border-color $border-color $white;
+      color: $primary;
+    }
+
+    &.active {
+      color: $primary;
+      background: $white;
+      border-color: $border-color $border-color $white;
+    }
+  }
+}
+
+// Bootstrap nav pills compatibility
+.nav-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+
+  .nav-link {
+    padding: $spacing-2 $spacing-4;
+    border-radius: $radius-lg;
+    color: $text-secondary;
+    text-decoration: none;
+
+    &:hover {
+      background: $gray-100;
+      color: $primary;
+    }
+
+    &.active {
+      background: $primary;
+      color: $white;
+    }
+  }
+}
+
+// Bootstrap breadcrumb compatibility
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  padding: $spacing-3 $spacing-4;
+  background: $gray-50;
+  border-radius: $radius-lg;
+  list-style: none;
+
+  .breadcrumb-item {
+    & + .breadcrumb-item {
+      padding-left: $spacing-2;
+
+      &::before {
+        display: inline-block;
+        padding-right: $spacing-2;
+        color: $text-muted;
+        content: "/";
+      }
+    }
+
+    &.active {
+      color: $text-muted;
+    }
+
+    a {
+      color: $primary;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Bootstrap progress compatibility
+.progress {
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  background: $gray-200;
+  border-radius: $radius-lg;
+
+  .progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: $white;
+    text-align: center;
+    white-space: nowrap;
+    background: $primary;
+    transition: width $transition-base;
+  }
+}
+
+// Bootstrap list group compatibility
+.list-group {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  border-radius: $radius-lg;
+
+  .list-group-item {
+    position: relative;
+    display: block;
+    padding: $spacing-3 $spacing-4;
+    color: $text-primary;
+    background: $white;
+    border: 1px solid $border-color;
+
+    &:first-child {
+      border-top-left-radius: inherit;
+      border-top-right-radius: inherit;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: inherit;
+      border-bottom-right-radius: inherit;
+    }
+
+    &.active {
+      z-index: 2;
+      color: $white;
+      background: $primary;
+      border-color: $primary;
+    }
+
+    &:hover {
+      background: $gray-50;
+    }
+  }
+}
+
+// Bootstrap media object compatibility
+.media {
+  display: flex;
+  align-items: flex-start;
+
+  .media-object {
+    flex-shrink: 0;
+  }
+
+  .media-body {
+    flex: 1;
+    margin-left: $spacing-4;
+  }
+}
+
+// Form control sizing compatibility
+.form-control-lg,
+.input-lg {
+  @extend .form-control-lg;
+}
+
+.form-control-sm,
+.input-sm {
+  @extend .form-control-sm;
+}
+
+// Responsive utilities compatibility
+@media (max-width: $breakpoint-sm - 1px) {
+  .hidden-xs {
+    display: none !important;
+  }
+}
+
+@media (min-width: $breakpoint-sm) and (max-width: $breakpoint-md - 1px) {
+  .hidden-sm {
+    display: none !important;
+  }
+}
+
+@media (min-width: $breakpoint-md) and (max-width: $breakpoint-lg - 1px) {
+  .hidden-md {
+    display: none !important;
+  }
+}
+
+@media (min-width: $breakpoint-lg) {
+  .hidden-lg {
+    display: none !important;
+  }
+}
+
+// Pull utilities compatibility
+.pull-left {
+  float: left !important;
+}
+
+.pull-right {
+  float: right !important;
+}
+
+// Center block compatibility
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

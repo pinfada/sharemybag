@@ -1,0 +1,218 @@
+<% provide(:title, 'Contact') %>
+
+<div class="hero hero-gradient">
+  <div class="hero-content">
+    <div class="container">
+      <h1 class="text-white">Contactez-nous</h1>
+      <p class="hero-subtitle text-white opacity-90">
+        Notre équipe est là pour répondre à toutes vos questions
+      </p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+
+        <div class="row g-4 mb-5">
+          <div class="col-md-4">
+            <div class="card h-100 text-center">
+              <div class="card-body p-4">
+                <div class="icon-circle icon-primary mx-auto mb-3">
+                  <i class="fas fa-envelope fa-lg"></i>
+                </div>
+                <h5 class="mb-2">Email</h5>
+                <p class="text-secondary mb-0">
+                  <a href="mailto:contact@sharemybag.com" class="text-decoration-none">
+                    contact@sharemybag.com
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card h-100 text-center">
+              <div class="card-body p-4">
+                <div class="icon-circle icon-success mx-auto mb-3">
+                  <i class="fas fa-phone fa-lg"></i>
+                </div>
+                <h5 class="mb-2">Téléphone</h5>
+                <p class="text-secondary mb-0">
+                  +33 1 23 45 67 89<br>
+                  <small>Lun-Ven 9h-18h</small>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card h-100 text-center">
+              <div class="card-body p-4">
+                <div class="icon-circle icon-info mx-auto mb-3">
+                  <i class="fas fa-map-marker-alt fa-lg"></i>
+                </div>
+                <h5 class="mb-2">Adresse</h5>
+                <p class="text-secondary mb-0">
+                  123 Rue de la Paix<br>
+                  75002 Paris, France
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body p-5">
+            <h2 class="h3 mb-4 text-center">Envoyez-nous un message</h2>
+
+            <%= form_with url: contact_path, local: true, class: "contact-form" do |f| %>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :name, "Nom complet", class: "form-label required" %>
+                    <%= f.text_field :name,
+                        class: "form-control",
+                        placeholder: "Jean Dupont",
+                        required: true %>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <%= f.label :email, "Email", class: "form-label required" %>
+                    <%= f.email_field :email,
+                        class: "form-control",
+                        placeholder: "jean.dupont@example.com",
+                        required: true %>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-group">
+                    <%= f.label :subject, "Sujet", class: "form-label required" %>
+                    <%= f.select :subject,
+                        options_for_select([
+                          ["Question générale", "general"],
+                          ["Support technique", "support"],
+                          ["Partenariat", "partnership"],
+                          ["Problème avec une livraison", "delivery"],
+                          ["Suggestion", "suggestion"],
+                          ["Autre", "other"]
+                        ]),
+                        { prompt: "Sélectionnez un sujet" },
+                        class: "form-control",
+                        required: true %>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-group">
+                    <%= f.label :message, "Message", class: "form-label required" %>
+                    <%= f.text_area :message,
+                        class: "form-control",
+                        rows: 6,
+                        placeholder: "Décrivez votre demande en détail...",
+                        required: true %>
+                    <div class="form-text">Minimum 20 caractères</div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-check">
+                    <%= f.check_box :newsletter, class: "form-check-input" %>
+                    <%= f.label :newsletter,
+                        "J'accepte de recevoir des actualités de ShareMyBag",
+                        class: "form-check-label" %>
+                  </div>
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                  <button type="submit" class="btn btn-primary btn-lg px-5">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    Envoyer le message
+                  </button>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="card mt-5">
+          <div class="card-body p-5">
+            <h3 class="h4 mb-4">Questions fréquentes</h3>
+
+            <div class="accordion" id="faqAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                    Comment fonctionne ShareMyBag ?
+                  </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    ShareMyBag connecte les personnes souhaitant envoyer des colis avec des voyageurs
+                    ayant de l'espace disponible dans leurs bagages. C'est simple, économique et écologique !
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                    Est-ce que c'est sécurisé ?
+                  </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    Oui ! Nous vérifions l'identité de tous nos utilisateurs et proposons un système
+                    d'évaluation et d'assurance pour garantir la sécurité de vos envois.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                    Quels types de colis puis-je envoyer ?
+                  </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                  <div class="accordion-body">
+                    Vous pouvez envoyer la plupart des objets légaux et non dangereux. Les articles
+                    interdits incluent les substances illégales, les armes, et les matières dangereuses.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center mt-4">
+              <%= link_to "Voir toutes les FAQ", help_path, class: "btn btn-outline-primary" %>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-5">
+          <h4 class="mb-3">Suivez-nous sur les réseaux sociaux</h4>
+          <div class="d-flex gap-3 justify-content-center">
+            <a href="#" class="btn btn-outline-primary btn-sm">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="btn btn-outline-primary btn-sm">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="btn btn-outline-primary btn-sm">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="btn btn-outline-primary btn-sm">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

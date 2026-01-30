@@ -1,0 +1,384 @@
+// =============================================
+// Header ShareMyBag - Navigation moderne
+// =============================================
+
+@import "../variables";
+
+// Variables header
+$header-bg: linear-gradient(135deg, rgba(31, 41, 55, 0.98) 0%, rgba(17, 24, 39, 0.98) 100%);
+$header-bg-solid: #111827;
+$header-height: 72px;
+$smb-primary: #4F46E5;
+$smb-primary-light: #6366F1;
+
+// Navbar principale (.navbar-smb)
+.navbar-smb {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: $header-bg !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: $header-height;
+  transition: all 0.3s ease;
+
+  .container {
+    max-width: 1320px;
+  }
+
+  // Logo
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: $white !important;
+    font-weight: 700;
+    font-size: 1.35rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+
+    &:hover {
+      color: lighten($smb-primary, 25%) !important;
+    }
+
+    .navbar-brand-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, $smb-primary 0%, $smb-primary-light 100%);
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    .navbar-brand-text {
+      letter-spacing: -0.02em;
+    }
+  }
+
+  // Toggle mobile
+  .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.2);
+    padding: 0.4rem 0.6rem;
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba($smb-primary, 0.4);
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+  }
+
+  // Liens de navigation
+  .nav-link {
+    position: relative;
+    padding: 0.5rem 0.75rem;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $white !important;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &.active {
+      color: $white !important;
+      background: rgba($smb-primary, 0.3);
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 2px;
+        background: $smb-primary-light;
+        border-radius: 2px;
+      }
+    }
+  }
+
+  .nav-link-icon {
+    font-size: 1.1rem;
+    padding: 0.4rem 0.5rem !important;
+  }
+
+  // Zone actions (recherche + compte)
+  .navbar-actions {
+    flex-shrink: 0;
+  }
+
+  // Recherche
+  .navbar-search-form {
+    .input-group {
+      max-width: 220px;
+    }
+
+    .form-control {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: $white;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      &:focus {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: $smb-primary;
+        color: $white;
+        box-shadow: 0 0 0 0.2rem rgba($smb-primary, 0.25);
+      }
+    }
+
+    .btn-primary {
+      background: $smb-primary;
+      border-color: $smb-primary;
+
+      &:hover {
+        background: $smb-primary-light;
+        border-color: $smb-primary-light;
+      }
+    }
+  }
+
+  // Avatar & Compte
+  .avatar-circle {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, $smb-primary 0%, $smb-primary-light 100%);
+    color: $white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    &.avatar-sm {
+      width: 36px;
+      height: 36px;
+    }
+
+    &.avatar-md {
+      width: 48px;
+      height: 48px;
+      font-size: 1.1rem;
+    }
+  }
+
+  .avatar-sm {
+    object-fit: cover;
+  }
+
+  .nav-link-account {
+    padding: 0.3rem 0.5rem !important;
+    border-radius: 12px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .account-name {
+      font-size: 0.9rem;
+    }
+
+    .account-badge.verified {
+      font-size: 0.7rem;
+      color: #10B981;
+    }
+
+    .account-chevron {
+      font-size: 0.65rem;
+      opacity: 0.7;
+    }
+  }
+
+  .notification-badge {
+    font-size: 0.65rem;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Boutons visiteurs
+  .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.9);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.6);
+      color: $white;
+    }
+  }
+
+  .btn-smb-primary {
+    background: linear-gradient(135deg, $smb-primary 0%, $smb-primary-light 100%);
+    border: none;
+
+    &:hover {
+      background: linear-gradient(135deg, lighten($smb-primary, 5%) 0%, lighten($smb-primary-light, 5%) 100%);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// Dropdown ShareMyBag
+.dropdown-menu-smb {
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  padding: 0.5rem !important;
+  margin-top: 0.5rem !important;
+  min-width: 220px;
+  background: $white !important;
+
+  .dropdown-item {
+    padding: 0.6rem 1rem !important;
+    border-radius: 8px !important;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba($smb-primary, 0.08) !important;
+    }
+
+    .dropdown-icon {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+
+      &.bg-primary-subtle { background: rgba(79, 70, 229, 0.12); }
+      &.bg-success-subtle { background: rgba(16, 185, 129, 0.12); }
+      &.bg-info-subtle { background: rgba(59, 130, 246, 0.12); }
+    }
+  }
+
+  .dropdown-header {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6B7280 !important;
+    padding: 0.5rem 1rem !important;
+  }
+
+  .dropdown-header-account {
+    padding: 1rem !important;
+
+    strong {
+      font-size: 0.95rem;
+    }
+  }
+
+  .dropdown-item-logout {
+    color: #DC2626 !important;
+
+    &:hover {
+      background: rgba(220, 38, 38, 0.08) !important;
+    }
+  }
+
+  .social-connect-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #F3F4F6;
+    color: #6B7280;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #E5E7EB;
+      color: #374151;
+      transform: translateY(-2px);
+    }
+  }
+
+  .bg-success-subtle.text-success {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+  }
+}
+
+// Mobile
+@media (max-width: 991.98px) {
+  .navbar-smb {
+    .navbar-collapse {
+      background: rgba(17, 24, 39, 0.98);
+      padding: 1rem;
+      border-radius: 12px;
+      margin-top: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .navbar-search {
+      display: block !important;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 0.5rem;
+
+      .input-group {
+        max-width: 100%;
+      }
+    }
+
+    .navbar-nav .nav-link {
+      padding: 0.65rem 1rem;
+    }
+
+    .dropdown-menu-smb {
+      background: rgba(31, 41, 55, 0.98) !important;
+
+      .dropdown-item {
+        color: rgba(255, 255, 255, 0.9) !important;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1) !important;
+          color: $white !important;
+        }
+      }
+
+      .dropdown-item-logout {
+        color: #FCA5A5 !important;
+
+        &:hover {
+          background: rgba(239, 68, 68, 0.2) !important;
+        }
+      }
+
+      .dropdown-header,
+      .dropdown-header-account strong {
+        color: rgba(255, 255, 255, 0.5) !important;
+      }
+
+      .dropdown-header-account strong {
+        color: $white !important;
+      }
+    }
+
+    .btn-outline-light, .btn-smb-primary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// Spacer
+.header-spacer {
+  height: $header-height;
+}

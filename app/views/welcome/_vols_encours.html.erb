@@ -3,7 +3,7 @@
     </div>
     <h1>Liste des vols en cours</h1>
     <br>
-    <%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
+    <%= will_paginate @coordonnees %>
     <table class="table table-hover">
       <thead>
         <tr>
@@ -71,4 +71,4 @@
         <% end %>
       <% end %>
     </table>
-    <%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
+    <%= will_paginate @coordonnees %>

@@ -1,10 +1,12 @@
 source 'https://rubygems.org'
 
-ruby '3.3.6'
+ruby '3.2.3'
 
 gem 'rails', '~> 7.0.8'
 gem 'sprockets-rails'
+gem 'dotenv-rails', groups: [:development, :test]
 gem 'sass-rails', '>= 6'
+gem 'coffee-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'pg', '~> 1.5'
 gem 'puma', '~> 6.0'
@@ -14,12 +16,14 @@ gem 'bootstrap', '~> 5.3'
 gem 'sassc-rails'
 gem 'font-awesome-sass', '~> 6.0'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
 
 # Maps
 gem 'geocoder'
 gem 'gmaps4rails'
+gem 'underscore-rails'
 
 # Data
 gem 'faker', '~> 3.0'

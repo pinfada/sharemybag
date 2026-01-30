@@ -11,13 +11,15 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery-ui
 //= require jquery_ujs
-//= require jquery.turbolinks
+//= require jquery-ui
 //= require bootstrap
 //= require turbolinks
 //= require underscore
 //= require gmaps/google
+//= require gmaps_fix
+//= require maps_init
+//= require google_maps_loader
 //= require magnific-popup
 //= require_tree .
 

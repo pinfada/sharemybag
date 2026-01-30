@@ -1,0 +1,227 @@
+// ========================================
+// ShareMyBag - Composant Boutons
+// ========================================
+
+// Base button styles
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-5;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 2px solid transparent;
+  border-radius: $radius-lg;
+  transition: all $transition-fast;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Tailles
+  &-sm {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+    border-radius: $radius-md;
+  }
+
+  &-lg {
+    padding: $spacing-4 $spacing-6;
+    font-size: $font-size-lg;
+    border-radius: $radius-xl;
+  }
+
+  &-xl {
+    padding: $spacing-5 $spacing-8;
+    font-size: $font-size-xl;
+    border-radius: $radius-xl;
+  }
+
+  // Variantes principales
+  &-primary {
+    background: $gradient-primary;
+    color: $white;
+    border-color: $primary;
+    box-shadow: $shadow-sm;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &-secondary {
+    background: $white;
+    color: $primary;
+    border-color: $border-color;
+
+    &:hover:not(:disabled) {
+      background: $gray-50;
+      border-color: $primary;
+      color: $primary-dark;
+    }
+  }
+
+  &-success {
+    background: $gradient-success;
+    color: $white;
+    border-color: $success;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, $secondary 0%, $secondary-dark 100%);
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+  }
+
+  &-danger {
+    background: $danger;
+    color: $white;
+    border-color: $danger;
+
+    &:hover:not(:disabled) {
+      background: darken($danger, 10%);
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+  }
+
+  &-ghost {
+    background: transparent;
+    color: $text-primary;
+    border-color: transparent;
+
+    &:hover:not(:disabled) {
+      background: $gray-100;
+      color: $primary;
+    }
+  }
+
+  &-outline {
+    background: transparent;
+    color: $primary;
+    border-color: $primary;
+
+    &:hover:not(:disabled) {
+      background: $primary;
+      color: $white;
+    }
+  }
+
+  // Full width button
+  &-block {
+    display: flex;
+    width: 100%;
+  }
+
+  // Icon buttons
+  &-icon {
+    padding: $spacing-3;
+
+    &.btn-sm {
+      padding: $spacing-2;
+    }
+
+    &.btn-lg {
+      padding: $spacing-4;
+    }
+  }
+
+  // Loading state
+  &-loading {
+    position: relative;
+    color: transparent;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      top: 50%;
+      left: 50%;
+      margin-left: -0.5rem;
+      margin-top: -0.5rem;
+      border: 2px solid $white;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spinner 0.6s linear infinite;
+    }
+  }
+}
+
+// Button groups
+.btn-group {
+  display: inline-flex;
+  gap: 0;
+
+  .btn {
+    border-radius: 0;
+
+    &:first-child {
+      border-top-left-radius: $radius-lg;
+      border-bottom-left-radius: $radius-lg;
+    }
+
+    &:last-child {
+      border-top-right-radius: $radius-lg;
+      border-bottom-right-radius: $radius-lg;
+    }
+
+    &:not(:first-child) {
+      margin-left: -2px;
+    }
+  }
+}
+
+// Floating Action Button
+.fab {
+  position: fixed;
+  bottom: $spacing-6;
+  right: $spacing-6;
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-full;
+  background: $gradient-primary;
+  color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $shadow-xl;
+  transition: all $transition-fast;
+  z-index: $z-index-sticky;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: $shadow-2xl;
+  }
+
+  &:active {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}

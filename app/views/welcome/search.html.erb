@@ -1,15 +1,19 @@
-<% content_for(:after_js) do %>
-  <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV['GGL_MAP_JS_BROWSER_API_KEY']}" %>
-<% end %>
-
 <div class="container mt-4">
   <div id="map-container">
-    <div id="map-canvas" style="height: 300px;"></div>
+    <div id="map-canvas"
+         style="height: 400px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
+         data-markers="<%= @markers.to_json %>"
+         data-api-key="<%= ENV['GGL_MAP_JS_BROWSER_API_KEY'] %>">
+      <div class="text-center p-5">
+        <i class="fas fa-spinner fa-spin fa-3x text-primary"></i>
+        <p class="mt-3">Chargement de la carte...</p>
+      </div>
+    </div>
   </div>
 
   <h1 class="mt-4"><%= t('search.title', default: 'Available flights') %></h1>
 
-  <%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
+  <%= will_paginate @coordonnees, class: 'pagination justify-content-center' %>
 
   <table class="table table-hover">
     <thead>
@@ -42,19 +46,5 @@
     </tbody>
   </table>
 
-  <%= will_paginate @coordonnees, renderer: BootstrapPagination::Rails %>
+  <%= will_paginate @coordonnees, class: 'pagination justify-content-center' %>
 </div>
-
-<script>
-  var handler = Gmaps.build('Google');
-  handler.buildMap({ provider: {}, internal: {id: 'map-canvas'}}, function(){
-    markers = handler.addMarkers(<%= json_escape(@markers.to_json).html_safe %>);
-    handler.bounds.extendWith(markers);
-    handler.fitMapToBounds();
-    if (markers.length == 0) {
-      handler.getMap().setZoom(2);
-    } else if (markers.length == 1) {
-      handler.getMap().setZoom(14);
-    }
-  });
-</script>

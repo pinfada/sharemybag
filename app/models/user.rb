@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  belongs_to :vol
+  belongs_to :vol, optional: true  # Le vol est optionnel pour un utilisateur
   has_many :bookings
   has_many :bagages
   has_many :paquets

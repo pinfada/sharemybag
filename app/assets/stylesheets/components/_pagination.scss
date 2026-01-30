@@ -1,0 +1,347 @@
+// ========================================
+// ShareMyBag - Composant Pagination
+// ========================================
+
+.pagination {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+  gap: $spacing-2;
+  margin: $spacing-4 0;
+
+  // Liens de pagination
+  .page-link {
+    position: relative;
+    display: block;
+    padding: $spacing-2 $spacing-3;
+    min-width: 40px;
+    text-align: center;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+    text-decoration: none;
+    background-color: $white;
+    border: 2px solid $border-color;
+    border-radius: $radius-lg;
+    transition: all $transition-fast;
+
+    &:hover:not(.disabled) {
+      background-color: $gray-50;
+      border-color: $primary;
+      color: $primary;
+      transform: translateY(-2px);
+      box-shadow: $shadow-sm;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+  }
+
+  // Item de pagination
+  .page-item {
+    &.active .page-link {
+      background: $gradient-primary;
+      border-color: $primary;
+      color: $white;
+      box-shadow: $shadow-sm;
+
+      &:hover {
+        transform: none;
+      }
+    }
+
+    &.disabled .page-link {
+      color: $text-muted;
+      pointer-events: none;
+      background-color: $gray-50;
+      border-color: $border-color;
+      opacity: 0.5;
+    }
+
+    &:first-child .page-link {
+      border-top-left-radius: $radius-xl;
+      border-bottom-left-radius: $radius-xl;
+    }
+
+    &:last-child .page-link {
+      border-top-right-radius: $radius-xl;
+      border-bottom-right-radius: $radius-xl;
+    }
+  }
+
+  // Tailles
+  &-sm {
+    .page-link {
+      padding: $spacing-1 $spacing-2;
+      font-size: $font-size-sm;
+      min-width: 32px;
+      border-radius: $radius-md;
+    }
+  }
+
+  &-lg {
+    .page-link {
+      padding: $spacing-3 $spacing-4;
+      font-size: $font-size-lg;
+      min-width: 48px;
+      border-radius: $radius-xl;
+    }
+  }
+
+  // Pagination centrée
+  &-centered {
+    justify-content: center;
+  }
+
+  // Pagination alignée à droite
+  &-right {
+    justify-content: flex-end;
+  }
+
+  // Pagination avec résumé
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: $spacing-4;
+    margin: $spacing-6 0;
+
+    @media (max-width: $breakpoint-md) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  &-info {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  // Variantes
+  &-pills {
+    .page-link {
+      border-radius: $radius-full;
+      border: none;
+      background: $gray-100;
+
+      &:hover:not(.disabled) {
+        background: $primary-50;
+        color: $primary;
+      }
+    }
+
+    .page-item.active .page-link {
+      background: $primary;
+      color: $white;
+    }
+  }
+
+  &-minimal {
+    gap: 0;
+
+    .page-link {
+      border: none;
+      background: transparent;
+      border-radius: 0;
+
+      &:hover:not(.disabled) {
+        background: $gray-50;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    .page-item.active .page-link {
+      background: transparent;
+      color: $primary;
+      border-bottom: 3px solid $primary;
+    }
+  }
+
+  &-rounded {
+    .page-link {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: $radius-full;
+    }
+
+    &.pagination-sm .page-link {
+      width: 32px;
+      height: 32px;
+    }
+
+    &.pagination-lg .page-link {
+      width: 48px;
+      height: 48px;
+    }
+  }
+}
+
+// Composant de navigation simple
+.simple-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+  margin: $spacing-6 0;
+
+  .pagination-prev,
+  .pagination-next {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-3 $spacing-4;
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+    text-decoration: none;
+    background: $white;
+    border: 2px solid $border-color;
+    border-radius: $radius-lg;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: $primary;
+      border-color: $primary;
+      color: $white;
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  .pagination-info {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+}
+
+// Pagination infinie (bouton)
+.load-more {
+  text-align: center;
+  margin: $spacing-8 0;
+
+  .btn-load-more {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-3 $spacing-6;
+    font-weight: $font-weight-medium;
+    color: $primary;
+    background: $white;
+    border: 2px solid $primary;
+    border-radius: $radius-full;
+    transition: all $transition-fast;
+    cursor: pointer;
+
+    &:hover {
+      background: $primary;
+      color: $white;
+      transform: scale(1.05);
+    }
+
+    &.loading {
+      pointer-events: none;
+      opacity: 0.7;
+
+      &::after {
+        content: "";
+        width: 16px;
+        height: 16px;
+        margin-left: $spacing-2;
+        border: 2px solid $primary;
+        border-right-color: transparent;
+        border-radius: $radius-full;
+        animation: spin 0.75s linear infinite;
+      }
+    }
+  }
+}
+
+// will_paginate styles
+.pagination {
+  em.current {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-2 $spacing-3;
+    min-width: 40px;
+    background: $gradient-primary;
+    border: 2px solid $primary;
+    color: $white;
+    font-weight: $font-weight-medium;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    font-style: normal;
+  }
+
+  span.gap {
+    display: inline-flex;
+    align-items: center;
+    padding: $spacing-2 $spacing-3;
+    color: $text-muted;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-2 $spacing-3;
+    min-width: 40px;
+    text-align: center;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+    text-decoration: none;
+    background-color: $white;
+    border: 2px solid $border-color;
+    border-radius: $radius-lg;
+    transition: all $transition-fast;
+    margin: 0 $spacing-1;
+
+    &:hover {
+      background-color: $gray-50;
+      border-color: $primary;
+      color: $primary;
+      transform: translateY(-2px);
+      box-shadow: $shadow-sm;
+    }
+
+    &.previous_page,
+    &.next_page {
+      font-weight: $font-weight-semibold;
+    }
+  }
+
+  span.previous_page,
+  span.next_page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-2 $spacing-3;
+    min-width: 40px;
+    color: $text-muted;
+    background-color: $gray-50;
+    border: 2px solid $border-color;
+    border-radius: $radius-lg;
+    opacity: 0.5;
+    cursor: not-allowed;
+    margin: 0 $spacing-1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

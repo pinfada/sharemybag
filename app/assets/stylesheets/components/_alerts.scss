@@ -1,0 +1,285 @@
+// ========================================
+// ShareMyBag - Composant Alertes
+// ========================================
+
+.alert {
+  position: relative;
+  padding: $spacing-4 $spacing-5;
+  margin-bottom: $spacing-4;
+  border: 1px solid transparent;
+  border-radius: $radius-lg;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  animation: slideIn 0.3s ease-out;
+
+  // Icône
+  &-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  // Contenu
+  &-content {
+    flex: 1;
+  }
+
+  // Titre
+  &-title {
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-1;
+  }
+
+  // Message
+  &-message {
+    font-size: $font-size-sm;
+    line-height: $line-height-relaxed;
+  }
+
+  // Bouton de fermeture
+  &-close {
+    position: absolute;
+    top: $spacing-4;
+    right: $spacing-4;
+    background: transparent;
+    border: none;
+    color: inherit;
+    opacity: 0.5;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity $transition-fast;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  // Variantes
+  &-primary {
+    background: $primary-50;
+    border-color: $primary-100;
+    color: $primary-dark;
+
+    .alert-icon {
+      color: $primary;
+    }
+  }
+
+  &-success {
+    background: rgba($success, 0.1);
+    border-color: rgba($success, 0.2);
+    color: darken($success, 20%);
+
+    .alert-icon {
+      color: $success;
+    }
+  }
+
+  &-warning {
+    background: rgba($warning, 0.1);
+    border-color: rgba($warning, 0.2);
+    color: darken($warning, 20%);
+
+    .alert-icon {
+      color: $warning;
+    }
+  }
+
+  &-danger {
+    background: rgba($danger, 0.1);
+    border-color: rgba($danger, 0.2);
+    color: darken($danger, 20%);
+
+    .alert-icon {
+      color: $danger;
+    }
+  }
+
+  &-info {
+    background: rgba($info, 0.1);
+    border-color: rgba($info, 0.2);
+    color: darken($info, 20%);
+
+    .alert-icon {
+      color: $info;
+    }
+  }
+
+  // Alert solide
+  &-solid {
+    &.alert-primary {
+      background: $primary;
+      border-color: $primary;
+      color: $white;
+    }
+
+    &.alert-success {
+      background: $success;
+      border-color: $success;
+      color: $white;
+    }
+
+    &.alert-warning {
+      background: $warning;
+      border-color: $warning;
+      color: $white;
+    }
+
+    &.alert-danger {
+      background: $danger;
+      border-color: $danger;
+      color: $white;
+    }
+
+    &.alert-info {
+      background: $info;
+      border-color: $info;
+      color: $white;
+    }
+  }
+
+  // Alert avec bordure gauche
+  &-bordered {
+    border-left-width: 4px;
+    border-radius: 0 $radius-lg $radius-lg 0;
+  }
+
+  // Petite alerte
+  &-sm {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+
+    .alert-close {
+      top: $spacing-2;
+      right: $spacing-2;
+    }
+  }
+}
+
+// Toast notifications
+.toast {
+  position: fixed;
+  bottom: $spacing-6;
+  right: $spacing-6;
+  max-width: 350px;
+  background: $white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-xl;
+  padding: $spacing-4;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  z-index: $z-index-tooltip;
+  animation: toastSlideIn 0.3s ease-out;
+
+  @media (max-width: $breakpoint-md) {
+    right: $spacing-4;
+    left: $spacing-4;
+    max-width: none;
+  }
+
+  &-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+  }
+
+  &-content {
+    flex: 1;
+  }
+
+  &-title {
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-1;
+  }
+
+  &-message {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  &-close {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.5;
+    transition: opacity $transition-fast;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  // Variantes de toast
+  &-success {
+    .toast-icon {
+      color: $success;
+    }
+  }
+
+  &-error {
+    .toast-icon {
+      color: $danger;
+    }
+  }
+
+  &-warning {
+    .toast-icon {
+      color: $warning;
+    }
+  }
+
+  &-info {
+    .toast-icon {
+      color: $info;
+    }
+  }
+}
+
+// Container pour plusieurs toasts
+.toast-container {
+  position: fixed;
+  bottom: $spacing-6;
+  right: $spacing-6;
+  z-index: $z-index-tooltip;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+
+  @media (max-width: $breakpoint-md) {
+    right: $spacing-4;
+    left: $spacing-4;
+  }
+}
+
+// Animations
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

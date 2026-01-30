@@ -1,11 +1,8 @@
-<div class="form-inline">
-    <%= form_tag(listevol_path, method: 'get', role: 'form') do %>
-  		<div class="form-group"> 
-        	<%= text_field_tag :search, params[:search], class: 'form-control', placeholder: "Saisir ville arrivée" %>
-        </div>
-
-        <div class="form-group" style="height: 50px;"> 
-        	<%= submit_tag "Search", :titre => nil, class: "btn btn-primary" %>
-        </div>
-    <% end %>
-</div>
+<%= form_tag(listevol_path, method: 'get', class: 'navbar-search-form') do %>
+  <div class="input-group input-group-sm">
+    <%= text_field_tag :search, params[:search], class: 'form-control form-control-sm', placeholder: "Ville, aéroport...", aria: { label: "Rechercher une destination" } %>
+    <button type="submit" class="btn btn-primary btn-sm" title="Rechercher">
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+<% end %>

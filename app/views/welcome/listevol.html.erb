@@ -1,0 +1,242 @@
+<% provide(:title, 'Liste des vols') %>
+
+<div class="hero hero-gradient">
+  <div class="hero-content">
+    <div class="container">
+      <h1 class="text-white">Vols disponibles</h1>
+      <p class="hero-subtitle text-white opacity-90">
+        Trouvez un transporteur pour votre colis
+      </p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+
+    <!-- Filtres de recherche -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">
+          <i class="fas fa-filter me-2"></i>Filtrer les vols
+        </h5>
+
+        <%= form_with url: listevol_path, method: :get, local: true, class: "row g-3" do |f| %>
+          <div class="col-md-3">
+            <label class="form-label">Ville de départ</label>
+            <%= f.text_field :departure,
+                class: "form-control",
+                placeholder: "Ex: Paris",
+                value: params[:departure] %>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Ville d'arrivée</label>
+            <%= f.text_field :arrival,
+                class: "form-control",
+                placeholder: "Ex: New York",
+                value: params[:arrival] %>
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">Date de départ</label>
+            <%= f.date_field :date,
+                class: "form-control",
+                value: params[:date] %>
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">Poids disponible</label>
+            <%= f.number_field :weight,
+                class: "form-control",
+                placeholder: "kg min",
+                min: 0,
+                value: params[:weight] %>
+          </div>
+
+          <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fas fa-search me-2"></i>Rechercher
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Liste des vols -->
+    <div class="row g-4">
+      <% # Simulation de données - À remplacer par les vraies données %>
+      <% sample_flights = [
+        {
+          id: 1,
+          user_name: "Marie D.",
+          user_rating: 4.8,
+          user_trips: 23,
+          departure: "Paris (CDG)",
+          arrival: "New York (JFK)",
+          date: 2.days.from_now,
+          weight: 15,
+          price_per_kg: 12,
+          verified: true
+        },
+        {
+          id: 2,
+          user_name: "Thomas L.",
+          user_rating: 4.5,
+          user_trips: 12,
+          departure: "Londres (LHR)",
+          arrival: "Tokyo (NRT)",
+          date: 5.days.from_now,
+          weight: 20,
+          price_per_kg: 15,
+          verified: true
+        },
+        {
+          id: 3,
+          user_name: "Sophie M.",
+          user_rating: 5.0,
+          user_trips: 45,
+          departure: "Barcelone (BCN)",
+          arrival: "Montréal (YUL)",
+          date: 1.week.from_now,
+          weight: 10,
+          price_per_kg: 18,
+          verified: false
+        }
+      ] %>
+
+      <% sample_flights.each do |flight| %>
+        <div class="col-lg-6">
+          <div class="card h-100 hover-lift">
+            <div class="card-body p-4">
+
+              <!-- En-tête avec info transporteur -->
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="d-flex align-items-center">
+                  <div class="position-relative">
+                    <%= image_tag "https://ui-avatars.com/api/?name=#{flight[:user_name]}&background=4F46E5&color=fff",
+                        class: "rounded-circle",
+                        style: "width: 48px; height: 48px;" %>
+                    <% if flight[:verified] %>
+                      <span class="position-absolute bottom-0 end-0 bg-success rounded-circle p-1"
+                            style="width: 18px; height: 18px;">
+                        <i class="fas fa-check text-white" style="font-size: 10px;"></i>
+                      </span>
+                    <% end %>
+                  </div>
+                  <div class="ms-3">
+                    <h6 class="mb-0"><%= flight[:user_name] %></h6>
+                    <div class="d-flex align-items-center gap-2">
+                      <small class="text-warning">
+                        <i class="fas fa-star"></i> <%= flight[:user_rating] %>
+                      </small>
+                      <small class="text-muted">
+                        <%= flight[:user_trips] %> trajets
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <span class="badge bg-success">
+                  <%= flight[:weight] %> kg disponibles
+                </span>
+              </div>
+
+              <!-- Itinéraire -->
+              <div class="bg-light rounded p-3 mb-3">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <div class="text-muted small">Départ</div>
+                    <strong><%= flight[:departure] %></strong>
+                  </div>
+                  <div class="text-center px-3">
+                    <i class="fas fa-plane text-primary"></i>
+                  </div>
+                  <div class="text-end">
+                    <div class="text-muted small">Arrivée</div>
+                    <strong><%= flight[:arrival] %></strong>
+                  </div>
+                </div>
+                <div class="text-center mt-2">
+                  <small class="text-muted">
+                    <i class="far fa-calendar-alt me-1"></i>
+                    <%= flight[:date].strftime("%d %B %Y") %>
+                  </small>
+                </div>
+              </div>
+
+              <!-- Prix et actions -->
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small">Prix par kg</div>
+                  <h5 class="mb-0 text-primary">
+                    <%= number_to_currency(flight[:price_per_kg], unit: "€") %>/kg
+                  </h5>
+                </div>
+                <div class="d-flex gap-2">
+                  <%= link_to "#", class: "btn btn-outline-primary" do %>
+                    <i class="fas fa-comment"></i>
+                    <span class="d-none d-sm-inline ms-1">Contacter</span>
+                  <% end %>
+                  <%= link_to "#", class: "btn btn-primary" do %>
+                    <i class="fas fa-paper-plane"></i>
+                    <span class="d-none d-sm-inline ms-1">Faire une offre</span>
+                  <% end %>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Navigation" class="mt-5">
+      <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1">Précédent</a>
+        </li>
+        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">Suivant</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- CTA si pas de résultats -->
+    <% if false # Condition pour afficher si pas de résultats %>
+      <div class="text-center py-5">
+        <i class="fas fa-plane-slash fa-3x text-muted mb-3"></i>
+        <h3>Aucun vol trouvé</h3>
+        <p class="text-muted mb-4">
+          Essayez de modifier vos critères de recherche ou créez une alerte
+        </p>
+        <button class="btn btn-primary">
+          <i class="fas fa-bell me-2"></i>Créer une alerte
+        </button>
+      </div>
+    <% end %>
+
+  </div>
+</section>
+
+<!-- Section CTA -->
+<section class="section bg-light">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h3 class="mb-2">Vous voyagez bientôt ?</h3>
+        <p class="text-muted mb-lg-0">
+          Rentabilisez votre espace de bagage disponible en transportant des colis
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <%= link_to "#", class: "btn btn-primary btn-lg" do %>
+          <i class="fas fa-plus-circle me-2"></i>Publier mon trajet
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

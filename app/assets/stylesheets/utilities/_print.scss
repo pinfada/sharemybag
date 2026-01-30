@@ -1,0 +1,225 @@
+// ========================================
+// ShareMyBag - Print Styles
+// ========================================
+
+@media print {
+  // Reset styles for print
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  // Page setup
+  @page {
+    margin: 2cm;
+  }
+
+  // Typography
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #000;
+    background: #fff;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  h1 {
+    font-size: 24pt;
+  }
+
+  h2 {
+    font-size: 18pt;
+  }
+
+  h3 {
+    font-size: 14pt;
+  }
+
+  h4, h5, h6 {
+    font-size: 12pt;
+  }
+
+  p, ul, ol, dl {
+    orphans: 3;
+    widows: 3;
+  }
+
+  // Links
+  a {
+    text-decoration: underline;
+    color: #000;
+
+    &[href]::after {
+      content: " (" attr(href) ")";
+      font-size: 0.8em;
+    }
+
+    &[href^="#"]::after,
+    &[href^="javascript:"]::after {
+      content: "";
+    }
+  }
+
+  // Abbreviations
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+
+  // Images
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  // Tables
+  table {
+    border-collapse: collapse !important;
+    width: 100%;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  th, td {
+    padding: 0.5em;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    text-align: left;
+    font-weight: bold;
+    background-color: #f5f5f5 !important;
+  }
+
+  // Code blocks
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  pre {
+    padding: 1em;
+    font-size: 0.9em;
+  }
+
+  blockquote {
+    padding: 1em 1em 1em 2em;
+    font-style: italic;
+  }
+
+  // Hide non-essential elements
+  .no-print,
+  .navbar,
+  .footer,
+  .sidebar,
+  .btn,
+  .modal,
+  .toast,
+  .alert,
+  .badge,
+  .pagination,
+  nav,
+  aside,
+  form,
+  input,
+  select,
+  textarea,
+  button,
+  .form-control,
+  .dropdown,
+  [role="navigation"],
+  [role="complementary"],
+  [role="banner"] {
+    display: none !important;
+  }
+
+  // Show print-only elements
+  .print-only {
+    display: block !important;
+  }
+
+  // Container adjustments
+  .container {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+  }
+
+  // Grid adjustments
+  .row {
+    margin: 0;
+  }
+
+  [class*="col-"] {
+    padding: 0;
+    width: 100%;
+  }
+
+  // Card adjustments
+  .card {
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+
+  // Ensure content is visible
+  .collapse {
+    display: block !important;
+    height: auto !important;
+  }
+
+  .tab-content > .tab-pane {
+    display: block !important;
+    opacity: 1 !important;
+  }
+
+  // Page breaks
+  .page-break {
+    page-break-after: always;
+  }
+
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+}
+
+// Print-specific utility classes
+.print-only {
+  display: none;
+}
+
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+// Page break utilities
+.page-break {
+  display: none;
+}
+
+.page-break-before {
+  display: none;
+}
+
+.page-break-avoid {
+  display: block;
+}

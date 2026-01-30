@@ -1,0 +1,410 @@
+// ========================================
+// ShareMyBag - Pages Shipping/Transport
+// ========================================
+
+.shipping {
+  &-request {
+    &-card {
+      background: $white;
+      border-radius: $radius-xl;
+      box-shadow: $shadow-md;
+      overflow: hidden;
+      margin-bottom: $spacing-6;
+      transition: all $transition-base;
+
+      &:hover {
+        box-shadow: $shadow-lg;
+        transform: translateY(-2px);
+      }
+
+      &-header {
+        padding: $spacing-5 $spacing-6;
+        background: $gray-50;
+        border-bottom: 1px solid $border-color;
+
+        .route {
+          display: flex;
+          align-items: center;
+          gap: $spacing-4;
+          margin-bottom: $spacing-3;
+
+          .city {
+            font-size: $font-size-lg;
+            font-weight: $font-weight-semibold;
+            color: $text-primary;
+          }
+
+          .arrow {
+            color: $text-muted;
+            font-size: $font-size-xl;
+          }
+        }
+
+        .dates {
+          display: flex;
+          align-items: center;
+          gap: $spacing-4;
+          font-size: $font-size-sm;
+          color: $text-secondary;
+
+          i {
+            color: $primary;
+          }
+        }
+      }
+
+      &-body {
+        padding: $spacing-6;
+
+        .package-info {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: $spacing-4;
+          margin-bottom: $spacing-5;
+
+          .info-item {
+            display: flex;
+            align-items: center;
+            gap: $spacing-2;
+
+            i {
+              color: $primary;
+              font-size: $font-size-lg;
+            }
+
+            .info-label {
+              font-size: $font-size-xs;
+              color: $text-muted;
+              display: block;
+            }
+
+            .info-value {
+              font-size: $font-size-base;
+              font-weight: $font-weight-medium;
+              color: $text-primary;
+            }
+          }
+        }
+
+        .description {
+          padding: $spacing-4;
+          background: $gray-50;
+          border-radius: $radius-lg;
+          margin-bottom: $spacing-5;
+
+          p {
+            font-size: $font-size-sm;
+            line-height: $line-height-relaxed;
+            color: $text-secondary;
+            margin: 0;
+          }
+        }
+
+        .sender-info {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-top: $spacing-4;
+          border-top: 1px solid $border-color;
+
+          .sender {
+            display: flex;
+            align-items: center;
+            gap: $spacing-3;
+
+            img {
+              width: 40px;
+              height: 40px;
+              border-radius: $radius-full;
+            }
+
+            .sender-details {
+              h5 {
+                font-size: $font-size-base;
+                font-weight: $font-weight-medium;
+                margin-bottom: $spacing-1;
+              }
+
+              .rating {
+                display: flex;
+                align-items: center;
+                gap: $spacing-2;
+                font-size: $font-size-sm;
+                color: $text-secondary;
+
+                .stars {
+                  color: $warning;
+                }
+              }
+            }
+          }
+
+          .price {
+            text-align: right;
+
+            .price-label {
+              font-size: $font-size-xs;
+              color: $text-muted;
+              display: block;
+            }
+
+            .price-value {
+              font-size: $font-size-2xl;
+              font-weight: $font-weight-bold;
+              color: $primary;
+            }
+          }
+        }
+      }
+
+      &-footer {
+        padding: $spacing-4 $spacing-6;
+        background: $gray-50;
+        border-top: 1px solid $border-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .status-badge {
+          padding: $spacing-1 $spacing-3;
+          border-radius: $radius-full;
+          font-size: $font-size-sm;
+          font-weight: $font-weight-medium;
+
+          &.open {
+            background: rgba($success, 0.1);
+            color: $success;
+          }
+
+          &.in-progress {
+            background: rgba($warning, 0.1);
+            color: $warning;
+          }
+
+          &.completed {
+            background: rgba($info, 0.1);
+            color: $info;
+          }
+
+          &.cancelled {
+            background: rgba($danger, 0.1);
+            color: $danger;
+          }
+        }
+
+        .actions {
+          display: flex;
+          gap: $spacing-2;
+        }
+      }
+    }
+  }
+
+  &-tracking {
+    background: $white;
+    border-radius: $radius-xl;
+    box-shadow: $shadow-lg;
+    padding: $spacing-8;
+
+    &-header {
+      text-align: center;
+      margin-bottom: $spacing-8;
+
+      h2 {
+        font-size: $font-size-2xl;
+        font-weight: $font-weight-bold;
+        margin-bottom: $spacing-2;
+      }
+
+      .tracking-code {
+        display: inline-flex;
+        align-items: center;
+        gap: $spacing-3;
+        padding: $spacing-3 $spacing-5;
+        background: $gray-50;
+        border-radius: $radius-lg;
+        font-family: $font-family-mono;
+        font-size: $font-size-lg;
+        font-weight: $font-weight-medium;
+        color: $primary;
+
+        button {
+          background: transparent;
+          border: none;
+          color: $text-muted;
+          cursor: pointer;
+          transition: color $transition-fast;
+
+          &:hover {
+            color: $primary;
+          }
+        }
+      }
+    }
+
+    &-timeline {
+      position: relative;
+      padding-left: $spacing-10;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: $border-color;
+      }
+
+      .timeline-item {
+        position: relative;
+        padding-bottom: $spacing-8;
+
+        &:last-child {
+          padding-bottom: 0;
+        }
+
+        &::before {
+          content: "";
+          position: absolute;
+          left: -25px;
+          top: 4px;
+          width: 12px;
+          height: 12px;
+          background: $white;
+          border: 2px solid $border-color;
+          border-radius: $radius-full;
+        }
+
+        &.completed {
+          &::before {
+            background: $success;
+            border-color: $success;
+          }
+
+          .timeline-content {
+            opacity: 1;
+          }
+        }
+
+        &.current {
+          &::before {
+            width: 16px;
+            height: 16px;
+            left: -27px;
+            top: 2px;
+            background: $primary;
+            border-color: $primary;
+            box-shadow: 0 0 0 4px rgba($primary, 0.2);
+          }
+        }
+
+        .timeline-content {
+          opacity: 0.6;
+
+          h4 {
+            font-size: $font-size-base;
+            font-weight: $font-weight-semibold;
+            margin-bottom: $spacing-1;
+            color: $text-primary;
+          }
+
+          p {
+            font-size: $font-size-sm;
+            color: $text-secondary;
+            margin-bottom: $spacing-2;
+          }
+
+          .timeline-date {
+            font-size: $font-size-xs;
+            color: $text-muted;
+          }
+        }
+      }
+    }
+
+    &-map {
+      margin-top: $spacing-8;
+      height: 400px;
+      background: $gray-100;
+      border-radius: $radius-xl;
+      position: relative;
+      overflow: hidden;
+
+      // Placeholder pour la carte
+      &::before {
+        content: "Carte de suivi";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: $text-muted;
+        font-size: $font-size-lg;
+      }
+    }
+  }
+
+  // Formulaire de création
+  &-form {
+    background: $white;
+    border-radius: $radius-xl;
+    box-shadow: $shadow-lg;
+    overflow: hidden;
+
+    &-header {
+      background: $gradient-primary;
+      color: $white;
+      padding: $spacing-6;
+      text-align: center;
+
+      h2 {
+        font-size: $font-size-2xl;
+        font-weight: $font-weight-bold;
+        margin-bottom: $spacing-2;
+        color: $white;
+      }
+
+      p {
+        font-size: $font-size-base;
+        opacity: 0.9;
+        color: $white;
+      }
+    }
+
+    &-body {
+      padding: $spacing-8;
+
+      .form-section {
+        margin-bottom: $spacing-8;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        h3 {
+          font-size: $font-size-lg;
+          font-weight: $font-weight-semibold;
+          margin-bottom: $spacing-4;
+          padding-bottom: $spacing-3;
+          border-bottom: 2px solid $primary;
+          color: $text-primary;
+        }
+      }
+    }
+
+    &-footer {
+      padding: $spacing-6;
+      background: $gray-50;
+      border-top: 1px solid $border-color;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .total {
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        color: $primary;
+      }
+    }
+  }
+}

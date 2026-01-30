@@ -1,6 +1,6 @@
 class Dispute < ActiveRecord::Base
   belongs_to :shipping_request
-  belongs_to :transaction
+  belongs_to :payment_transaction, class_name: "Transaction", foreign_key: "transaction_id"
   belongs_to :opened_by, class_name: "User"
   belongs_to :assigned_to, class_name: "User", optional: true
   belongs_to :resolved_by, class_name: "User", optional: true

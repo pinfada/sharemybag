@@ -1,0 +1,308 @@
+// ========================================
+// ShareMyBag - Pages d'authentification
+// ========================================
+
+.auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $primary-50 0%, $white 100%);
+  padding: $spacing-8 $spacing-4;
+
+  &-container {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  &-card {
+    background: $white;
+    border-radius: $radius-2xl;
+    box-shadow: $shadow-2xl;
+    overflow: hidden;
+  }
+
+  &-header {
+    background: $gradient-primary;
+    color: $white;
+    padding: $spacing-8 $spacing-6;
+    text-align: center;
+
+    .auth-logo {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto $spacing-4;
+      background: rgba($white, 0.2);
+      border-radius: $radius-xl;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: $font-size-2xl;
+    }
+
+    h1 {
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      margin-bottom: $spacing-2;
+      color: $white;
+    }
+
+    p {
+      font-size: $font-size-base;
+      opacity: 0.9;
+      margin: 0;
+      color: $white;
+    }
+  }
+
+  &-body {
+    padding: $spacing-8 $spacing-6;
+  }
+
+  &-form {
+    .form-group {
+      margin-bottom: $spacing-5;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: $spacing-2;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $text-primary;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: $spacing-3 $spacing-4;
+      font-size: $font-size-base;
+      border: 2px solid $border-color;
+      border-radius: $radius-lg;
+      transition: all $transition-fast;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+      }
+
+      &.is-invalid {
+        border-color: $danger;
+
+        &:focus {
+          border-color: $danger;
+          box-shadow: 0 0 0 3px rgba($danger, 0.1);
+        }
+      }
+    }
+
+    .form-check {
+      display: flex;
+      align-items: center;
+      margin-bottom: $spacing-4;
+
+      input {
+        margin-right: $spacing-2;
+      }
+
+      label {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        cursor: pointer;
+      }
+    }
+
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: $spacing-6;
+
+      a {
+        font-size: $font-size-sm;
+        color: $primary;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .btn-auth {
+      width: 100%;
+      padding: $spacing-4;
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      border: none;
+      border-radius: $radius-lg;
+      cursor: pointer;
+      transition: all $transition-fast;
+
+      &.btn-primary {
+        background: $gradient-primary;
+        color: $white;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: $shadow-lg;
+        }
+      }
+    }
+  }
+
+  &-divider {
+    position: relative;
+    text-align: center;
+    margin: $spacing-6 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: $border-color;
+    }
+
+    span {
+      position: relative;
+      padding: 0 $spacing-4;
+      background: $white;
+      color: $text-muted;
+      font-size: $font-size-sm;
+    }
+  }
+
+  &-social {
+    display: flex;
+    gap: $spacing-3;
+
+    .btn-social {
+      flex: 1;
+      padding: $spacing-3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: $spacing-2;
+      border: 2px solid $border-color;
+      border-radius: $radius-lg;
+      background: $white;
+      color: $text-primary;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      text-decoration: none;
+      transition: all $transition-fast;
+
+      &:hover {
+        border-color: $primary;
+        background: $primary-50;
+        transform: translateY(-2px);
+      }
+
+      i {
+        font-size: $font-size-lg;
+      }
+
+      &.facebook {
+        color: #1877f2;
+        border-color: #1877f2;
+
+        &:hover {
+          background: rgba(#1877f2, 0.1);
+        }
+      }
+
+      &.google {
+        color: #ea4335;
+        border-color: #ea4335;
+
+        &:hover {
+          background: rgba(#ea4335, 0.1);
+        }
+      }
+
+      &.twitter {
+        color: #1da1f2;
+        border-color: #1da1f2;
+
+        &:hover {
+          background: rgba(#1da1f2, 0.1);
+        }
+      }
+    }
+  }
+
+  &-footer {
+    text-align: center;
+    padding: $spacing-6;
+    background: $gray-50;
+
+    p {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      margin: 0;
+
+      a {
+        color: $primary;
+        font-weight: $font-weight-medium;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  // Messages d'erreur
+  .invalid-feedback {
+    display: block;
+    margin-top: $spacing-2;
+    font-size: $font-size-sm;
+    color: $danger;
+  }
+
+  // Indicateur de force du mot de passe
+  .password-strength {
+    margin-top: $spacing-2;
+
+    &-bar {
+      height: 4px;
+      background: $gray-200;
+      border-radius: $radius-full;
+      overflow: hidden;
+
+      &-fill {
+        height: 100%;
+        transition: all $transition-base;
+
+        &.weak {
+          width: 33%;
+          background: $danger;
+        }
+
+        &.medium {
+          width: 66%;
+          background: $warning;
+        }
+
+        &.strong {
+          width: 100%;
+          background: $success;
+        }
+      }
+    }
+
+    &-text {
+      margin-top: $spacing-1;
+      font-size: $font-size-xs;
+      color: $text-secondary;
+    }
+  }
+}

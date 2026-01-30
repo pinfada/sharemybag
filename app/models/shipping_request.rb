@@ -4,7 +4,7 @@ class ShippingRequest < ActiveRecord::Base
   has_many :conversations, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_one :shipment_tracking, dependent: :destroy
-  has_one :transaction, dependent: :destroy
+  has_one :payment_transaction, class_name: "Transaction", dependent: :destroy
   has_many :disputes, dependent: :destroy
   has_one :customs_declaration, dependent: :destroy
   has_one :compliance_checklist, dependent: :destroy

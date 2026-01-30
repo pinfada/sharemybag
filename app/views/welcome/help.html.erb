@@ -1,0 +1,288 @@
+<% provide(:title, 'Aide') %>
+
+<div class="hero hero-gradient">
+  <div class="hero-content">
+    <div class="container">
+      <h1 class="text-white">Centre d'aide</h1>
+      <p class="hero-subtitle text-white opacity-90">
+        Trouvez rapidement des réponses à vos questions
+      </p>
+
+      <div class="hero-search mt-5">
+        <form class="d-flex gap-2">
+          <input type="search"
+                 class="form-control form-control-lg"
+                 placeholder="Rechercher dans l'aide..."
+                 aria-label="Rechercher">
+          <button class="btn btn-light btn-lg px-4" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="card h-100 hover-lift">
+          <div class="card-body text-center p-4">
+            <div class="icon-circle icon-primary mx-auto mb-3">
+              <i class="fas fa-shipping-fast fa-lg"></i>
+            </div>
+            <h5 class="card-title">Envoyer un colis</h5>
+            <p class="card-text text-secondary">
+              Guide complet pour publier une demande d'envoi et choisir un transporteur
+            </p>
+            <a href="#sending" class="btn btn-outline-primary btn-sm">En savoir plus</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 hover-lift">
+          <div class="card-body text-center p-4">
+            <div class="icon-circle icon-success mx-auto mb-3">
+              <i class="fas fa-suitcase fa-lg"></i>
+            </div>
+            <h5 class="card-title">Transporter des colis</h5>
+            <p class="card-text text-secondary">
+              Comment devenir transporteur et gagner de l'argent avec vos voyages
+            </p>
+            <a href="#carrying" class="btn btn-outline-success btn-sm">En savoir plus</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 hover-lift">
+          <div class="card-body text-center p-4">
+            <div class="icon-circle icon-info mx-auto mb-3">
+              <i class="fas fa-shield-alt fa-lg"></i>
+            </div>
+            <h5 class="card-title">Sécurité & Paiement</h5>
+            <p class="card-text text-secondary">
+              Tout savoir sur la sécurité, les paiements et notre système de protection
+            </p>
+            <a href="#security" class="btn btn-outline-info btn-sm">En savoir plus</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+
+        <!-- Section Envoyer un colis -->
+        <div id="sending" class="card mb-5">
+          <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="fas fa-shipping-fast me-2"></i>Envoyer un colis</h3>
+          </div>
+          <div class="card-body p-4">
+            <div class="accordion" id="sendingAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#send1">
+                    Comment publier une demande d'envoi ?
+                  </button>
+                </h2>
+                <div id="send1" class="accordion-collapse collapse show" data-bs-parent="#sendingAccordion">
+                  <div class="accordion-body">
+                    <ol>
+                      <li>Connectez-vous à votre compte</li>
+                      <li>Cliquez sur "Envoyer un colis"</li>
+                      <li>Remplissez les informations : origine, destination, poids, dimensions</li>
+                      <li>Ajoutez des photos du colis</li>
+                      <li>Définissez votre budget maximum</li>
+                      <li>Publiez votre demande</li>
+                    </ol>
+                    Les transporteurs intéressés vous enverront des offres que vous pourrez comparer.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#send2">
+                    Quels objets puis-je envoyer ?
+                  </button>
+                </h2>
+                <div id="send2" class="accordion-collapse collapse" data-bs-parent="#sendingAccordion">
+                  <div class="accordion-body">
+                    <strong>Autorisés :</strong> Vêtements, documents, électronique (déclarée), cadeaux, livres, cosmétiques...<br>
+                    <strong>Interdits :</strong> Armes, drogues, contrefaçons, argent liquide, matières dangereuses, animaux...
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#send3">
+                    Comment choisir un transporteur ?
+                  </button>
+                </h2>
+                <div id="send3" class="accordion-collapse collapse" data-bs-parent="#sendingAccordion">
+                  <div class="accordion-body">
+                    Consultez les profils des transporteurs : vérification d'identité, évaluations, historique.
+                    Privilégiez les profils vérifiés avec de bonnes évaluations. N'hésitez pas à poser des questions
+                    via la messagerie avant d'accepter une offre.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Transporter -->
+        <div id="carrying" class="card mb-5">
+          <div class="card-header bg-success text-white">
+            <h3 class="mb-0"><i class="fas fa-suitcase me-2"></i>Transporter des colis</h3>
+          </div>
+          <div class="card-body p-4">
+            <div class="accordion" id="carryingAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#carry1">
+                    Comment devenir transporteur ?
+                  </button>
+                </h2>
+                <div id="carry1" class="accordion-collapse collapse show" data-bs-parent="#carryingAccordion">
+                  <div class="accordion-body">
+                    <ol>
+                      <li>Créez votre compte et complétez votre profil</li>
+                      <li>Vérifiez votre identité (pièce d'identité)</li>
+                      <li>Publiez vos trajets ou recherchez des demandes</li>
+                      <li>Faites des offres sur les colis qui vous intéressent</li>
+                      <li>Une fois accepté, organisez la remise avec l'expéditeur</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#carry2">
+                    Combien puis-je gagner ?
+                  </button>
+                </h2>
+                <div id="carry2" class="accordion-collapse collapse" data-bs-parent="#carryingAccordion">
+                  <div class="accordion-body">
+                    Les gains dépendent du poids, de la distance et de la demande. En moyenne :
+                    <ul>
+                      <li>Petit colis (< 5kg) : 20-50€</li>
+                      <li>Colis moyen (5-15kg) : 50-150€</li>
+                      <li>Gros colis (> 15kg) : 150€ et plus</li>
+                    </ul>
+                    ShareMyBag prélève une commission de 15% sur chaque transaction.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#carry3">
+                    Responsabilités du transporteur
+                  </button>
+                </h2>
+                <div id="carry3" class="accordion-collapse collapse" data-bs-parent="#carryingAccordion">
+                  <div class="accordion-body">
+                    En tant que transporteur, vous êtes responsable du colis du point de collecte à la livraison.
+                    Vous devez respecter les délais convenus, maintenir le colis en bon état, et fournir
+                    un suivi régulier. Une assurance est incluse jusqu'à 500€ par colis.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Sécurité -->
+        <div id="security" class="card mb-5">
+          <div class="card-header bg-info text-white">
+            <h3 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Sécurité & Paiement</h3>
+          </div>
+          <div class="card-body p-4">
+            <div class="accordion" id="securityAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#sec1">
+                    Comment fonctionne le paiement sécurisé ?
+                  </button>
+                </h2>
+                <div id="sec1" class="accordion-collapse collapse show" data-bs-parent="#securityAccordion">
+                  <div class="accordion-body">
+                    Le paiement est sécurisé par notre système d'entiercement :
+                    <ol>
+                      <li>L'expéditeur paie lors de l'acceptation d'une offre</li>
+                      <li>L'argent est bloqué sur ShareMyBag</li>
+                      <li>Le transporteur récupère et livre le colis</li>
+                      <li>L'expéditeur confirme la réception</li>
+                      <li>Le transporteur est payé automatiquement</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sec2">
+                    Que faire en cas de problème ?
+                  </button>
+                </h2>
+                <div id="sec2" class="accordion-collapse collapse" data-bs-parent="#securityAccordion">
+                  <div class="accordion-body">
+                    En cas de litige, ouvrez immédiatement un ticket depuis votre espace membre.
+                    Notre équipe de médiation interviendra sous 48h. Conservez tous les échanges et
+                    preuves (photos, messages, reçus). L'assurance couvre jusqu'à 500€ par colis.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sec3">
+                    Comment vérifier un profil ?
+                  </button>
+                </h2>
+                <div id="sec3" class="accordion-collapse collapse" data-bs-parent="#securityAccordion">
+                  <div class="accordion-body">
+                    Recherchez ces indicateurs de confiance :
+                    <ul>
+                      <li>✓ Badge "Identité vérifiée"</li>
+                      <li>✓ Nombre d'évaluations positives</li>
+                      <li>✓ Ancienneté sur la plateforme</li>
+                      <li>✓ Profil complet avec photo</li>
+                      <li>✓ Réponses rapides aux messages</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ressources supplémentaires -->
+        <div class="card">
+          <div class="card-body p-5 text-center">
+            <h3 class="mb-4">Besoin d'aide supplémentaire ?</h3>
+            <p class="text-secondary mb-4">
+              Notre équipe support est disponible pour répondre à toutes vos questions
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+              <%= link_to contact_path, class: "btn btn-primary" do %>
+                <i class="fas fa-envelope me-2"></i>Nous contacter
+              <% end %>
+              <a href="#" class="btn btn-outline-primary">
+                <i class="fas fa-comments me-2"></i>Chat en direct
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

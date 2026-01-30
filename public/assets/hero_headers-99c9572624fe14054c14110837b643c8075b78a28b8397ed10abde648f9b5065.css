@@ -1,0 +1,597 @@
+@charset "UTF-8";
+/*
+ * Hero Headers Carousel - Design Responsive Amélioré
+ * ShareMyBag - Marketplace de transport de bagages
+ */
+/********************************/
+/*     Fade Carousel Main      */
+/********************************/
+/* line 12, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+}
+
+/* line 19, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-inner {
+  height: 100%;
+}
+
+/* line 22, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-inner .carousel-item {
+  height: 100%;
+  position: relative;
+}
+
+/* line 26, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-inner .carousel-item.active {
+  display: flex;
+  align-items: center;
+}
+
+/* line 34, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-indicators {
+  bottom: 30px;
+  z-index: 10;
+}
+
+/* line 38, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-indicators button {
+  width: 12px;
+  height: 12px;
+  margin: 0 5px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+/* line 47, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-indicators button.active {
+  width: 40px;
+  height: 12px;
+  border-radius: 20px;
+  background-color: #1abc9c;
+  border-color: #1abc9c;
+}
+
+/* line 55, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-indicators button:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* line 62, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-control-prev,
+.fade-carousel .carousel-control-next {
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  margin: 0 20px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+/* line 73, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-control-prev:hover,
+.fade-carousel .carousel-control-next:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* line 77, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-control-prev .carousel-control-prev-icon,
+.fade-carousel .carousel-control-prev .carousel-control-next-icon,
+.fade-carousel .carousel-control-next .carousel-control-prev-icon,
+.fade-carousel .carousel-control-next .carousel-control-next-icon {
+  width: 30px;
+  height: 30px;
+}
+
+/********************************/
+/*        Hero Content          */
+/********************************/
+/* line 88, app/assets/stylesheets/hero_headers.css.scss */
+.hero {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  color: #f5f5f5;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  -moz-transform: translate3d(-50%, -50%, 0);
+  -ms-transform: translate3d(-50%, -50%, 0);
+  -o-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+  width: 90%;
+  max-width: 1200px;
+}
+
+/* line 100, app/assets/stylesheets/hero_headers.css.scss */
+.hero hgroup {
+  margin-bottom: 30px;
+}
+
+/* line 104, app/assets/stylesheets/hero_headers.css.scss */
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 800;
+  margin: 0 0 20px;
+  padding: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.2;
+}
+
+/* line 114, app/assets/stylesheets/hero_headers.css.scss */
+.hero h3 {
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  font-weight: 300;
+  margin: 0 0 30px;
+  opacity: 0.9;
+  text-transform: none;
+}
+
+/* line 123, app/assets/stylesheets/hero_headers.css.scss */
+.hero .hero-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+/* line 134, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-inner .carousel-item .hero {
+  opacity: 0;
+  -webkit-transform: translate3d(-50%, -40%, 0);
+  -moz-transform: translate3d(-50%, -40%, 0);
+  -ms-transform: translate3d(-50%, -40%, 0);
+  -o-transform: translate3d(-50%, -40%, 0);
+  transform: translate3d(-50%, -40%, 0);
+  -webkit-transition: 1.5s, all, ease-out, 0.3s;
+  -moz-transition: 1.5s, all, ease-out, 0.3s;
+  -ms-transition: 1.5s, all, ease-out, 0.3s;
+  -o-transition: 1.5s, all, ease-out, 0.3s;
+  transition: 1.5s, all, ease-out, 0.3s;
+}
+
+/* line 140, app/assets/stylesheets/hero_headers.css.scss */
+.fade-carousel .carousel-inner .carousel-item.active .hero {
+  opacity: 1;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  -moz-transform: translate3d(-50%, -50%, 0);
+  -ms-transform: translate3d(-50%, -50%, 0);
+  -o-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+}
+
+/********************************/
+/*          Overlay             */
+/********************************/
+/* line 149, app/assets/stylesheets/hero_headers.css.scss */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background: linear-gradient(135deg, rgba(8, 13, 21, 0.8) 0%, rgba(8, 13, 21, 0.6) 50%, rgba(8, 13, 21, 0.8) 100%);
+}
+
+/********************************/
+/*       Custom Buttons         */
+/********************************/
+/* line 165, app/assets/stylesheets/hero_headers.css.scss */
+.btn-hero {
+  padding: 12px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #f5f5f5;
+  background-color: #1abc9c;
+  border: 2px solid #1abc9c;
+  border-radius: 50px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* line 180, app/assets/stylesheets/hero_headers.css.scss */
+.btn-hero:hover, .btn-hero:focus {
+  color: #f5f5f5;
+  background-color: #148f77;
+  border-color: #148f77;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* line 189, app/assets/stylesheets/hero_headers.css.scss */
+.btn-hero i {
+  font-size: 1.2rem;
+}
+
+/* line 194, app/assets/stylesheets/hero_headers.css.scss */
+.btn-hero-outline {
+  padding: 12px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #f5f5f5;
+  background-color: transparent;
+  border: 2px solid #f5f5f5;
+  border-radius: 50px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* line 209, app/assets/stylesheets/hero_headers.css.scss */
+.btn-hero-outline:hover, .btn-hero-outline:focus {
+  color: #080d15;
+  background-color: #f5f5f5;
+  border-color: #f5f5f5;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.3);
+}
+
+/* line 218, app/assets/stylesheets/hero_headers.css.scss */
+.btn-hero-outline i {
+  font-size: 1.2rem;
+}
+
+/********************************/
+/*    Slides Backgrounds        */
+/********************************/
+/* line 226, app/assets/stylesheets/hero_headers.css.scss */
+.slide-1,
+.slide-2,
+.slide-3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+/* line 239, app/assets/stylesheets/hero_headers.css.scss */
+.slide-1 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=2000");
+}
+
+/* line 244, app/assets/stylesheets/hero_headers.css.scss */
+.slide-2 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2000");
+}
+
+/* line 249, app/assets/stylesheets/hero_headers.css.scss */
+.slide-3 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?q=80&w=2000");
+}
+
+/********************************/
+/*    Sections Additionnelles   */
+/********************************/
+/* line 260, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+/* line 267, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* line 272, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card .process-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+/* line 278, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card .process-header i {
+  color: #1abc9c;
+  margin-bottom: 15px;
+}
+
+/* line 283, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card .process-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+/* line 289, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card .step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+/* line 294, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card .step .step-number {
+  width: 40px;
+  height: 40px;
+  background: #1abc9c;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+
+/* line 308, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card .step .step-content {
+  flex: 1;
+}
+
+/* line 311, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card .step .step-content h5 {
+  margin: 0 0 5px;
+  color: #333;
+}
+
+/* line 316, app/assets/stylesheets/hero_headers.css.scss */
+.how-it-works .process-card .step .step-content p {
+  margin: 0;
+  color: #666;
+}
+
+/* line 327, app/assets/stylesheets/hero_headers.css.scss */
+.features-section .feature-card {
+  padding: 30px 20px;
+  border-radius: 10px;
+  background: white;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+  height: 100%;
+}
+
+/* line 334, app/assets/stylesheets/hero_headers.css.scss */
+.features-section .feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* line 338, app/assets/stylesheets/hero_headers.css.scss */
+.features-section .feature-card:hover .feature-icon {
+  transform: scale(1.1) rotateZ(5deg);
+}
+
+/* line 343, app/assets/stylesheets/hero_headers.css.scss */
+.features-section .feature-card .feature-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, #1abc9c, #117964);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+/* line 354, app/assets/stylesheets/hero_headers.css.scss */
+.features-section .feature-card .feature-icon i {
+  font-size: 2rem;
+  color: white;
+}
+
+/* line 360, app/assets/stylesheets/hero_headers.css.scss */
+.features-section .feature-card h4 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* line 365, app/assets/stylesheets/hero_headers.css.scss */
+.features-section .feature-card p {
+  color: #666;
+  margin: 0;
+}
+
+/* line 373, app/assets/stylesheets/hero_headers.css.scss */
+.stats-section {
+  background: linear-gradient(135deg, #1abc9c, #117964);
+  color: white;
+}
+
+/* line 377, app/assets/stylesheets/hero_headers.css.scss */
+.stats-section .stat-box {
+  padding: 20px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+/* line 381, app/assets/stylesheets/hero_headers.css.scss */
+.stats-section .stat-box:hover {
+  transform: scale(1.05);
+}
+
+/* line 384, app/assets/stylesheets/hero_headers.css.scss */
+.stats-section .stat-box:hover i {
+  transform: rotateY(360deg);
+}
+
+/* line 389, app/assets/stylesheets/hero_headers.css.scss */
+.stats-section .stat-box i {
+  color: rgba(255, 255, 255, 0.8);
+  -webkit-transition: 0.6s;
+  -moz-transition: 0.6s;
+  -ms-transition: 0.6s;
+  -o-transition: 0.6s;
+  transition: 0.6s;
+}
+
+/* line 394, app/assets/stylesheets/hero_headers.css.scss */
+.stats-section .stat-box h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* line 400, app/assets/stylesheets/hero_headers.css.scss */
+.stats-section .stat-box p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* line 409, app/assets/stylesheets/hero_headers.css.scss */
+.cta-section {
+  background: #f8f9fa;
+}
+
+/* line 412, app/assets/stylesheets/hero_headers.css.scss */
+.cta-section .cta-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/********************************/
+/*      Responsive Design       */
+/********************************/
+@media screen and (max-width: 992px) {
+  /* line 426, app/assets/stylesheets/hero_headers.css.scss */
+  .fade-carousel {
+    height: 80vh;
+    min-height: 500px;
+  }
+  /* line 432, app/assets/stylesheets/hero_headers.css.scss */
+  .hero h1 {
+    font-size: 3.5rem;
+  }
+  /* line 436, app/assets/stylesheets/hero_headers.css.scss */
+  .hero h3 {
+    font-size: 1.5rem;
+  }
+  /* line 441, app/assets/stylesheets/hero_headers.css.scss */
+  .carousel-control-prev,
+.carousel-control-next {
+    width: 45px;
+    height: 45px;
+    margin: 0 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* line 451, app/assets/stylesheets/hero_headers.css.scss */
+  .fade-carousel {
+    height: 70vh;
+    min-height: 450px;
+  }
+  /* line 456, app/assets/stylesheets/hero_headers.css.scss */
+  .hero {
+    width: 95%;
+  }
+  /* line 459, app/assets/stylesheets/hero_headers.css.scss */
+  .hero h1 {
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
+  /* line 464, app/assets/stylesheets/hero_headers.css.scss */
+  .hero h3 {
+    font-size: 1.2rem;
+  }
+  /* line 468, app/assets/stylesheets/hero_headers.css.scss */
+  .hero .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  /* line 472, app/assets/stylesheets/hero_headers.css.scss */
+  .hero .hero-buttons .btn-hero,
+.hero .hero-buttons .btn-hero-outline {
+    width: 100%;
+    max-width: 280px;
+    margin: 5px 0;
+  }
+  /* line 481, app/assets/stylesheets/hero_headers.css.scss */
+  .carousel-indicators {
+    bottom: 15px;
+  }
+  /* line 485, app/assets/stylesheets/hero_headers.css.scss */
+  .carousel-control-prev,
+.carousel-control-next {
+    display: none;
+  }
+  /* line 491, app/assets/stylesheets/hero_headers.css.scss */
+  .process-card {
+    margin-bottom: 20px;
+  }
+  /* line 497, app/assets/stylesheets/hero_headers.css.scss */
+  .stats-section .stat-box h2 {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* line 506, app/assets/stylesheets/hero_headers.css.scss */
+  .fade-carousel {
+    height: 60vh;
+    min-height: 400px;
+  }
+  /* line 512, app/assets/stylesheets/hero_headers.css.scss */
+  .hero h1 {
+    font-size: 2rem;
+  }
+  /* line 516, app/assets/stylesheets/hero_headers.css.scss */
+  .hero h3 {
+    font-size: 1rem;
+  }
+  /* line 521, app/assets/stylesheets/hero_headers.css.scss */
+  .btn-hero,
+.btn-hero-outline {
+    padding: 10px 30px;
+    font-size: 0.95rem;
+  }
+}

@@ -1,0 +1,371 @@
+// ========================================
+// ShareMyBag - Page Profil
+// ========================================
+
+.profile {
+  &-header {
+    background: $gradient-primary;
+    color: $white;
+    padding: $spacing-12 0 $spacing-16;
+    margin-bottom: -$spacing-8;
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: $spacing-6;
+
+      @media (max-width: $breakpoint-md) {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      &-avatar {
+        position: relative;
+
+        img {
+          width: 120px;
+          height: 120px;
+          border-radius: $radius-full;
+          border: 4px solid rgba($white, 0.2);
+          background: $white;
+        }
+
+        .avatar-badge {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 32px;
+          height: 32px;
+          background: $success;
+          color: $white;
+          border-radius: $radius-full;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 3px solid $white;
+        }
+      }
+
+      &-details {
+        flex: 1;
+
+        h1 {
+          font-size: $font-size-3xl;
+          font-weight: $font-weight-bold;
+          margin-bottom: $spacing-2;
+          color: $white;
+        }
+
+        .profile-meta {
+          display: flex;
+          align-items: center;
+          gap: $spacing-4;
+          flex-wrap: wrap;
+          margin-bottom: $spacing-3;
+
+          @media (max-width: $breakpoint-md) {
+            justify-content: center;
+          }
+
+          span {
+            display: flex;
+            align-items: center;
+            gap: $spacing-2;
+            font-size: $font-size-sm;
+            opacity: 0.9;
+
+            i {
+              font-size: $font-size-base;
+            }
+          }
+        }
+
+        .profile-bio {
+          font-size: $font-size-base;
+          line-height: $line-height-relaxed;
+          opacity: 0.95;
+          max-width: 600px;
+        }
+      }
+
+      &-actions {
+        display: flex;
+        gap: $spacing-3;
+        flex-shrink: 0;
+
+        @media (max-width: $breakpoint-md) {
+          justify-content: center;
+        }
+
+        .btn {
+          padding: $spacing-3 $spacing-5;
+        }
+      }
+    }
+  }
+
+  &-stats {
+    background: $white;
+    border-radius: $radius-xl;
+    box-shadow: $shadow-lg;
+    padding: $spacing-6;
+    margin-bottom: $spacing-8;
+    position: relative;
+    z-index: 1;
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: $spacing-6;
+      text-align: center;
+
+      .stat-item {
+        h3 {
+          font-size: $font-size-2xl;
+          font-weight: $font-weight-bold;
+          color: $primary;
+          margin-bottom: $spacing-1;
+        }
+
+        p {
+          font-size: $font-size-sm;
+          color: $text-secondary;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  &-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: $spacing-8;
+
+    @media (max-width: $breakpoint-lg) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &-sidebar {
+    .sidebar-card {
+      background: $white;
+      border-radius: $radius-xl;
+      box-shadow: $shadow-md;
+      padding: $spacing-6;
+      margin-bottom: $spacing-6;
+
+      h3 {
+        font-size: $font-size-lg;
+        font-weight: $font-weight-semibold;
+        margin-bottom: $spacing-4;
+        color: $text-primary;
+      }
+
+      .verification-items {
+        .verification-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: $spacing-3 0;
+          border-bottom: 1px solid $border-light;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          span {
+            display: flex;
+            align-items: center;
+            gap: $spacing-2;
+            color: $text-secondary;
+            font-size: $font-size-sm;
+          }
+
+          .status {
+            &.verified {
+              color: $success;
+            }
+
+            &.pending {
+              color: $warning;
+            }
+
+            &.unverified {
+              color: $text-muted;
+            }
+          }
+        }
+      }
+
+      .skills-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-2;
+
+        .tag {
+          padding: $spacing-1 $spacing-3;
+          background: $primary-50;
+          color: $primary;
+          border-radius: $radius-full;
+          font-size: $font-size-sm;
+          font-weight: $font-weight-medium;
+        }
+      }
+    }
+  }
+
+  &-main {
+    .profile-tabs {
+      background: $white;
+      border-radius: $radius-xl;
+      box-shadow: $shadow-md;
+      margin-bottom: $spacing-6;
+
+      .tabs-nav {
+        display: flex;
+        border-bottom: 1px solid $border-color;
+        padding: 0 $spacing-4;
+        overflow-x: auto;
+
+        .tab-link {
+          padding: $spacing-4 $spacing-5;
+          color: $text-secondary;
+          font-weight: $font-weight-medium;
+          text-decoration: none;
+          border-bottom: 3px solid transparent;
+          transition: all $transition-fast;
+          white-space: nowrap;
+
+          &:hover {
+            color: $primary;
+          }
+
+          &.active {
+            color: $primary;
+            border-bottom-color: $primary;
+          }
+        }
+      }
+
+      .tabs-content {
+        padding: $spacing-6;
+      }
+    }
+
+    .activity-feed {
+      .activity-item {
+        display: flex;
+        gap: $spacing-4;
+        padding: $spacing-4 0;
+        border-bottom: 1px solid $border-light;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: $radius-full;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+
+          &.success {
+            background: rgba($success, 0.1);
+            color: $success;
+          }
+
+          &.info {
+            background: rgba($info, 0.1);
+            color: $info;
+          }
+
+          &.warning {
+            background: rgba($warning, 0.1);
+            color: $warning;
+          }
+        }
+
+        &-content {
+          flex: 1;
+
+          h4 {
+            font-size: $font-size-base;
+            font-weight: $font-weight-medium;
+            margin-bottom: $spacing-1;
+          }
+
+          p {
+            font-size: $font-size-sm;
+            color: $text-secondary;
+            margin-bottom: $spacing-2;
+          }
+
+          .activity-time {
+            font-size: $font-size-xs;
+            color: $text-muted;
+          }
+        }
+      }
+    }
+
+    .reviews-list {
+      .review-item {
+        padding: $spacing-5 0;
+        border-bottom: 1px solid $border-light;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: $spacing-3;
+
+          .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: $spacing-3;
+
+            img {
+              width: 40px;
+              height: 40px;
+              border-radius: $radius-full;
+            }
+
+            .reviewer-details {
+              h5 {
+                font-size: $font-size-base;
+                font-weight: $font-weight-medium;
+                margin-bottom: $spacing-1;
+              }
+
+              .review-date {
+                font-size: $font-size-sm;
+                color: $text-muted;
+              }
+            }
+          }
+
+          .review-rating {
+            display: flex;
+            gap: $spacing-1;
+            color: $warning;
+          }
+        }
+
+        &-content {
+          p {
+            font-size: $font-size-base;
+            line-height: $line-height-relaxed;
+            color: $text-primary;
+          }
+        }
+      }
+    }
+  }
+}

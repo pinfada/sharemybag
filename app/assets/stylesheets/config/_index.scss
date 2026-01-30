@@ -1,0 +1,45 @@
+// ========================================
+// ShareMyBag - Configuration Index
+// ========================================
+
+// Import toutes les variables de configuration
+@import "colors";
+@import "typography";
+@import "spacing";
+
+// Variables globales supplémentaires
+$enable-smooth-scroll: true;
+$enable-transitions: true;
+$enable-reduced-motion: true;
+
+// Configuration des animations
+$animation-duration: 0.3s;
+$animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+// Mixins globaux
+@mixin transition($properties: all) {
+  @if $enable-transitions {
+    transition: $properties $animation-duration $animation-timing;
+  }
+}
+
+@mixin focus-ring {
+  outline: 2px solid $primary;
+  outline-offset: 2px;
+}
+
+@mixin card-shadow {
+  box-shadow: $shadow-md;
+  transition: box-shadow $transition-base;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+  }
+}
+
+@mixin glass-effect {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}

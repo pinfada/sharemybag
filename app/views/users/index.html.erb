@@ -1,7 +1,7 @@
 <% provide(:title, 'All users') %>
 <h1>All users</h1>
 
-<%= will_paginate @users, renderer: BootstrapPagination::Rails %>
+<%= will_paginate @users %>
 
 <table class="table table-hover">
   <thead>
@@ -45,4 +45,4 @@
 <br>
 <%= link_to 'New User', new_user_path %>
 
-<%= will_paginate @users, renderer: BootstrapPagination::Rails %>
+<%= will_paginate @users %>

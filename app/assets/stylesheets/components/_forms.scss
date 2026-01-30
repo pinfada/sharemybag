@@ -1,0 +1,370 @@
+// ========================================
+// ShareMyBag - Composant Formulaires
+// ========================================
+
+// Groupes de formulaire
+.form-group {
+  margin-bottom: $spacing-5;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Labels
+.form-label {
+  display: inline-block;
+  margin-bottom: $spacing-2;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+
+  &.required::after {
+    content: " *";
+    color: $danger;
+  }
+}
+
+// Contrôles de formulaire
+.form-control {
+  display: block;
+  width: 100%;
+  padding: $spacing-3 $spacing-4;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  color: $text-primary;
+  background-color: $white;
+  background-clip: padding-box;
+  border: 2px solid $border-color;
+  border-radius: $radius-lg;
+  transition: all $transition-fast;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    background-color: $white;
+    box-shadow: 0 0 0 3px rgba($primary, 0.1);
+  }
+
+  &:hover:not(:disabled):not(:focus) {
+    border-color: $gray-300;
+  }
+
+  &::placeholder {
+    color: $text-muted;
+    opacity: 1;
+  }
+
+  &:disabled,
+  &[readonly] {
+    background-color: $gray-50;
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  // Tailles
+  &-sm {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+    border-radius: $radius-md;
+  }
+
+  &-lg {
+    padding: $spacing-4 $spacing-5;
+    font-size: $font-size-lg;
+    border-radius: $radius-xl;
+  }
+}
+
+// Textarea
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+// Select
+select.form-control {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right $spacing-3 center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: $spacing-10;
+  cursor: pointer;
+}
+
+// Input groups
+.input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+
+  > .form-control {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+  }
+
+  &-prepend,
+  &-append {
+    display: flex;
+    align-items: center;
+    padding: $spacing-3 $spacing-4;
+    font-size: $font-size-base;
+    font-weight: $font-weight-normal;
+    line-height: $line-height-normal;
+    color: $text-secondary;
+    text-align: center;
+    white-space: nowrap;
+    background-color: $gray-50;
+    border: 2px solid $border-color;
+  }
+
+  &-prepend {
+    margin-right: -2px;
+    border-radius: $radius-lg 0 0 $radius-lg;
+  }
+
+  &-append {
+    margin-left: -2px;
+    border-radius: 0 $radius-lg $radius-lg 0;
+  }
+
+  .form-control:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .form-control:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+// Checkbox et radio
+.form-check {
+  display: flex;
+  align-items: center;
+  padding-left: 0;
+  margin-bottom: $spacing-3;
+
+  &-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: $spacing-2;
+    background-color: $white;
+    border: 2px solid $border-color;
+    border-radius: $radius-md;
+    transition: all $transition-fast;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    &:checked {
+      background-color: $primary;
+      border-color: $primary;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3e%3cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3e%3c/svg%3e");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 0.875rem;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+
+    &[type="radio"] {
+      border-radius: $radius-full;
+
+      &:checked {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3e%3ccircle cx='10' cy='10' r='3'/%3e%3c/svg%3e");
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &-label {
+    font-size: $font-size-base;
+    color: $text-primary;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &-inline {
+    display: inline-flex;
+    margin-right: $spacing-4;
+  }
+}
+
+// Switch toggle
+.form-switch {
+  position: relative;
+  display: inline-block;
+  width: 3rem;
+  height: 1.5rem;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .slider {
+      background-color: $primary;
+
+      &::before {
+        transform: translateX(1.5rem);
+      }
+    }
+
+    &:focus + .slider {
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $gray-300;
+    transition: all $transition-fast;
+    border-radius: $radius-full;
+
+    &::before {
+      position: absolute;
+      content: "";
+      height: 1.125rem;
+      width: 1.125rem;
+      left: 0.1875rem;
+      bottom: 0.1875rem;
+      background-color: white;
+      transition: all $transition-fast;
+      border-radius: $radius-full;
+    }
+  }
+}
+
+// Range slider
+.form-range {
+  width: 100%;
+  height: 1.5rem;
+  padding: 0;
+  background-color: transparent;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::-webkit-slider-track {
+    width: 100%;
+    height: 0.5rem;
+    cursor: pointer;
+    background: $gray-200;
+    border-radius: $radius-full;
+  }
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    background: $primary;
+    border-radius: $radius-full;
+    cursor: pointer;
+    margin-top: -0.5rem;
+    box-shadow: $shadow-md;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: $primary-dark;
+      transform: scale(1.1);
+    }
+  }
+
+  &::-moz-range-track {
+    width: 100%;
+    height: 0.5rem;
+    cursor: pointer;
+    background: $gray-200;
+    border-radius: $radius-full;
+  }
+
+  &::-moz-range-thumb {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    background: $primary;
+    border-radius: $radius-full;
+    cursor: pointer;
+    box-shadow: $shadow-md;
+  }
+}
+
+// Messages de validation
+.invalid-feedback,
+.valid-feedback {
+  display: none;
+  width: 100%;
+  margin-top: $spacing-2;
+  font-size: $font-size-sm;
+}
+
+.invalid-feedback {
+  color: $danger;
+}
+
+.valid-feedback {
+  color: $success;
+}
+
+.was-validated {
+  .form-control:invalid,
+  .form-control.is-invalid {
+    border-color: $danger;
+
+    &:focus {
+      border-color: $danger;
+      box-shadow: 0 0 0 3px rgba($danger, 0.1);
+    }
+
+    ~ .invalid-feedback {
+      display: block;
+    }
+  }
+
+  .form-control:valid,
+  .form-control.is-valid {
+    border-color: $success;
+
+    &:focus {
+      border-color: $success;
+      box-shadow: 0 0 0 3px rgba($success, 0.1);
+    }
+
+    ~ .valid-feedback {
+      display: block;
+    }
+  }
+}
+
+// Texte d'aide
+.form-text {
+  display: block;
+  margin-top: $spacing-2;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}

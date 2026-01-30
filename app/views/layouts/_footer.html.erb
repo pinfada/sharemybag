@@ -1,77 +1,148 @@
-<!--
-<footer class="footer"> 
-	<small> 
-		<a href="http://google.com/">recherche google</a> 
-		by Mich Mich
-	</small> 
-	<nav> 
-		<ul> 
-			<li><%= link_to "About", propos_path %></li> 
-			<li><%= link_to "Contact", contact_path %></li> 
-		</ul> 
-	</nav> 
-</footer>
--->
-
-<footer>
-    <div class="footer" id="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3  col-md-3 col-sm-6 col-xs-12">
-                    <h3> A propos </h3>
-                    <p class="text-left">Sharemybag propose de mettre en relation de facon sécurisée les voyageurs disposant de places libres dans leurs bagages avec des personnes souhaitant expédier leurs colis. Principal intermediaire des voyageurs, nous prenons les dispositions auprès des compagnies aériennes pour faire de ce moment une expérience unique.</p>
-                </div>
-                <div class="col-lg-2  col-md-2 col-sm-4 col-xs-6">
-                    <h3> Dernières News </h3>
-                    <p>Lancement prévue en 2019</p>
-                </div>
-                <div class="col-lg-2  col-md-2 col-sm-4 col-xs-6">
-                    <h3> Contact </h3>
-                    <ul>
-                        <li> <%= link_to "Mon compte", current_user %> </li>
-                        <li> <%= link_to 'Politique de confidentialité', policy_path %> </li>
-                        <li> <a href="#"> Partenaires </a> </li>
-                        <li> <a href="#"> Support </a> </li>
-                        <li> <a href="#"> FAQ </a> </li>
-                        <li> <a href="#"> Regles d'utilisation </a> </li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-3  col-md-3 col-sm-6 col-xs-12 ">
-                    <h3> Newsletter </h3>
-                    <p class="text-left">Restez en contact avec Sharemybag. Laissez-nous votre e-mail ci-dessous pour recevoir les dernières nouvelles, promotions et bien plus!</p>
-                    <ul>
-                        <li>
-                            <div class="input-append newsletter-box text-center">
-                                <input type="text" class="full text-center" placeholder="Email ">
-                                <button class="btn bg-gray" type="button">
-                                 	SUBSCRIVE	 
-                                 	<i class="fa fa-long-arrow-right"> </i> 
-                             	</button>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+<!-- Footer Moderne et Responsive -->
+<footer class="footer-section mt-5">
+  <div class="footer-main bg-dark text-white py-5">
+    <div class="container">
+      <div class="row g-4">
+        <!-- À propos -->
+        <div class="col-lg-4 col-md-6">
+          <div class="footer-widget">
+            <h3 class="text-primary mb-4">
+              <i class="fas fa-suitcase-rolling me-2"></i>ShareMyBag
+            </h3>
+            <p class="text-light opacity-75">
+              ShareMyBag révolutionne le transport de colis en connectant voyageurs et expéditeurs.
+              Une solution économique, écologique et sécurisée pour vos envois internationaux.
+            </p>
+            <div class="social-links mt-4">
+              <a href="#" class="social-link me-3" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" class="social-link me-3" title="Twitter">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="social-link me-3" title="Instagram">
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a href="#" class="social-link me-3" title="LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="#" class="social-link" title="YouTube">
+                <i class="fab fa-youtube"></i>
+              </a>
             </div>
-            <!--/.row--> 
+          </div>
         </div>
-        <!--/.container--> 
-    </div>
-    <!--/.footer-->
-    
-    <div class="footer-bottom">
-        <div class="container">
-            <p class="pull-left"> Copyright © Footer MBO Plugin 2018. All right reserved. </p>
-            <div class="pull-right">
-                <ul class="social">
-                    <li> <a href="#"> <i class=" fa fa-facebook">   </i> </a> </li>
-                    <li> <a href="#"> <i class="fa fa-twitter">   </i> </a> </li>
-                    <li> <a href="#"> <i class="fa fa-google-plus">   </i> </a> </li>
-                    <li> <a href="#"> <i class="fa fa-pinterest">   </i> </a> </li>
-                    <li> <a href="#"> <i class="fa fa-youtube">   </i> </a> </li>
-                </ul>
+
+        <!-- Liens utiles -->
+        <div class="col-lg-2 col-md-6">
+          <div class="footer-widget">
+            <h5 class="text-white mb-4">Entreprise</h5>
+            <ul class="footer-links">
+              <li><%= link_to "À propos", propos_path, class: "footer-link" %></li>
+              <li><%= link_to "Notre équipe", team_path, class: "footer-link" %></li>
+              <li><%= link_to "Contact", contact_path, class: "footer-link" %></li>
+              <li><a href="#" class="footer-link">Carrières</a></li>
+              <li><a href="#" class="footer-link">Presse</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="col-lg-2 col-md-6">
+          <div class="footer-widget">
+            <h5 class="text-white mb-4">Services</h5>
+            <ul class="footer-links">
+              <li><%= link_to "Envoyer un colis", new_shipping_request_path, class: "footer-link" %></li>
+              <li><%= link_to "Devenir transporteur", new_kilo_offer_path, class: "footer-link" %></li>
+              <li><%= link_to "Parcourir les offres", kilo_offers_path, class: "footer-link" %></li>
+              <li><a href="#" class="footer-link">Calculateur de prix</a></li>
+              <li><a href="#" class="footer-link">Assurance colis</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Support -->
+        <div class="col-lg-2 col-md-6">
+          <div class="footer-widget">
+            <h5 class="text-white mb-4">Support</h5>
+            <ul class="footer-links">
+              <li><%= link_to "Centre d'aide", help_path, class: "footer-link" %></li>
+              <li><a href="#" class="footer-link">FAQ</a></li>
+              <li><%= link_to "Politique de confidentialité", policy_path, class: "footer-link" %></li>
+              <li><a href="#" class="footer-link">Conditions d'utilisation</a></li>
+              <li><a href="#" class="footer-link">Signaler un problème</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="col-lg-2 col-md-12">
+          <div class="footer-widget">
+            <h5 class="text-white mb-4">Newsletter</h5>
+            <p class="text-light opacity-75 small">Recevez nos dernières actualités et offres exclusives</p>
+            <form class="newsletter-form mt-3">
+              <div class="input-group">
+                <input type="email" class="form-control" placeholder="Votre email" required>
+                <button class="btn btn-primary" type="submit">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </form>
+            <div class="app-buttons mt-4">
+              <a href="#" class="d-block mb-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                     alt="Google Play" height="35">
+              </a>
+              <a href="#" class="d-block">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+                     alt="App Store" height="35">
+              </a>
             </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="footer-stats row text-center mt-5 pt-4 border-top border-secondary">
+        <div class="col-6 col-md-3">
+          <h4 class="text-primary mb-2">50K+</h4>
+          <small class="text-light opacity-75">Utilisateurs</small>
+        </div>
+        <div class="col-6 col-md-3">
+          <h4 class="text-primary mb-2">120+</h4>
+          <small class="text-light opacity-75">Pays</small>
+        </div>
+        <div class="col-6 col-md-3 mt-3 mt-md-0">
+          <h4 class="text-primary mb-2">100K+</h4>
+          <small class="text-light opacity-75">Colis livrés</small>
+        </div>
+        <div class="col-6 col-md-3 mt-3 mt-md-0">
+          <h4 class="text-primary mb-2">4.8★</h4>
+          <small class="text-light opacity-75">Note moyenne</small>
+        </div>
+      </div>
     </div>
-    <!--/.footer-bottom--> 
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom bg-black py-3">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0 text-white-50 small">
+            © <%= Date.current.year %> ShareMyBag. Tous droits réservés.
+          </p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <div class="payment-methods">
+            <i class="fab fa-cc-visa text-white-50 mx-2"></i>
+            <i class="fab fa-cc-mastercard text-white-50 mx-2"></i>
+            <i class="fab fa-cc-paypal text-white-50 mx-2"></i>
+            <i class="fab fa-cc-stripe text-white-50 mx-2"></i>
+            <i class="fab fa-cc-amex text-white-50 mx-2"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </footer>

@@ -1,0 +1,342 @@
+// ========================================
+// ShareMyBag - Composant Tables
+// ========================================
+
+.table {
+  width: 100%;
+  margin-bottom: $spacing-4;
+  background-color: $white;
+  border-collapse: collapse;
+
+  thead {
+    th {
+      padding: $spacing-3 $spacing-4;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $text-secondary;
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: $letter-spacing-wide;
+      background: $gray-50;
+      border-bottom: 2px solid $border-color;
+
+      &.sortable {
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+        padding-right: $spacing-8;
+
+        &::after {
+          content: "↕";
+          position: absolute;
+          right: $spacing-4;
+          opacity: 0.3;
+          transition: opacity $transition-fast;
+        }
+
+        &:hover::after {
+          opacity: 0.6;
+        }
+
+        &.sorted-asc::after {
+          content: "↑";
+          opacity: 1;
+        }
+
+        &.sorted-desc::after {
+          content: "↓";
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $border-light;
+      transition: background-color $transition-fast;
+
+      &:hover {
+        background-color: $gray-50;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding: $spacing-4;
+      font-size: $font-size-base;
+      color: $text-primary;
+    }
+  }
+
+  // Variantes
+  &-striped {
+    tbody tr:nth-child(odd) {
+      background-color: $gray-50;
+    }
+  }
+
+  &-bordered {
+    border: 1px solid $border-color;
+
+    th,
+    td {
+      border: 1px solid $border-color;
+    }
+  }
+
+  &-borderless {
+    th,
+    td {
+      border: none;
+    }
+
+    thead th {
+      border-bottom: 2px solid $border-color;
+    }
+
+    tbody tr {
+      border-bottom: none;
+    }
+  }
+
+  &-hover {
+    tbody tr {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $primary-50;
+      }
+    }
+  }
+
+  &-sm {
+    th,
+    td {
+      padding: $spacing-2 $spacing-3;
+      font-size: $font-size-sm;
+    }
+  }
+
+  &-lg {
+    th,
+    td {
+      padding: $spacing-5 $spacing-6;
+    }
+  }
+
+  // Table responsive
+  &-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $gray-100;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $gray-400;
+      border-radius: $radius-full;
+
+      &:hover {
+        background: $gray-500;
+      }
+    }
+  }
+
+  // Alignement
+  &-align {
+    &-middle {
+      td,
+      th {
+        vertical-align: middle;
+      }
+    }
+
+    &-top {
+      td,
+      th {
+        vertical-align: top;
+      }
+    }
+  }
+
+  // États de ligne
+  tbody tr {
+    &.selected {
+      background-color: $primary-50;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    &.table-primary {
+      background-color: $primary-50;
+    }
+
+    &.table-success {
+      background-color: rgba($success, 0.1);
+    }
+
+    &.table-warning {
+      background-color: rgba($warning, 0.1);
+    }
+
+    &.table-danger {
+      background-color: rgba($danger, 0.1);
+    }
+
+    &.table-info {
+      background-color: rgba($info, 0.1);
+    }
+  }
+
+  // Cellules d'action
+  .table-actions {
+    white-space: nowrap;
+    text-align: right;
+
+    .btn {
+      margin-left: $spacing-2;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  // Checkbox dans les tables
+  .table-checkbox {
+    width: 40px;
+    text-align: center;
+
+    input[type="checkbox"] {
+      cursor: pointer;
+    }
+  }
+
+  // Avatar dans les tables
+  .table-avatar {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: $radius-full;
+    }
+
+    .avatar-name {
+      font-weight: $font-weight-medium;
+    }
+
+    .avatar-email {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+    }
+  }
+
+  // Badge dans les tables
+  .table-badge {
+    .badge {
+      margin-right: $spacing-2;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+// Table avec carte
+.table-card {
+  background: $white;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-md;
+  overflow: hidden;
+
+  .table {
+    margin-bottom: 0;
+
+    thead th {
+      &:first-child {
+        padding-left: $spacing-6;
+      }
+
+      &:last-child {
+        padding-right: $spacing-6;
+      }
+    }
+
+    tbody td {
+      &:first-child {
+        padding-left: $spacing-6;
+      }
+
+      &:last-child {
+        padding-right: $spacing-6;
+      }
+    }
+  }
+
+  &-header {
+    padding: $spacing-5 $spacing-6;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h3 {
+      margin: 0;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+    }
+  }
+
+  &-footer {
+    padding: $spacing-4 $spacing-6;
+    background: $gray-50;
+    border-top: 1px solid $border-color;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+// Table vide
+.table-empty {
+  text-align: center;
+  padding: $spacing-12 $spacing-6;
+  color: $text-secondary;
+
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto $spacing-4;
+    opacity: 0.3;
+  }
+
+  h4 {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    margin-bottom: $spacing-2;
+    color: $text-primary;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    margin-bottom: $spacing-4;
+  }
+}

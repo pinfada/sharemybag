@@ -1,0 +1,149 @@
+<% provide(:title, 'À propos') %>
+
+<div class="hero hero-gradient">
+  <div class="hero-content">
+    <div class="container">
+      <h1 class="text-white">À propos de ShareMyBag</h1>
+      <p class="hero-subtitle text-white opacity-90">
+        La plateforme collaborative qui révolutionne le transport de bagages
+      </p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+
+        <div class="card mb-5">
+          <div class="card-body p-5">
+            <h2 class="h3 mb-4 text-primary">Notre Mission</h2>
+            <p class="lead mb-4">
+              ShareMyBag connecte les voyageurs avec de l'espace disponible dans leurs bagages
+              aux personnes souhaitant envoyer des colis à travers le monde.
+            </p>
+            <p>
+              Nous créons une communauté de confiance où chaque voyage devient une opportunité
+              d'entraide, tout en réduisant l'empreinte carbone du transport de marchandises.
+            </p>
+          </div>
+        </div>
+
+        <div class="card mb-5">
+          <div class="card-body p-5">
+            <h2 class="h3 mb-4 text-primary">Comment ça marche ?</h2>
+
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="d-flex">
+                  <div class="flex-shrink-0">
+                    <div class="icon-circle icon-primary">
+                      <i class="fas fa-box fa-lg"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h5>Pour les expéditeurs</h5>
+                    <p class="text-secondary">
+                      Publiez votre demande d'envoi et recevez des offres de voyageurs
+                      se rendant à votre destination.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="d-flex">
+                  <div class="flex-shrink-0">
+                    <div class="icon-circle icon-success">
+                      <i class="fas fa-plane fa-lg"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h5>Pour les voyageurs</h5>
+                    <p class="text-secondary">
+                      Rentabilisez votre espace de bagage disponible en transportant
+                      des colis pour d'autres personnes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-5">
+          <div class="card-body p-5">
+            <h2 class="h3 mb-4 text-primary">Nos Valeurs</h2>
+
+            <div class="row g-4 mt-2">
+              <div class="col-md-4 text-center">
+                <div class="icon-circle icon-primary mx-auto mb-3">
+                  <i class="fas fa-shield-alt fa-lg"></i>
+                </div>
+                <h5>Confiance</h5>
+                <p class="text-secondary small">
+                  Système de vérification d'identité et évaluations pour garantir la sécurité
+                </p>
+              </div>
+
+              <div class="col-md-4 text-center">
+                <div class="icon-circle icon-success mx-auto mb-3">
+                  <i class="fas fa-leaf fa-lg"></i>
+                </div>
+                <h5>Écologie</h5>
+                <p class="text-secondary small">
+                  Réduire l'empreinte carbone en optimisant les trajets existants
+                </p>
+              </div>
+
+              <div class="col-md-4 text-center">
+                <div class="icon-circle icon-warning mx-auto mb-3">
+                  <i class="fas fa-users fa-lg"></i>
+                </div>
+                <h5>Communauté</h5>
+                <p class="text-secondary small">
+                  Créer des liens entre voyageurs et faciliter l'entraide internationale
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body p-5">
+            <h2 class="h3 mb-4 text-primary">ShareMyBag en chiffres</h2>
+
+            <div class="row g-4 text-center">
+              <div class="col-6 col-md-3">
+                <h3 class="text-primary mb-1">50K+</h3>
+                <p class="text-secondary small mb-0">Utilisateurs actifs</p>
+              </div>
+              <div class="col-6 col-md-3">
+                <h3 class="text-primary mb-1">120+</h3>
+                <p class="text-secondary small mb-0">Pays desservis</p>
+              </div>
+              <div class="col-6 col-md-3">
+                <h3 class="text-primary mb-1">200K+</h3>
+                <p class="text-secondary small mb-0">Colis livrés</p>
+              </div>
+              <div class="col-6 col-md-3">
+                <h3 class="text-primary mb-1">4.8/5</h3>
+                <p class="text-secondary small mb-0">Note moyenne</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-5">
+          <h3 class="mb-4">Prêt à rejoindre l'aventure ?</h3>
+          <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <%= link_to "S'inscrire", signup_path, class: "btn btn-primary btn-lg" %>
+            <%= link_to "En savoir plus", help_path, class: "btn btn-outline-primary btn-lg" %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,331 @@
+// Styles modernes pour la page d'accueil ShareMyBag
+
+// Variables de couleurs personnalisées
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --success-gradient: linear-gradient(135deg, #13B955 0%, #06D6A0 100%);
+  --warning-gradient: linear-gradient(135deg, #FFB800 0%, #FF6B6B 100%);
+}
+
+// Couleurs soft pour les backgrounds
+.bg-primary-soft {
+  background-color: rgba(102, 126, 234, 0.1) !important;
+}
+
+.bg-success-soft {
+  background-color: rgba(19, 185, 85, 0.1) !important;
+}
+
+.bg-warning-soft {
+  background-color: rgba(255, 184, 0, 0.1) !important;
+}
+
+.bg-info-soft {
+  background-color: rgba(0, 184, 217, 0.1) !important;
+}
+
+.bg-danger-soft {
+  background-color: rgba(245, 87, 108, 0.1) !important;
+}
+
+.bg-purple-soft {
+  background-color: rgba(118, 75, 162, 0.1) !important;
+}
+
+.text-purple {
+  color: #764ba2 !important;
+}
+
+// Hero Section
+.hero-gradient-bg {
+  background: var(--primary-gradient);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,213.3C960,203,1056,181,1152,181.3C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+    background-size: cover;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 1s ease-out;
+}
+
+.animate-slide-up-delay {
+  animation: slideUp 1s ease-out 0.3s both;
+}
+
+.animate-fade-in-delay {
+  animation: fadeIn 1s ease-out 0.5s both;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-bounce {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.animate-bounce-delay {
+  animation: bounce 2s ease-in-out infinite 0.5s;
+}
+
+// Hero Content
+.hero-content {
+  position: relative;
+  z-index: 10;
+}
+
+.hero-image-wrapper {
+  position: relative;
+
+  .floating-card,
+  .floating-card-2 {
+    max-width: 250px;
+    animation-duration: 3s;
+  }
+
+  .floating-card {
+    top: 10%;
+    left: -10%;
+  }
+
+  .floating-card-2 {
+    bottom: 10%;
+    right: -10%;
+  }
+}
+
+// Avatar styles
+.avatar-sm {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+// Buttons avec effets hover
+.hover-lift {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+// Cards avec hover effects
+.hover-shadow-lg {
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-5px);
+  }
+}
+
+// Process steps
+.step-number {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+// Icon boxes
+.icon-box {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+// Transitions générales
+.transition {
+  transition: all 0.3s ease;
+}
+
+// Gap utility pour Bootstrap 5
+.gap-3 {
+  gap: 1rem !important;
+}
+
+// Rounded corners
+.rounded-4 {
+  border-radius: 1rem !important;
+}
+
+.rounded-pill {
+  border-radius: 50rem !important;
+}
+
+// Typography
+.display-2 {
+  font-weight: 800;
+  line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 3rem;
+  }
+}
+
+.display-5 {
+  font-weight: 700;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+// Text colors
+.text-white-50 {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+// Shadow utilities
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.shadow {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+// Fix pour le hero image si SVG n'existe pas
+.hero-image-wrapper img {
+  max-width: 100%;
+  height: auto;
+
+  // Fallback si image n'existe pas
+  &::before {
+    content: '';
+    display: block;
+    width: 100%;
+    min-height: 400px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    opacity: 0.1;
+    border-radius: 20px;
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 992px) {
+  .floating-card,
+  .floating-card-2 {
+    display: none !important;
+  }
+
+  .hero-gradient-bg {
+    padding: 60px 0;
+    min-height: auto !important;
+  }
+
+  .icon-box {
+    width: 80px;
+    height: 80px;
+
+    i {
+      font-size: 1.5rem !important;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .btn-lg {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 1rem !important;
+  }
+
+  .display-2 {
+    font-size: 2rem;
+  }
+
+  .stat-box {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+}
+
+// Fix pour la navbar transparente sur le hero
+.hero-section {
+  margin-top: -76px; // Compense la hauteur de la navbar
+  padding-top: 76px;
+}
+
+// Ajustement pour affichage sans image
+.hero-image-wrapper:empty::before {
+  content: '';
+  display: block;
+  width: 100%;
+  min-height: 400px;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect fill="%23f8f9fa" width="400" height="400"/><text x="50%" y="50%" font-family="Arial" font-size="20" fill="%236c757d" text-anchor="middle" dy=".3em">Illustration</text></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}

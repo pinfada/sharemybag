@@ -1,0 +1,75 @@
+/* line 1, app/assets/stylesheets/fancy.css.scss */
+body {
+  padding-top: 60px;
+}
+
+/* line 2, app/assets/stylesheets/fancy.css.scss */
+.nav.nav-justified > li > a {
+  position: relative;
+}
+
+/* line 3, app/assets/stylesheets/fancy.css.scss */
+.nav.nav-justified > li > a:hover,
+.nav.nav-justified > li > a:focus {
+  background-color: transparent;
+}
+
+/* line 5, app/assets/stylesheets/fancy.css.scss */
+.nav.nav-justified > li > a > .quote {
+  position: absolute;
+  left: 0px;
+  top: 0;
+  opacity: 0;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  background-color: #13c0ba;
+  border-radius: 15px;
+  color: #fff;
+}
+
+/* line 17, app/assets/stylesheets/fancy.css.scss */
+.nav.nav-justified > li.active > a > .quote {
+  opacity: 1;
+}
+
+/* line 18, app/assets/stylesheets/fancy.css.scss */
+.nav.nav-justified > li > a > img {
+  box-shadow: 0 0 0 5px #13c0ba;
+}
+
+/* line 19, app/assets/stylesheets/fancy.css.scss */
+.nav.nav-justified > li > a > img {
+  max-width: 100%;
+  opacity: .3;
+  -webkit-transform: scale(0.8, 0.8);
+  transform: scale(0.8, 0.8);
+  -webkit-transition: all 0.3s 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* line 27, app/assets/stylesheets/fancy.css.scss */
+.nav.nav-justified > li.active > a > img,
+.nav.nav-justified > li:hover > a > img,
+.nav.nav-justified > li:focus > a > img {
+  opacity: 1;
+  -webkit-transform: none;
+  transform: none;
+  -webkit-transition: all 0.3s 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* line 36, app/assets/stylesheets/fancy.css.scss */
+.tab-pane .tab-inner {
+  padding: 30px 0 20px;
+}
+
+@media (min-width: 768px) {
+  /* line 39, app/assets/stylesheets/fancy.css.scss */
+  .nav.nav-justified > li > a > .quote {
+    left: auto;
+    top: auto;
+    right: 20px;
+    bottom: 0px;
+  }
+}

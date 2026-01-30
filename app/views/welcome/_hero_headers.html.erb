@@ -1,45 +1,292 @@
-<div class="carousel fade-carousel slide" data-ride="carousel" data-interval="4000" id="bs-carousel">
-  <!-- Overlay -->
+<!-- Hero Carousel Section avec Design Original Amélioré -->
+<div class="carousel fade-carousel slide" data-bs-ride="carousel" data-bs-interval="4000" id="bs-carousel">
+  <!-- Overlay pour effet de profondeur -->
   <div class="overlay"></div>
 
-  <!-- Indicators -->
-  <ol class="carousel-indicators">
-    <li data-target="#bs-carousel" data-slide-to="0" class="active"></li>
-    <li data-target="#bs-carousel" data-slide-to="1"></li>
-    <li data-target="#bs-carousel" data-slide-to="2"></li>
-  </ol>
-  
-  <!-- Wrapper for slides -->
+  <!-- Indicateurs Bootstrap 5 -->
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#bs-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#bs-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#bs-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+
+  <!-- Slides du Carousel -->
   <div class="carousel-inner">
-    <div class="item slides active">
+    <!-- Slide 1 - Économies -->
+    <div class="carousel-item active">
       <div class="slide-1"></div>
       <div class="hero">
-        <hgroup>
-            <h1>Faites des économies</h1>        
-            <h3>Rentabilisez vos déplacements grace à vos bagages</h3>
-        </hgroup>
-        <button class="btn btn-hero btn-lg" role="button">En savoir plus</button>
+        <div class="container">
+          <hgroup>
+            <h1 class="display-3 fw-bold mb-4">Faites des économies</h1>
+            <h3 class="lead fs-3">Rentabilisez vos déplacements grâce à vos bagages</h3>
+          </hgroup>
+          <div class="hero-buttons mt-5">
+            <%= link_to new_shipping_request_path, class: 'btn btn-hero btn-lg me-3' do %>
+              <i class="fas fa-box me-2"></i> Envoyer un colis
+            <% end %>
+            <%= link_to new_kilo_offer_path, class: 'btn btn-hero-outline btn-lg' do %>
+              <i class="fas fa-plane me-2"></i> Devenir transporteur
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="item slides">
+
+    <!-- Slide 2 - Sérénité -->
+    <div class="carousel-item">
       <div class="slide-2"></div>
-      <div class="hero">        
-        <hgroup>
-            <h1>Voyagez serein</h1>        
-            <h3>nous sommes là, à vos côtés, pour organiser vos déplacements</h3>
-        </hgroup>       
-        <button class="btn btn-hero btn-lg" role="button">En savoir plus</button>
+      <div class="hero">
+        <div class="container">
+          <hgroup>
+            <h1 class="display-3 fw-bold mb-4">Voyagez serein</h1>
+            <h3 class="lead fs-3">Nous sommes là, à vos côtés, pour organiser vos déplacements</h3>
+          </hgroup>
+          <div class="hero-buttons mt-5">
+            <%= link_to shipping_requests_path, class: 'btn btn-hero btn-lg me-3' do %>
+              <i class="fas fa-search me-2"></i> Parcourir les demandes
+            <% end %>
+            <%= link_to kilo_offers_path, class: 'btn btn-hero-outline btn-lg' do %>
+              <i class="fas fa-suitcase me-2"></i> Voir les offres
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="item slides">
+
+    <!-- Slide 3 - Équipe -->
+    <div class="carousel-item">
       <div class="slide-3"></div>
-      <div class="hero">        
-        <hgroup>
-            <h1>Une equipe dediée</h1>        
-            <h3>Forte capacité de réactivité, d'innovation et de flexibilité </h3>
-        </hgroup>
-        <%= link_to 'En savoir plus', team_path, class: 'btn btn-hero btn-lg' %> 
+      <div class="hero">
+        <div class="container">
+          <hgroup>
+            <h1 class="display-3 fw-bold mb-4">Une équipe dédiée</h1>
+            <h3 class="lead fs-3">Forte capacité de réactivité, d'innovation et de flexibilité</h3>
+          </hgroup>
+          <div class="hero-buttons mt-5">
+            <%= link_to team_path, class: 'btn btn-hero btn-lg me-3' do %>
+              <i class="fas fa-users me-2"></i> Notre équipe
+            <% end %>
+            <%= link_to contact_path, class: 'btn btn-hero-outline btn-lg' do %>
+              <i class="fas fa-envelope me-2"></i> Nous contacter
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
-  </div> 
+  </div>
+
+  <!-- Contrôles du Carousel Bootstrap 5 -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#bs-carousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Précédent</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#bs-carousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Suivant</span>
+  </button>
 </div>
+
+<!-- Section Comment ça marche -->
+<section class="how-it-works py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold">Comment ça marche ?</h2>
+      <p class="lead text-muted">Un processus simple et sécurisé en 3 étapes</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Pour les expéditeurs -->
+      <div class="col-lg-6">
+        <div class="process-card h-100">
+          <div class="process-header">
+            <i class="fas fa-box fa-2x"></i>
+            <h3>Pour les expéditeurs</h3>
+          </div>
+          <div class="process-steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h5>Publiez votre demande</h5>
+                <p>Décrivez votre colis et indiquez votre trajet souhaité</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h5>Recevez des offres</h5>
+                <p>Les voyageurs vous proposent leurs meilleurs tarifs</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h5>Expédiez en sécurité</h5>
+                <p>Paiement sécurisé et suivi en temps réel</p>
+              </div>
+            </div>
+          </div>
+          <%= link_to "Commencer maintenant →", new_shipping_request_path, class: "btn btn-primary btn-lg w-100 mt-4" %>
+        </div>
+      </div>
+
+      <!-- Pour les voyageurs -->
+      <div class="col-lg-6">
+        <div class="process-card h-100">
+          <div class="process-header">
+            <i class="fas fa-plane fa-2x"></i>
+            <h3>Pour les voyageurs</h3>
+          </div>
+          <div class="process-steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h5>Proposez votre espace</h5>
+                <p>Indiquez vos trajets et la capacité disponible</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h5>Acceptez des colis</h5>
+                <p>Choisissez les demandes qui vous conviennent</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h5>Gagnez de l'argent</h5>
+                <p>Rentabilisez facilement vos déplacements</p>
+              </div>
+            </div>
+          </div>
+          <%= link_to "Devenir transporteur →", new_kilo_offer_path, class: "btn btn-success btn-lg w-100 mt-4" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Avantages -->
+<section class="features-section py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold">Nos avantages</h2>
+      <p class="lead text-muted">Pourquoi choisir ShareMyBag ?</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card text-center">
+          <div class="feature-icon">
+            <i class="fas fa-piggy-bank"></i>
+          </div>
+          <h4>Économique</h4>
+          <p>Jusqu'à 70% moins cher que les transporteurs traditionnels</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card text-center">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h4>Sécurisé</h4>
+          <p>Vérification d'identité, assurance et paiement sécurisé</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card text-center">
+          <div class="feature-icon">
+            <i class="fas fa-leaf"></i>
+          </div>
+          <h4>Écologique</h4>
+          <p>Réduisez votre empreinte carbone en optimisant les trajets</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card text-center">
+          <div class="feature-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h4>International</h4>
+          <p>Connecté à plus de 120 pays dans le monde entier</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card text-center">
+          <div class="feature-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <h4>Rapide</h4>
+          <p>Livraison directe de personne à personne</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="feature-card text-center">
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h4>Communauté</h4>
+          <p>Rejoignez une communauté de confiance vérifiée</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Statistiques -->
+<section class="stats-section py-5">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-3 col-6 mb-4">
+        <div class="stat-box">
+          <i class="fas fa-users fa-3x mb-3"></i>
+          <h2 class="counter">50,000+</h2>
+          <p>Utilisateurs actifs</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6 mb-4">
+        <div class="stat-box">
+          <i class="fas fa-globe-americas fa-3x mb-3"></i>
+          <h2 class="counter">120+</h2>
+          <p>Pays connectés</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6 mb-4">
+        <div class="stat-box">
+          <i class="fas fa-box fa-3x mb-3"></i>
+          <h2 class="counter">100,000+</h2>
+          <p>Colis livrés</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6 mb-4">
+        <div class="stat-box">
+          <i class="fas fa-star fa-3x mb-3"></i>
+          <h2 class="counter">4.8/5</h2>
+          <p>Note moyenne</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Final -->
+<section class="cta-section py-5">
+  <div class="container text-center">
+    <h2 class="display-5 fw-bold mb-4">Prêt à commencer ?</h2>
+    <p class="lead mb-5">Rejoignez des milliers d'utilisateurs qui économisent déjà sur leurs envois</p>
+    <div class="cta-buttons">
+      <%= link_to signup_path, class: "btn btn-primary btn-lg me-3" do %>
+        <i class="fas fa-user-plus me-2"></i> Créer un compte gratuitement
+      <% end %>
+      <%= link_to propos_path, class: "btn btn-outline-primary btn-lg" do %>
+        <i class="fas fa-info-circle me-2"></i> En savoir plus
+      <% end %>
+    </div>
+  </div>
+</section>
