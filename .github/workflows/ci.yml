@@ -1,9 +1,9 @@
 name: CI
 
+# Sans filtre de branche : chaque push est vérifié, et les pull requests
+# internes affichent le même résultat sans le relancer une seconde fois.
 on:
   push:
-    branches: [master, main]
-  pull_request:
   workflow_dispatch:
 
 concurrency:
