@@ -412,10 +412,12 @@ puts "✅ #{Review.count} avis créés"
 # ================================================
 puts "💬 Création des conversations et messages..."
 
-15.times do
-  user1 = users.sample
-  user2 = (users - [user1]).sample
+# Conversation valide `sender_id` en unicité sur `recipient_id` : tirer les
+# paires au hasard une par une finissait par en rejouer une et faire échouer
+# tout le seed. On tire donc parmi les paires distinctes possibles.
+paires = users.combination(2).to_a.shuffle.first(15)
 
+paires.each do |user1, user2|
   conversation = Conversation.create!(
     sender_id: user1.id,
     recipient_id: user2.id  # 'recipient_id' au lieu de 'receiver_id'

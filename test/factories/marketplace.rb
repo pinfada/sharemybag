@@ -116,7 +116,7 @@ FactoryBot.define do
 
   factory :dispute do
     association :shipping_request
-    association :transaction, factory: :marketplace_transaction
+    association :payment_transaction, factory: :marketplace_transaction
     association :opened_by, factory: :marketplace_user
     dispute_type { "damaged" }
     title { "Package was damaged" }
@@ -152,7 +152,7 @@ FactoryBot.define do
   end
 
   factory :payment_audit_log do
-    association :transaction, factory: :marketplace_transaction
+    association :payment_transaction, factory: :marketplace_transaction
     association :user, factory: :marketplace_user
     action { "payment_initiated" }
     status { "success" }

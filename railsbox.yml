@@ -1,0 +1,27 @@
+# Configuration de la sandbox railsbox — https://github.com/pinfada/railsbox
+#
+# Tout le reste est auto-détecté (Sprockets, gems natives, Sidekiq/Redis lus
+# dans le Gemfile.lock). Ne sont déclarés ici que les points que la détection
+# ne peut pas deviner.
+
+# Série du Ruby de l'étage de précompilation des assets. Elle doit correspondre
+# à celle de la base railsbox (3.3-r2 → Ruby 3.3.12 dans la VM) ; le Gemfile
+# demande `>= 3.2.3`, satisfait des deux côtés.
+ruby: 3.3.6
+
+# config/database.yml est déjà en adapter: postgresql, mais le bloc production
+# n'expose qu'une URL : on lève l'ambiguïté explicitement.
+database: postgresql
+
+seed:
+  # Le seed tourne à la construction : le visiteur trouve la base déjà peuplée
+  # (24 utilisateurs, 200 vols, 30 demandes d'expédition, enchères, messages).
+  command: "bin/rails db:seed"
+  # Pas d'auto_login : l'authentification de ShareMyBag repose sur un cookie
+  # `remember_token` (SessionsHelper#sign_in), pas sur Warden ni sur la session
+  # Rack — les deux seuls canaux que railsbox sait ouvrir. Le visiteur se
+  # connecte avec les comptes de démonstration listés dans le README.
+
+# Répertoires sans intérêt pour une démonstration jouable. Le parseur de
+# railsbox attend une liste en ligne, pas un bloc de tirets.
+exclude: [users-stories]

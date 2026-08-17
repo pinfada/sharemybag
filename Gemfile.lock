@@ -221,8 +221,7 @@ GEM
     matrix (0.4.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
-    minitest (6.0.1)
-      prism (~> 1.5)
+    minitest (5.27.0)
     monetize (1.13.0)
       money (~> 6.12)
     money (6.19.0)
@@ -303,7 +302,6 @@ GEM
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
-    prism (1.9.0)
     psych (5.3.1)
       date
       stringio
@@ -501,6 +499,7 @@ DEPENDENCIES
   jquery-ui-rails
   letter_opener
   magnific-popup-rails
+  minitest (~> 5.18)
   money-rails (~> 1.15)
   omniauth (~> 2.1)
   omniauth-facebook
