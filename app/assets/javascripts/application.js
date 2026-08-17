@@ -16,7 +16,7 @@
 //= require bootstrap
 //= require turbolinks
 //= require underscore
-//= require gmaps/google
+//= require gmaps4rails
 //= require gmaps_fix
 //= require maps_init
 //= require google_maps_loader

@@ -6,8 +6,11 @@ gem 'rails', '~> 7.0.8'
 gem 'sprockets-rails'
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'sass-rails', '>= 6'
-gem 'coffee-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
+# Ni coffee-rails ni uglifier : tous deux passent par ExecJS, donc exigent un
+# runtime JavaScript à la précompilation des assets. La sandbox railsbox n'en a
+# aucun (VM i386 sans Node), et l'application n'en a plus besoin — il ne restait
+# aucune ligne de CoffeeScript, et aucun environnement ne déclarait
+# `config.assets.js_compressor`, donc uglifier ne minifiait rien.
 gem 'pg', '~> 1.5'
 gem 'puma', '~> 6.0'
 
