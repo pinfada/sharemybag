@@ -1,7 +1,6 @@
 # ShareMyBag
 
-[![Essayer avec railsbox](https://pinfada.github.io/sharemybag/badge.svg)](https://pinfada.github.io/sharemybag/)
-[![CI](https://github.com/pinfada/sharemybag/actions/workflows/ci.yml/badge.svg)](https://github.com/pinfada/sharemybag/actions/workflows/ci.yml)
+[![Try with railsbox](https://pinfada.github.io/tchopmygrinds/badge.svg)](https://pinfada.github.io/sharemybag/)
 
 Place de marché qui met en relation des voyageurs disposant de kilos libres
 dans leurs bagages avec des expéditeurs de colis. Le fonctionnement est celui
