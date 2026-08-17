@@ -1,0 +1,20 @@
+# Démonstration jouable dans le navigateur, publiée sur GitHub Pages.
+#
+# railsbox construit une VM Linux x86 émulée qui fait tourner Puma, PostgreSQL
+# et les gems natives de l'application, puis publie le tout sur la branche
+# gh-pages. Documentation : https://github.com/pinfada/railsbox
+#
+# La branche par défaut de ce dépôt est `master` : c'est elle qui doit figurer
+# dans le filtre ci-dessous, sans quoi rien ne se déclencherait jamais.
+name: Sandbox railsbox
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  sandbox:
+    uses: pinfada/railsbox/.github/workflows/construire-sandbox.yml@main
+    permissions:
+      contents: write
