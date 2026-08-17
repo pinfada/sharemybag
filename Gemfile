@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '3.2.3'
+ruby '>= 3.2.3'
 
 gem 'rails', '~> 7.0.8'
 gem 'sprockets-rails'
@@ -72,6 +72,8 @@ gem 'http_accept_language'
 gem 'magnific-popup-rails'
 
 group :development, :test do
+  # Rails 7.0 n'est pas compatible avec Minitest 6 (signature de Runnable#run modifiée)
+  gem 'minitest', '~> 5.18'
   gem 'debug', platforms: %i[mri]
   gem 'selenium-webdriver'
   gem 'capybara'

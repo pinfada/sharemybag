@@ -4,6 +4,8 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
   template: template0
+  host: <%= ENV.fetch("DB_HOST", "") %>
+  port: <%= ENV.fetch("DB_PORT", "5432") %>
   username: <%= ENV.fetch("DB_USERNAME", "ubuntu") %>
   password: <%= ENV.fetch("DB_PASSWORD", "") %>
 

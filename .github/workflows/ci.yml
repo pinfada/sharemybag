@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Tests (Minitest)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: sharemybag_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      RAILS_ENV: test
+      CI: "true"
+      DB_HOST: 127.0.0.1
+      DB_PORT: "5432"
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME_TEST: sharemybag_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer les dépendances système (pg, sassc)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libpq-dev
+
+      - name: Installer Ruby et les gems
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version-file: .ruby-version
+          bundler-cache: true
+
+      - name: Préparer la base de test
+        run: bin/rails db:test:prepare
+
+      - name: Vérifier le chargement des constantes (Zeitwerk)
+        run: bin/rails zeitwerk:check
+
+      - name: Lancer la suite de tests
+        run: bin/rails test
+
+  assets:
+    name: Précompilation des assets (production)
+    runs-on: ubuntu-latest
+
+    env:
+      RAILS_ENV: production
+      SECRET_KEY_BASE: precompilation-seulement-jamais-utilise-en-ligne
+      # Sprockets n'a pas besoin d'une base joignable, mais Rails lit database.yml
+      # au démarrage : une URL syntaxiquement valide suffit.
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sharemybag_production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer les dépendances système (pg, sassc)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libpq-dev
+
+      - name: Installer Ruby et les gems
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version-file: .ruby-version
+          bundler-cache: true
+
+      - name: Précompiler les assets
+        run: bin/rails assets:precompile
