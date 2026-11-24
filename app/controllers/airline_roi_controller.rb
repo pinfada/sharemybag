@@ -17,6 +17,7 @@ class AirlineRoiController < ApplicationController
       avg_spot_price_euros: 7.50,
       commission_percent: 25.0,
       voucher_adoption_percent: 75.0,
+      voucher_redemption_percent: 75.0,
       avg_flight_duration_hours: 4.5,
       airport_excess_fee_euros: 15.0,
       cannibalization_percent: 6.0,

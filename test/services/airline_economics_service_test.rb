@@ -62,13 +62,14 @@ class AirlineEconomicsServiceTest < ActiveSupport::TestCase
     assert_equal 1, fleet[:flights_count]
   end
 
-  test "projects annual fleet ROI transparently including pre-flight booking cannibalization, counter haircut, unused sensitivity, and conservative-to-base range" do
+  test "projects annual fleet ROI transparently including pre-flight booking cannibalization, counter haircut, unused sensitivity, voucher redemption, and sign-aware range" do
     projection = AirlineEconomicsService.annual_fleet_projection(
-      daily_flights: 100,
-      avg_matched_kg_per_flight: 180.0,
+      daily_flights: 120,
+      avg_matched_kg_per_flight: 120.0,
       avg_spot_price_euros: 7.5,
       commission_percent: 25.0,
-      voucher_adoption_percent: 70.0,
+      voucher_adoption_percent: 75.0,
+      voucher_redemption_percent: 75.0,
       avg_flight_duration_hours: 4.5,
       airport_excess_fee_euros: 15.0,
       cannibalization_percent: 6.0,
@@ -77,21 +78,52 @@ class AirlineEconomicsServiceTest < ActiveSupport::TestCase
       unused_allowance_percent: 35.0
     )
 
-    assert_equal 36_500, projection[:annual_flights]
-    assert_in_delta 6_570_000.0, projection[:annual_matched_kg], 0.1
-    assert_operator projection[:annual_gross_volume_cents], :>, 0
-    assert_operator projection[:annual_net_margin_cents], :>, 0
-    assert_operator projection[:annual_cannibalization_deduction_cents], :>, 0
-    assert_operator projection[:annual_booking_cannibalization_deduction_cents], :>, 0
+    # 120 flights/day * 365 * 120 kg = 5,256,000 kg/yr
+    assert_equal 43_800, projection[:annual_flights]
+    assert_in_delta 5_256_000.0, projection[:annual_matched_kg], 0.1
+
+    # Bug #2 regression: exact gross counterfactual cannibalization (ZERO fuel credit deducted)
+    # 15% * 5,256,000 * €10 = €7,884,000 (788,400,000 cents)
+    assert_equal 788_400_000, projection[:annual_booking_cannibalization_deduction_cents]
+    # 6% * 5,256,000 * €15 = €4,730,400 (473,040,000 cents)
+    assert_equal 473_040_000, projection[:annual_cannibalization_deduction_cents]
+
+    # Structural transparency: ex-voucher cash result exposed explicitly
+    expected_ex_voucher = projection[:annual_net_margin_cents] -
+                          projection[:annual_booking_cannibalization_deduction_cents] -
+                          projection[:annual_cannibalization_deduction_cents]
+    assert_equal expected_ex_voucher, projection[:annual_ex_voucher_profit_cents]
+
+    # Voucher redemption rate controls voucher contribution (0% redemption -> €0 voucher contribution)
+    zero_redemption = AirlineEconomicsService.annual_fleet_projection(
+      daily_flights: 120,
+      avg_matched_kg_per_flight: 120.0,
+      voucher_redemption_percent: 0.0
+    )
+    assert_equal 0, zero_redemption[:annual_voucher_rebooking_margin_cents]
+    assert_equal zero_redemption[:annual_ex_voucher_profit_cents], zero_redemption[:annual_incremental_profit_cents]
+
+    # Positive base case: conservative low < base
+    assert_operator projection[:annual_incremental_profit_cents], :>, 0
     assert_operator projection[:annual_incremental_profit_low_cents], :<, projection[:annual_incremental_profit_cents]
-    assert_operator projection[:annual_retained_voucher_cents], :>, 0
-    assert_operator projection[:annual_passenger_savings_cents], :>, 0
-    assert_operator projection[:annual_checkin_hours_saved], :>, 0
+
+    # Bug #1 regression: negative base case (e.g. booking fee €20/kg) keeps conservative floor STRICTLY WORSE than base (never inverted!)
+    negative_case = AirlineEconomicsService.annual_fleet_projection(
+      daily_flights: 120,
+      avg_matched_kg_per_flight: 120.0,
+      preflight_bag_fee_euros: 20.0,
+      booking_cannibalization_percent: 15.0,
+      cannibalization_percent: 6.0,
+      voucher_redemption_percent: 75.0
+    )
+    assert_equal 1_576_800_000, negative_case[:annual_booking_cannibalization_deduction_cents] # exact €15,768,000
+    assert_operator negative_case[:annual_incremental_profit_cents], :<, 0
+    assert_operator negative_case[:annual_incremental_profit_low_cents], :<, negative_case[:annual_incremental_profit_cents]
 
     # Sensitivity: cutting unused allowance benchmark from 35% to 20% scales matched volume down proportionally
     lower_unused = AirlineEconomicsService.annual_fleet_projection(
-      daily_flights: 100,
-      avg_matched_kg_per_flight: 180.0,
+      daily_flights: 120,
+      avg_matched_kg_per_flight: 120.0,
       unused_allowance_percent: 20.0
     )
     assert_operator lower_unused[:annual_matched_kg], :<, projection[:annual_matched_kg]

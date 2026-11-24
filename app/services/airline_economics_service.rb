@@ -89,7 +89,8 @@ class AirlineEconomicsService
     avg_matched_kg_per_flight:,
     avg_spot_price_euros: 7.5,
     commission_percent: 25.0,
-    voucher_adoption_percent: 70.0,
+    voucher_adoption_percent: 75.0,
+    voucher_redemption_percent: 75.0,
     avg_flight_duration_hours: 4.5,
     airport_excess_fee_euros: 15.0,
     fuel_burn_rate_per_kg_hour: 0.035,
@@ -107,24 +108,29 @@ class AirlineEconomicsService
     commission_cents = (gross_cents * (commission_percent.to_f / 100.0)).round
     seller_payout_cents = gross_cents - commission_cents
     retained_voucher_cents = (seller_payout_cents * (voucher_adoption_percent.to_f / 100.0)).round
-    voucher_rebooking_margin_cents = (retained_voucher_cents * VOUCHER_REBOOKING_MARGIN_RATIO).round
+    voucher_rebooking_margin_cents = (retained_voucher_cents * (voucher_redemption_percent.to_f / 100.0) * VOUCHER_REBOOKING_MARGIN_RATIO).round
 
     fuel_per_kg_euros = fuel_burn_rate_per_kg_hour.to_f * avg_flight_duration_hours.to_f * JET_FUEL_PRICE_EUR_PER_KG
     fuel_cost_cents = (annual_kg * fuel_per_kg_euros * 100.0).round
     net_margin_cents = commission_cents - fuel_cost_cents
 
-    # Cannibalization #1 (Primary RM risk): passengers who would have bought an extra bag online at booking
+    # Counterfactual cannibalization: the physical bag flies in BOTH worlds, so fuel is identical
+    # and MUST NOT be credited back against foregone ancillary bag revenue.
     booking_cannib_kg = annual_kg * (booking_cannibalization_percent.to_f / 100.0)
-    booking_cannib_deduction_cents = (booking_cannib_kg * [preflight_bag_fee_euros.to_f - fuel_per_kg_euros, 0.0].max * 100.0).round
+    booking_cannib_deduction_cents = (booking_cannib_kg * preflight_bag_fee_euros.to_f * 100.0).round
 
-    # Cannibalization #2: passengers who would have paid airport excess desk fees
     counter_cannib_kg = annual_kg * (cannibalization_percent.to_f / 100.0)
-    counter_cannib_deduction_cents = (counter_cannib_kg * [airport_excess_fee_euros.to_f - fuel_per_kg_euros, 0.0].max * 100.0).round
+    counter_cannib_deduction_cents = (counter_cannib_kg * airport_excess_fee_euros.to_f * 100.0).round
 
-    incremental_profit_cents = net_margin_cents + voucher_rebooking_margin_cents - booking_cannib_deduction_cents - counter_cannib_deduction_cents
-    # Conservative floor: assumes 30% lower capture / higher variance than base case
-    incremental_profit_low_cents = (incremental_profit_cents * 0.70).round
-    incremental_profit_high_cents = (incremental_profit_cents * 1.15).round
+    ex_voucher_profit_cents = net_margin_cents - booking_cannib_deduction_cents - counter_cannib_deduction_cents
+    incremental_profit_cents = ex_voucher_profit_cents + voucher_rebooking_margin_cents
+
+    # Sign-aware conservative floor: always 30% worse than base (lower profit when positive, deeper loss when negative)
+    incremental_profit_low_cents = if incremental_profit_cents >= 0
+      (incremental_profit_cents * 0.70).round
+    else
+      (incremental_profit_cents * 1.30).round
+    end
 
     savings_per_kg = [airport_excess_fee_euros.to_f - avg_spot_price_euros.to_f, 0.0].max
     passenger_savings_cents = (annual_kg * savings_per_kg * 100.0).round
@@ -142,9 +148,9 @@ class AirlineEconomicsService
       annual_net_margin_cents: net_margin_cents,
       annual_booking_cannibalization_deduction_cents: booking_cannib_deduction_cents,
       annual_cannibalization_deduction_cents: counter_cannib_deduction_cents,
+      annual_ex_voucher_profit_cents: ex_voucher_profit_cents,
       annual_incremental_profit_low_cents: incremental_profit_low_cents,
       annual_incremental_profit_cents: incremental_profit_cents,
-      annual_incremental_profit_high_cents: incremental_profit_high_cents,
       annual_passenger_savings_cents: passenger_savings_cents,
       annual_checkin_hours_saved: annual_checkin_hours_saved
     }

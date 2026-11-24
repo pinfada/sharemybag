@@ -68,13 +68,15 @@ class RgaaAccessibilityAndI18nTest < ActionDispatch::IntegrationTest
     assert_select "[aria-invalid='true']", { minimum: 1 }
   end
 
-  test "airline ROI page provides an accessible CFO fleet simulator with booking cannibalization & unused sensitivity controls" do
+  test "airline ROI page provides an accessible CFO fleet simulator with booking cannibalization, voucher redemption & ex-voucher P&L" do
     get airline_roi_path
     assert_response :success
     assert_select "[data-demo-disclaimer-banner]", 1
     assert_select "[data-roi-simulator]", 1
     assert_select "[data-roi-booking-cannib]", 1
     assert_select "[data-roi-unused-rate]", 1
+    assert_select "[data-roi-voucher-redemption]", 1
+    assert_select "[data-roi-ex-voucher-profit]", 1
     assert_select "[aria-live='polite'][data-roi-incremental-range]", 1
   end
 

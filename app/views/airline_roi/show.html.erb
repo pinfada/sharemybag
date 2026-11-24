@@ -167,32 +167,52 @@
             <input type="number" id="sim_airport_fee" class="form-control" value="15.00" min="5" max="40" step="1" data-roi-airport-fee>
           </div>
 
-          <div class="col-sm-4">
-            <label for="sim_commission" class="form-label">Commission (%)</label>
+          <div class="col-sm-6">
+            <label for="sim_voucher_rate" class="form-label">Seller voucher adoption (%)</label>
+            <input type="number" id="sim_voucher_rate" class="form-control" value="75" min="0" max="100" step="5" data-roi-voucher-rate>
+            <div class="form-text">% of sellers choosing flight credit</div>
+          </div>
+          <div class="col-sm-6">
+            <label for="sim_voucher_redemption" class="form-label">Voucher redemption rate (% · 12-mo validity)</label>
+            <input type="number" id="sim_voucher_redemption" class="form-control" value="75" min="0" max="100" step="5" data-roi-voucher-redemption>
+            <div class="form-text">% redeemed on future seats (30% est. margin)</div>
+          </div>
+
+          <div class="col-sm-6">
+            <label for="sim_commission" class="form-label">Airline commission (%)</label>
             <input type="number" id="sim_commission" class="form-control" value="25" min="5" max="45" step="1" data-roi-commission>
           </div>
-          <div class="col-sm-4">
-            <label for="sim_voucher_rate" class="form-label">Voucher payout (%)</label>
-            <input type="number" id="sim_voucher_rate" class="form-control" value="75" min="0" max="100" step="5" data-roi-voucher-rate>
-          </div>
-          <div class="col-sm-4">
-            <label for="sim_duration" class="form-label">Avg flight (h)</label>
+          <div class="col-sm-6">
+            <label for="sim_duration" class="form-label">Avg flight duration (h)</label>
             <input type="number" id="sim_duration" class="form-control" value="4.5" min="1" max="14" step="0.5" data-roi-duration>
           </div>
         </div>
       </div>
 
       <div class="col-lg-6">
+        <% base_pos = @default_projection[:annual_incremental_profit_cents] >= 0 %>
+        <% ex_v_pos = @default_projection[:annual_ex_voucher_profit_cents] >= 0 %>
         <div class="p-4 rounded bg-light border h-100 d-flex flex-column justify-content-between">
           <div>
-            <div class="small text-uppercase fw-bold text-muted mb-1">
-              Projected Annual Incremental Profit Range (Conservative – Base)
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-1">
+              <div class="small text-uppercase fw-bold text-muted">
+                Projected Annual Incremental Range (Conservative – Base)
+              </div>
+              <span class="smb-badge <%= base_pos ? 'smb-badge--emerald' : 'smb-badge--amber' %>" data-roi-status-badge>
+                <%= base_pos ? "Net Profit" : "Net Loss" %>
+              </span>
             </div>
-            <div class="h2 fw-bold text-success mb-1 smb-tabular" aria-live="polite" data-roi-incremental-range>
+            <div class="h2 fw-bold <%= base_pos ? 'text-success' : 'text-danger' %> mb-1 smb-tabular" aria-live="polite" data-roi-incremental-range>
               <%= format_euros(@default_projection[:annual_incremental_profit_low_cents]) %> – <%= format_euros(@default_projection[:annual_incremental_profit_cents]) %> / yr
             </div>
             <div class="small text-muted mb-3">
-              Conservative floor applies a 30% execution variance buffer below base case.
+              Sign-aware conservative floor applies a 30% adverse buffer (lower profit or deeper loss than base).
+            </div>
+
+            <!-- Transparent Structural Verdict Callout -->
+            <div class="alert <%= !base_pos ? 'alert-danger' : (!ex_v_pos ? 'alert-warning' : 'alert-success') %> py-2 px-3 small mb-3"
+                 role="status" aria-live="polite" data-roi-verdict-banner>
+              Structural sensitivity: cash P&amp;L excluding vouchers is negative (<%= format_euros(@default_projection[:annual_ex_voucher_profit_cents]) %>). Net profitability under these rates depends on voucher re-booking redemption (75%).
             </div>
 
             <!-- CFO Transparent Dual-Cannibalization P&L Waterfall -->
@@ -210,20 +230,28 @@
                 <span class="fw-bold text-dark smb-tabular" data-roi-annual-margin>+<%= format_euros(@default_projection[:annual_net_margin_cents]) %></span>
               </div>
               <div class="smb-waterfall-row">
-                <span class="text-muted">Voucher Re-booking Margin (30% est.)</span>
-                <span class="fw-semibold text-success smb-tabular" data-roi-voucher-margin>+<%= format_euros(@default_projection[:annual_voucher_rebooking_margin_cents]) %></span>
-              </div>
-              <div class="smb-waterfall-row">
-                <span class="text-muted">Pre-Flight Booking Bag Cannibalization</span>
+                <span class="text-muted">Pre-Flight Booking Bag Cannibalization (gross)</span>
                 <span class="fw-semibold text-danger smb-tabular" data-roi-booking-cannib-deduction>−<%= format_euros(@default_projection[:annual_booking_cannibalization_deduction_cents]) %></span>
               </div>
               <div class="smb-waterfall-row">
-                <span class="text-muted">Airport Counter Excess Cannibalization</span>
+                <span class="text-muted">Airport Counter Excess Cannibalization (gross)</span>
                 <span class="fw-semibold text-danger smb-tabular" data-roi-cannibalization-deduction>−<%= format_euros(@default_projection[:annual_cannibalization_deduction_cents]) %></span>
               </div>
+              <div class="smb-waterfall-row">
+                <span class="fw-bold text-dark">Cash Result Ex-Voucher (Before Credits)</span>
+                <span class="fw-bold <%= ex_v_pos ? 'text-success' : 'text-danger' %> smb-tabular" data-roi-ex-voucher-profit>
+                  <%= ex_v_pos ? "+" : "" %><%= format_euros(@default_projection[:annual_ex_voucher_profit_cents]) %>
+                </span>
+              </div>
+              <div class="smb-waterfall-row">
+                <span class="text-muted">Voucher Re-booking Margin (redeemed × 30%)</span>
+                <span class="fw-semibold text-success smb-tabular" data-roi-voucher-margin>+<%= format_euros(@default_projection[:annual_voucher_rebooking_margin_cents]) %></span>
+              </div>
               <div class="smb-waterfall-row smb-waterfall-row--total">
-                <span class="text-dark">Base Incremental Annual Profit</span>
-                <span class="text-success smb-tabular" data-roi-incremental-profit>+<%= format_euros(@default_projection[:annual_incremental_profit_cents]) %></span>
+                <span class="text-dark">Base Incremental Annual Profit (Incl. Vouchers)</span>
+                <span class="<%= base_pos ? 'text-success' : 'text-danger' %> smb-tabular" data-roi-incremental-profit>
+                  <%= base_pos ? "+" : "" %><%= format_euros(@default_projection[:annual_incremental_profit_cents]) %>
+                </span>
               </div>
             </div>
 

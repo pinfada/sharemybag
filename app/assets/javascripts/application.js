@@ -124,6 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var spotEl = roiSim.querySelector("[data-roi-spot-price]");
     var commEl = roiSim.querySelector("[data-roi-commission]");
     var voucherEl = roiSim.querySelector("[data-roi-voucher-rate]");
+    var voucherRedemptionEl = roiSim.querySelector("[data-roi-voucher-redemption]");
     var durationEl = roiSim.querySelector("[data-roi-duration]");
     var excessEl = roiSim.querySelector("[data-roi-airport-fee]");
     var cannibEl = roiSim.querySelector("[data-roi-cannibalization]");
@@ -131,7 +132,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var bookingFeeEl = roiSim.querySelector("[data-roi-booking-fee]");
 
     var outRange = roiSim.querySelector("[data-roi-incremental-range]");
+    var outStatusBadge = roiSim.querySelector("[data-roi-status-badge]");
     var outMargin = roiSim.querySelector("[data-roi-annual-margin]");
+    var outExVoucher = roiSim.querySelector("[data-roi-ex-voucher-profit]");
     var outIncremental = roiSim.querySelector("[data-roi-incremental-profit]");
     var outCommission = roiSim.querySelector("[data-roi-annual-commission]");
     var outVoucher = roiSim.querySelector("[data-roi-annual-voucher]");
@@ -142,6 +145,13 @@ document.addEventListener("DOMContentLoaded", function () {
     var outSavings = roiSim.querySelector("[data-roi-annual-savings]");
     var outCash = roiSim.querySelector("[data-roi-annual-cash]");
     var outCheckinHours = roiSim.querySelector("[data-roi-checkin-hours]");
+    var outVerdict = roiSim.querySelector("[data-roi-verdict-banner]");
+
+    var setSignClass = function (el, val) {
+      if (!el) return;
+      el.classList.toggle("text-success", val >= 0);
+      el.classList.toggle("text-danger", val < 0);
+    };
 
     var updateRoi = function () {
       var dailyFlights = parseFloat(flightsEl && flightsEl.value) || 0;
@@ -150,6 +160,8 @@ document.addEventListener("DOMContentLoaded", function () {
       var spotPrice = parseFloat(spotEl && spotEl.value) || 0;
       var commissionPct = parseFloat(commEl && commEl.value) || 0;
       var voucherPct = parseFloat(voucherEl && voucherEl.value) || 0;
+      var redemptionPct = parseFloat(voucherRedemptionEl && voucherRedemptionEl.value);
+      if (isNaN(redemptionPct)) redemptionPct = 75;
       var durationH = parseFloat(durationEl && durationEl.value) || 0;
       var excessFee = parseFloat(excessEl && excessEl.value) || 0;
       var counterCannibPct = parseFloat(cannibEl && cannibEl.value) || 0;
@@ -162,15 +174,20 @@ document.addEventListener("DOMContentLoaded", function () {
       var commission = gross * (commissionPct / 100.0);
       var sellerPayout = gross - commission;
       var retainedVoucher = sellerPayout * (voucherPct / 100.0);
-      var voucherRebookingMargin = retainedVoucher * 0.30;
+      var voucherRebookingMargin = retainedVoucher * (redemptionPct / 100.0) * 0.30;
       var fuelPerKg = 0.035 * durationH * 1.10;
       var fuelCost = annualKg * fuelPerKg;
       var netMargin = commission - fuelCost;
 
-      var bookingCannibDeduction = annualKg * (bookingCannibPct / 100.0) * Math.max(bookingFee - fuelPerKg, 0);
-      var counterCannibDeduction = annualKg * (counterCannibPct / 100.0) * Math.max(excessFee - fuelPerKg, 0);
-      var incrementalProfit = netMargin + voucherRebookingMargin - bookingCannibDeduction - counterCannibDeduction;
-      var incrementalLow = incrementalProfit * 0.70;
+      // Exact counterfactual cannibalization (no fuel credit — physical bag flies in both scenarios)
+      var bookingCannibDeduction = annualKg * (bookingCannibPct / 100.0) * bookingFee;
+      var counterCannibDeduction = annualKg * (counterCannibPct / 100.0) * excessFee;
+
+      var exVoucherProfit = netMargin - bookingCannibDeduction - counterCannibDeduction;
+      var incrementalProfit = exVoucherProfit + voucherRebookingMargin;
+
+      // Sign-aware conservative floor (always strictly <= base)
+      var incrementalLow = incrementalProfit >= 0 ? incrementalProfit * 0.70 : incrementalProfit * 1.30;
 
       var totalCashRetained = commission + retainedVoucher;
       var paxSavings = annualKg * Math.max(excessFee - spotPrice, 0);
@@ -178,9 +195,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (outRange) {
         outRange.textContent = formatCompactMillions(incrementalLow) + " – " + formatCompactMillions(incrementalProfit) + " / yr";
+        setSignClass(outRange, incrementalProfit);
+      }
+      if (outStatusBadge) {
+        outStatusBadge.textContent = incrementalProfit >= 0 ? "Net Profit" : "Net Loss";
+        outStatusBadge.className = incrementalProfit >= 0 ? "smb-badge smb-badge--emerald" : "smb-badge smb-badge--amber";
       }
       if (outMargin) outMargin.textContent = (netMargin >= 0 ? "+" : "") + formatWholeEuros(netMargin);
-      if (outIncremental) outIncremental.textContent = (incrementalProfit >= 0 ? "+" : "") + formatWholeEuros(incrementalProfit);
+      if (outExVoucher) {
+        outExVoucher.textContent = (exVoucherProfit >= 0 ? "+" : "") + formatWholeEuros(exVoucherProfit);
+        setSignClass(outExVoucher, exVoucherProfit);
+      }
+      if (outIncremental) {
+        outIncremental.textContent = (incrementalProfit >= 0 ? "+" : "") + formatWholeEuros(incrementalProfit);
+        setSignClass(outIncremental, incrementalProfit);
+      }
       if (outCommission) outCommission.textContent = "+" + formatWholeEuros(commission);
       if (outVoucher) outVoucher.textContent = formatWholeEuros(retainedVoucher);
       if (outVoucherMargin) outVoucherMargin.textContent = "+" + formatWholeEuros(voucherRebookingMargin);
@@ -190,9 +219,22 @@ document.addEventListener("DOMContentLoaded", function () {
       if (outSavings) outSavings.textContent = formatWholeEuros(paxSavings);
       if (outCash) outCash.textContent = formatWholeEuros(totalCashRetained);
       if (outCheckinHours) outCheckinHours.textContent = checkinHours.toLocaleString("en-US") + " hrs/yr";
+
+      if (outVerdict) {
+        if (incrementalProfit < 0) {
+          outVerdict.className = "alert alert-danger py-2 px-3 small mb-3";
+          outVerdict.textContent = "Value-destroying under these parameters: cannibalization exceeds commission + voucher contribution. Restrict exchange eligibility (e.g. T-48h window only) or adjust commission.";
+        } else if (exVoucherProfit < 0) {
+          outVerdict.className = "alert alert-warning py-2 px-3 small mb-3";
+          outVerdict.textContent = "Structural sensitivity: cash P&L excluding vouchers is negative (" + formatWholeEuros(exVoucherProfit) + "). Net profitability under these rates depends on voucher re-booking redemption (" + Math.round(redemptionPct) + "%).";
+        } else {
+          outVerdict.className = "alert alert-success py-2 px-3 small mb-3";
+          outVerdict.textContent = "Cash-flow positive before vouchers (" + formatWholeEuros(exVoucherProfit) + "): profitable even at 0% voucher redemption.";
+        }
+      }
     };
 
-    [flightsEl, kgEl, unusedEl, spotEl, commEl, voucherEl, durationEl, excessEl, cannibEl, bookingCannibEl, bookingFeeEl].forEach(function (el) {
+    [flightsEl, kgEl, unusedEl, spotEl, commEl, voucherEl, voucherRedemptionEl, durationEl, excessEl, cannibEl, bookingCannibEl, bookingFeeEl].forEach(function (el) {
       if (el) el.addEventListener("input", updateRoi);
     });
     updateRoi();
