@@ -1,6 +1,6 @@
 # Configuration de la sandbox railsbox — https://github.com/pinfada/railsbox
 
-ruby: 3.3.6
+ruby: 3.3.12
 database: postgresql
 
 seed:
