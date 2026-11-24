@@ -1,37 +1,55 @@
-<div class="container mt-4">
-  <h1><i class="fa fa-envelope"></i> <%= t('conversations.title') %></h1>
+<% provide(:title, "Messages") %>
 
-  <% if @conversations.empty? %>
-    <div class="alert alert-info"><%= t('conversations.no_conversations') %></div>
-  <% else %>
-    <div class="list-group">
-      <% @conversations.each do |conversation| %>
-        <% other = conversation.other_participant(current_user) %>
-        <% unread = conversation.unread_count(current_user) %>
-        <%= link_to conversation_path(conversation),
-            class: "list-group-item list-group-item-action #{'list-group-item-light font-weight-bold' if unread > 0}" do %>
-          <div class="d-flex justify-content-between">
-            <div>
-              <h5 class="mb-1"><%= other.name %>
-                <% if other.verified? %>
-                  <span class="badge badge-primary"><i class="fa fa-check"></i></span>
+<div class="container py-5">
+  <h1 class="h2 mb-1">Messages</h1>
+  <p class="text-muted mb-4">Your private conversations with senders and travelers.</p>
+
+  <% if @conversations.any? %>
+    <ul class="d-flex flex-column gap-2 list-unstyled mb-0">
+      <% @conversations.each do |conv| %>
+        <% other = conv.other_participant(current_user) %>
+        <% unread = conv.unread_count(current_user) %>
+        <% last_msg = conv.last_message %>
+        <li>
+          <%= link_to conversation_path(conv), class: "smb-card smb-card--interactive p-3 p-md-4 d-flex align-items-center justify-content-between gap-3 text-dark smb-card-link" do %>
+            <div class="d-flex align-items-center gap-3 min-w-0">
+              <%= user_avatar(other, size: :md) %>
+              <div class="min-w-0">
+                <div class="fw-bold d-flex align-items-center gap-2">
+                  <span><%= other.name %></span>
+                  <% if unread > 0 %>
+                    <span class="badge rounded-pill text-bg-primary">
+                      <%= unread %>
+                      <span class="visually-hidden">unread</span>
+                    </span>
+                  <% end %>
+                </div>
+                <% if conv.shipping_request %>
+                  <div class="small text-primary"><%= conv.shipping_request.title %></div>
                 <% end %>
-              </h5>
-              <% if conversation.last_message %>
-                <p class="mb-1 text-muted"><%= truncate(conversation.last_message.body, length: 80) %></p>
-              <% end %>
+                <% if last_msg %>
+                  <div class="small text-muted text-truncate"><%= truncate(last_msg.body, length: 90) %></div>
+                <% else %>
+                  <div class="small text-muted">No messages yet</div>
+                <% end %>
+              </div>
             </div>
-            <div class="text-right">
-              <% if unread > 0 %>
-                <span class="badge badge-danger badge-pill"><%= unread %></span>
-              <% end %>
-              <small class="text-muted"><%= time_ago_in_words(conversation.updated_at) %></small>
+            <div class="small text-muted flex-shrink-0">
+              <%= l(conv.updated_at, format: :short) %>
             </div>
-          </div>
-        <% end %>
+          <% end %>
+        </li>
       <% end %>
+    </ul>
+
+    <nav aria-label="Pagination" class="mt-4">
+      <%= will_paginate @conversations, previous_label: "← Previous", next_label: "Next →" %>
+    </nav>
+  <% else %>
+    <div class="smb-empty-state">
+      <h2 class="h5 mb-2">No conversations yet</h2>
+      <p class="text-muted mb-3">Contact a sender or traveler directly from any shipping request.</p>
+      <%= link_to "Browse shipping requests", shipping_requests_path, class: "btn btn-primary" %>
     </div>
   <% end %>
-
-  <%= will_paginate @conversations %>
 </div>

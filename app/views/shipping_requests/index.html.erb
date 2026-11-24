@@ -1,75 +1,68 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-md-12">
-      <h1><%= t('shipping_requests.index.title') %></h1>
-      <p class="lead"><%= t('shipping_requests.index.subtitle') %></p>
+<% provide(:title, "Open shipping requests") %>
 
-      <!-- Search Filters -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <%= form_tag shipping_requests_path, method: :get, class: "form-inline" do %>
-            <div class="form-group mr-2 mb-2">
-              <%= text_field_tag :departure_city, params[:departure_city],
-                  class: "form-control", placeholder: t('common.departure_city') %>
-            </div>
-            <div class="form-group mr-2 mb-2">
-              <%= text_field_tag :arrival_city, params[:arrival_city],
-                  class: "form-control", placeholder: t('common.arrival_city') %>
-            </div>
-            <div class="form-group mr-2 mb-2">
-              <%= number_field_tag :max_weight, params[:max_weight],
-                  class: "form-control", placeholder: t('common.max_weight_kg'), min: 0, step: 0.1 %>
-            </div>
-            <div class="form-group mr-2 mb-2">
-              <%= date_field_tag :date_from, params[:date_from], class: "form-control" %>
-            </div>
-            <%= submit_tag t('common.search'), class: "btn btn-primary mb-2" %>
-          <% end %>
-        </div>
-      </div>
-
-      <%= link_to t('shipping_requests.new_request'), new_shipping_request_path, class: "btn btn-success mb-3" %>
-
-      <!-- Requests List -->
-      <% @shipping_requests.each do |request| %>
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-8">
-                <h5 class="card-title">
-                  <%= link_to request.title, shipping_request_path(request) %>
-                  <span class="badge badge-<%= request.status == 'open' ? 'success' : 'info' %>">
-                    <%= t("statuses.#{request.status}") %>
-                  </span>
-                </h5>
-                <p class="card-text">
-                  <i class="fa fa-plane"></i>
-                  <strong><%= request.departure_city %>, <%= request.departure_country %></strong>
-                  &rarr;
-                  <strong><%= request.arrival_city %>, <%= request.arrival_country %></strong>
-                </p>
-                <p class="card-text">
-                  <i class="fa fa-weight"></i> <%= request.weight_kg %> kg
-                  &bull;
-                  <i class="fa fa-calendar"></i> <%= l(request.desired_date, format: :long) %>
-                  <% if request.max_budget_cents %>
-                    &bull;
-                    <i class="fa fa-money"></i> <%= t('common.budget') %>: <%= number_to_currency(request.max_budget_cents / 100.0, unit: request.currency) %>
-                  <% end %>
-                </p>
-              </div>
-              <div class="col-md-4 text-right">
-                <p><small class="text-muted"><%= t('common.posted_by') %> <%= request.sender.name %></small></p>
-                <p><small class="text-muted"><%= time_ago_in_words(request.created_at) %> <%= t('common.ago') %></small></p>
-                <p><span class="badge badge-secondary"><%= request.bids.count %> <%= t('common.offers') %></span></p>
-                <%= link_to t('common.view_details'), shipping_request_path(request), class: "btn btn-outline-primary btn-sm" %>
-              </div>
-            </div>
-          </div>
-        </div>
-      <% end %>
-
-      <%= will_paginate @shipping_requests %>
+<div class="container py-5">
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div>
+      <h1 class="h2 mb-1">Open shipping requests</h1>
+      <p class="text-muted mb-0">Browse parcels looking for a carrier and submit your price per kilo.</p>
     </div>
+    <%= link_to new_shipping_request_path, class: "btn btn-primary px-4" do %>
+      <i class="fas fa-plus me-2" aria-hidden="true"></i>Post a request
+    <% end %>
   </div>
+
+  <section class="smb-card p-3 p-md-4 mb-4" aria-label="Filter shipping requests">
+    <%= form_with url: shipping_requests_path, method: :get, local: true, role: "search", class: "row g-3 align-items-end" do %>
+      <div class="col-md-3">
+        <%= label_tag :departure_city, "Departure", class: "form-label" %>
+        <%= text_field_tag :departure_city, params[:departure_city], class: "form-control", placeholder: "City or country" %>
+      </div>
+      <div class="col-md-3">
+        <%= label_tag :arrival_city, "Arrival", class: "form-label" %>
+        <%= text_field_tag :arrival_city, params[:arrival_city], class: "form-control", placeholder: "City or country" %>
+      </div>
+      <div class="col-6 col-md-2">
+        <%= label_tag :max_weight, "Max weight (kg)", class: "form-label" %>
+        <%= number_field_tag :max_weight, params[:max_weight], class: "form-control", min: 0.5, max: 50, step: 0.5, placeholder: "e.g. 10" %>
+      </div>
+      <div class="col-6 col-md-2">
+        <%= label_tag :date_from, "Earliest date", class: "form-label" %>
+        <%= date_field_tag :date_from, params[:date_from], class: "form-control" %>
+      </div>
+      <div class="col-md-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary flex-grow-1">Filter</button>
+        <% if params[:departure_city].present? || params[:arrival_city].present? || params[:max_weight].present? || params[:date_from].present? %>
+          <%= link_to shipping_requests_path, class: "btn btn-outline-secondary", aria: { label: "Reset all filters" }, title: "Reset all filters" do %>
+            <span aria-hidden="true">×</span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+
+  <% if @shipping_requests.any? %>
+    <section aria-labelledby="results-heading">
+      <h2 id="results-heading" class="visually-hidden">Matching shipping requests</h2>
+      <div class="row g-4">
+        <% @shipping_requests.each do |req| %>
+          <div class="col-md-6 col-lg-4">
+            <%= render "shipping_requests/card", shipping_request: req %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <nav aria-label="Pagination" class="mt-4">
+      <%= will_paginate @shipping_requests, previous_label: "← Previous", next_label: "Next →" %>
+    </nav>
+  <% else %>
+    <div class="smb-empty-state">
+      <h2 class="h5 mb-2">No requests match your filters</h2>
+      <p class="text-muted mb-3">Try broadening your search or post your own shipping request.</p>
+      <div class="d-flex justify-content-center gap-2">
+        <%= link_to "View all requests", shipping_requests_path, class: "btn btn-outline-secondary" %>
+        <%= link_to "Post a request", new_shipping_request_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
 </div>

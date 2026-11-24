@@ -17,9 +17,11 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  # Email via letter_opener in dev
-  config.action_mailer.delivery_method = :letter_opener
-  config.action_mailer.perform_deliveries = true
+  # Autorise les proxys de prévisualisation en développement uniquement
+  config.hosts.clear
+
+  config.action_mailer.delivery_method = :test
+  config.action_mailer.perform_deliveries = false
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 

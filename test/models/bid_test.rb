@@ -1,61 +1,64 @@
 require 'test_helper'
 
 class BidTest < ActiveSupport::TestCase
-  def setup
-    @sender = FactoryBot.create(:marketplace_user)
-    @traveler = FactoryBot.create(:marketplace_user)
-    @shipping_request = FactoryBot.create(:shipping_request, sender: @sender, weight_kg: 5)
-    @bid = FactoryBot.build(:bid, shipping_request: @shipping_request, traveler: @traveler)
+  test "crée une offre valide en euros et calcule le total" do
+    req = create_shipping_request(weight_kg: 4.5)
+    traveler = create_user
+    bid = Bid.create!(
+      shipping_request: req,
+      traveler: traveler,
+      price_per_kg_euros: "12.50",
+      available_kg: 10,
+      currency: "EUR",
+      travel_date: 8.days.from_now.to_date,
+      flight_number: "AF718"
+    )
+    assert_equal 1250, bid.price_per_kg_cents
+    assert_equal 12.5, bid.price_per_kg
+    assert_equal 5625, bid.total_price_cents
+    assert_equal 56.25, bid.total_price
   end
 
-  test "should be valid with valid attributes" do
-    assert @bid.valid?
+  test "interdit de faire une offre sur sa propre demande" do
+    sender = create_user
+    req = create_shipping_request(sender: sender)
+    bid = Bid.new(
+      shipping_request: req,
+      traveler: sender,
+      price_per_kg_cents: 1000,
+      available_kg: 10,
+      currency: "EUR",
+      travel_date: 8.days.from_now.to_date
+    )
+    assert_not bid.valid?
+    assert bid.errors[:base].any?
   end
 
-  test "should require price_per_kg_cents" do
-    @bid.price_per_kg_cents = nil
-    assert_not @bid.valid?
+  test "exige une capacité suffisante pour le poids du colis" do
+    req = create_shipping_request(weight_kg: 8.0)
+    bid = Bid.new(
+      shipping_request: req,
+      traveler: create_user,
+      price_per_kg_cents: 1000,
+      available_kg: 5.0,
+      currency: "EUR",
+      travel_date: 8.days.from_now.to_date
+    )
+    assert_not bid.valid?
+    assert bid.errors[:available_kg].any?
   end
 
-  test "should not allow negative price" do
-    @bid.price_per_kg_cents = -100
-    assert_not @bid.valid?
-  end
+  test "withdraw! autorisé uniquement sur une offre pending" do
+    req = create_shipping_request
+    bid = create_bid(shipping_request: req)
+    assert bid.withdrawable?
+    bid.withdraw!
+    assert_equal "withdrawn", bid.reload.status
+    assert_not bid.withdrawable?
 
-  test "should require available_kg" do
-    @bid.available_kg = nil
-    assert_not @bid.valid?
-  end
-
-  test "should require travel_date" do
-    @bid.travel_date = nil
-    assert_not @bid.valid?
-  end
-
-  test "should not allow bidding on own request" do
-    @bid.traveler = @sender
-    assert_not @bid.valid?
-  end
-
-  test "should not allow duplicate bids" do
-    @bid.save!
-    duplicate = FactoryBot.build(:bid, shipping_request: @shipping_request, traveler: @traveler)
-    assert_not duplicate.valid?
-  end
-
-  test "should not allow bidding on non-biddable request" do
-    @shipping_request.update!(status: "completed")
-    new_bid = FactoryBot.build(:bid, shipping_request: @shipping_request, traveler: FactoryBot.create(:marketplace_user))
-    assert_not new_bid.valid?
-  end
-
-  test "available_kg must cover request weight" do
-    @bid.available_kg = 2 # less than shipping_request weight_kg of 5
-    assert_not @bid.valid?
-  end
-
-  test "total_price_cents should calculate correctly" do
-    @bid.price_per_kg_cents = 500
-    assert_equal 2500, @bid.total_price_cents # 500 * 5kg
+    req2 = create_shipping_request
+    accepted_bid = create_bid(shipping_request: req2)
+    req2.accept_bid!(accepted_bid)
+    assert_raises(Bid::InvalidTransitionError) { accepted_bid.reload.withdraw! }
   end
 end

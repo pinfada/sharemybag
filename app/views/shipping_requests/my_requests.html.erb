@@ -1,23 +1,52 @@
-<div class="container mt-4">
-  <h1><%= t('shipping_requests.my_requests.title') %></h1>
-  <%= link_to t('shipping_requests.new_request'), new_shipping_request_path, class: "btn btn-success mb-3" %>
+<% provide(:title, "My shipping requests") %>
 
-  <% @shipping_requests.each do |request| %>
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5>
-          <%= link_to request.title, shipping_request_path(request) %>
-          <span class="badge badge-<%= request.status == 'open' ? 'success' : 'info' %>"><%= t("statuses.#{request.status}") %></span>
-        </h5>
-        <p>
-          <%= request.departure_city %> &rarr; <%= request.arrival_city %>
-          &bull; <%= request.weight_kg %> kg
-          &bull; <%= l(request.desired_date, format: :short) %>
-          &bull; <%= request.bids.count %> <%= t('common.offers') %>
-        </p>
-      </div>
+<div class="container py-5">
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div>
+      <h1 class="h2 mb-1">My shipping requests</h1>
+      <p class="text-muted mb-0">Review incoming offers and track active parcel handovers.</p>
+    </div>
+    <%= link_to new_shipping_request_path, class: "btn btn-primary" do %>
+      <i class="fas fa-plus me-2" aria-hidden="true"></i>New request
+    <% end %>
+  </div>
+
+  <% if @shipping_requests.any? %>
+    <ul class="d-flex flex-column gap-3 list-unstyled mb-0">
+      <% @shipping_requests.each do |req| %>
+        <li class="smb-card p-4">
+          <div class="row align-items-center gy-3">
+            <div class="col-md-7">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="<%= status_badge_class(req.status) %>"><%= t("statuses.#{req.status}") %></span>
+                <span class="small text-muted"><%= l(req.desired_date, format: :short) %> · <%= number_with_precision(req.weight_kg, strip_insignificant_zeros: true) %> kg</span>
+              </div>
+              <h2 class="h5 mb-1">
+                <%= link_to req.title, shipping_request_path(req), class: "text-dark" %>
+              </h2>
+              <div class="small text-muted">
+                <%= req.departure_city %> to <%= req.arrival_city %> · <%= pluralize(req.bids.size, "offer") %>
+              </div>
+            </div>
+            <div class="col-md-5 text-md-end d-flex flex-wrap gap-2 justify-content-md-end">
+              <%= link_to "View details", shipping_request_path(req), class: "btn btn-outline-primary btn-sm" %>
+              <% if req.shipment_tracking %>
+                <%= link_to "Tracking & codes", shipment_tracking_path(req.shipment_tracking), class: "btn btn-success btn-sm" %>
+              <% end %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+
+    <nav aria-label="Pagination" class="mt-4">
+      <%= will_paginate @shipping_requests, previous_label: "← Previous", next_label: "Next →" %>
+    </nav>
+  <% else %>
+    <div class="smb-empty-state">
+      <h2 class="h5 mb-2">You haven't posted any shipping requests yet</h2>
+      <p class="text-muted mb-3">Publish your first parcel to start receiving traveler offers.</p>
+      <%= link_to "Post a shipping request", new_shipping_request_path, class: "btn btn-primary" %>
     </div>
   <% end %>
-
-  <%= will_paginate @shipping_requests %>
 </div>

@@ -1,0 +1,42 @@
+<article class="smb-card smb-card--interactive p-4 h-100 d-flex flex-column position-relative">
+  <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+    <span class="<%= status_badge_class(shipping_request.status) %>">
+      <%= t("statuses.#{shipping_request.status}") %>
+    </span>
+    <span class="small text-muted">
+      <%= l(shipping_request.desired_date, format: :short) %>
+    </span>
+  </div>
+
+  <div class="smb-route mb-2">
+    <span><%= shipping_request.departure_city %></span>
+    <i class="fas fa-arrow-right smb-route-arrow" aria-hidden="true"></i>
+    <span class="visually-hidden">to</span>
+    <span><%= shipping_request.arrival_city %></span>
+  </div>
+
+  <h3 class="h6 mb-2">
+    <%= link_to shipping_request.title, shipping_request_path(shipping_request), class: "text-dark stretched-link smb-card-link" %>
+  </h3>
+
+  <div class="d-flex flex-wrap gap-3 small text-muted mb-3">
+    <span><i class="fas fa-weight-hanging me-1" aria-hidden="true"></i><%= number_with_precision(shipping_request.weight_kg, strip_insignificant_zeros: true) %> kg</span>
+    <% if shipping_request.max_budget_cents.present? %>
+      <span><i class="fas fa-euro-sign me-1" aria-hidden="true"></i>Max budget <%= format_euros(shipping_request.max_budget_cents) %></span>
+    <% end %>
+    <% if shipping_request.item_category.present? %>
+      <span><%= t("categories.#{shipping_request.item_category}", default: shipping_request.item_category) %></span>
+    <% end %>
+  </div>
+
+  <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-2 small">
+      <%= user_avatar(shipping_request.sender, size: :sm) %>
+      <span class="text-muted"><%= shipping_request.sender.name.split.first %></span>
+    </div>
+    <% pending_count = shipping_request.bids.select { |b| b.status == "pending" }.size %>
+    <span class="small fw-semibold text-primary">
+      <%= pending_count == 0 ? "No offers yet" : pluralize(pending_count, "offer") %>
+    </span>
+  </div>
+</article>

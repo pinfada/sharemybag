@@ -1,4 +1,4 @@
-class Notification < ActiveRecord::Base
+class Notification < ApplicationRecord
   belongs_to :user
   belongs_to :notifiable, polymorphic: true
 
@@ -6,13 +6,15 @@ class Notification < ActiveRecord::Base
   validates :message, presence: true
 
   scope :unread, -> { where(read: false) }
-  scope :recent, -> { order(created_at: :desc).limit(20) }
+  scope :recent, -> { order(created_at: :desc).limit(30) }
 
   def mark_as_read!
     update!(read: true) unless read?
   end
 
   def self.notify(user, notifiable, action, message)
+    return nil unless user && notifiable
+
     create!(
       user: user,
       notifiable: notifiable,

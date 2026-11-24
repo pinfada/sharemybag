@@ -5,90 +5,34 @@ ruby '>= 3.2.3'
 gem 'rails', '~> 7.0.8'
 gem 'sprockets-rails'
 gem 'dotenv-rails', groups: [:development, :test]
-gem 'sass-rails', '>= 6'
-# Ni coffee-rails ni uglifier : tous deux passent par ExecJS, donc exigent un
-# runtime JavaScript à la précompilation des assets. La sandbox railsbox n'en a
-# aucun (VM i386 sans Node), et l'application n'en a plus besoin — il ne restait
-# aucune ligne de CoffeeScript, et aucun environnement ne déclarait
-# `config.assets.js_compressor`, donc uglifier ne minifiait rien.
+# Pas d'ExecJS (ni uglifier ni coffee-rails) pour compatibilité totale avec la sandbox railsbox.
+gem 'sassc-rails'
 gem 'pg', '~> 1.5'
 gem 'puma', '~> 6.0'
 
-# Frontend
+# Frontend (Bootstrap 5.3 natif + Font Awesome, zéro jQuery / zéro Bootstrap 3 vendored)
 gem 'bootstrap', '~> 5.3'
-gem 'sassc-rails'
 gem 'font-awesome-sass', '~> 6.0'
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
-gem 'turbolinks', '~> 5'
-gem 'jbuilder', '~> 2.7'
 
-# Maps
-gem 'geocoder'
-gem 'gmaps4rails'
-gem 'underscore-rails'
-
-# Data
-gem 'faker', '~> 3.0'
+# Pagination & Base de données
 gem 'will_paginate', '~> 4.0'
-gem 'will_paginate-bootstrap-style'
-
-# Admin
-gem 'rails_admin', '~> 3.0'
-gem 'blazer', '~> 3.0'
-
-# Secrets management
-gem 'figaro'
-
-# Authentication & OAuth
-gem 'bcrypt', '~> 3.1'
-gem 'omniauth', '~> 2.1'
-gem 'omniauth-rails_csrf_protection'
-gem 'omniauth-twitter2'
-gem 'omniauth-facebook'
-gem 'omniauth-github', '~> 2.0'
-
-# Security
-gem 'rack-attack'
-
-# Payment
-gem 'stripe', '~> 10.0'
-gem 'money-rails', '~> 1.15'
-
-# SMS (OTP delivery)
-gem 'twilio-ruby', '~> 6.0'
-
-# HTTP client (Amadeus API)
-gem 'faraday', '~> 2.0'
-
-# Background jobs
-gem 'sidekiq', '~> 7.0'
-
-# Database tools
 gem 'activerecord-reset-pk-sequence'
 
-# Internationalization
-gem 'rails-i18n', '~> 7.0'
-gem 'http_accept_language'
+# Authentification & Sécurité
+gem 'bcrypt', '~> 3.1'
+gem 'rack-attack'
 
-# Pagination
-gem 'magnific-popup-rails'
+# Internationalisation
+gem 'rails-i18n', '~> 7.0'
 
 group :development, :test do
   # Rails 7.0 n'est pas compatible avec Minitest 6 (signature de Runnable#run modifiée)
   gem 'minitest', '~> 5.18'
   gem 'debug', platforms: %i[mri]
-  gem 'selenium-webdriver'
-  gem 'capybara'
-  gem 'factory_bot_rails'
-  gem 'rspec-rails', '~> 6.0'
-  gem 'database_cleaner-active_record'
 end
 
 group :development do
   gem 'web-console'
-  gem 'spring'
-  gem 'letter_opener'
 end
 
 group :production do

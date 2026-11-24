@@ -1,8 +1,9 @@
-class Message < ActiveRecord::Base
+class Message < ApplicationRecord
   belongs_to :conversation
   belongs_to :sender, class_name: "User"
 
   validates :body, presence: true, length: { maximum: 2000 }
+  validate :sender_must_be_participant
 
   scope :unread, -> { where(read: false) }
   scope :chronological, -> { order(created_at: :asc) }
@@ -14,6 +15,14 @@ class Message < ActiveRecord::Base
   end
 
   private
+
+  def sender_must_be_participant
+    return unless conversation && sender
+
+    unless conversation.participant?(sender)
+      errors.add(:sender, :not_a_participant)
+    end
+  end
 
   def update_conversation_timestamp
     conversation.touch

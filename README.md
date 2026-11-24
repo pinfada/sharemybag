@@ -2,74 +2,46 @@
 
 [![Try with railsbox](https://pinfada.github.io/tchopmygrinds/badge.svg)](https://pinfada.github.io/sharemybag/)
 
-Place de marché qui met en relation des voyageurs disposant de kilos libres
-dans leurs bagages avec des expéditeurs de colis. Le fonctionnement est celui
-d'une **enchère inversée** : l'expéditeur publie une demande de transport, les
-voyageurs proposent leur prix, l'expéditeur retient une offre.
+**ShareMyBag** connects parcel senders with travelers who have spare luggage allowance through a single, transparent **reverse auction** workflow:
 
-Application Ruby on Rails 7.0 sur PostgreSQL.
+1. **Post** — The sender describes their route, parcel weight, desired date, optional budget cap, and confirms the prohibited items safety pledge.
+2. **Compare** — Travelers flying that route submit their price per kilo; total cost is calculated automatically.
+3. **Track with secret codes** — Accepting one offer locks the request and generates two confidential 8-character codes (handover and delivery), visible only to the sender and verified in constant time on the server.
+4. **Review** — Once receipt is confirmed, both participants publish a single verified review that builds lasting profile trust.
 
-## Démonstration jouable
+Built with **Ruby on Rails 7.0** and **PostgreSQL**, accessible to **RGAA 4.1 / WCAG 2.1 Level AA** standards, and zero ExecJS dependency (fully compatible with `railsbox`).
+
+## Live Playable Demo
 
 **→ [pinfada.github.io/sharemybag](https://pinfada.github.io/sharemybag/)**
 
-La démonstration tourne **entièrement dans le navigateur** : Puma, PostgreSQL
-et l'application s'exécutent dans une VM Linux émulée par
-[railsbox](https://github.com/pinfada/railsbox), publiée sur GitHub Pages.
-Comptez une vingtaine de secondes au premier chargement, le temps que
-l'instantané mémoire soit restauré.
+Demo accounts pre-loaded by `db/seeds.rb`:
 
-Chaque visiteur écrit dans sa propre copie, qui disparaît avec l'onglet — rien
-n'est partagé, rien n'est conservé. La base est peuplée par `db/seeds.rb`
-(24 utilisateurs, 200 vols, 30 demandes d'expédition, enchères, conversations).
-
-Comptes de démonstration :
-
-| Rôle | Identifiant | Mot de passe |
+| Role | Email | Password |
 | --- | --- | --- |
-| Administrateur | `admin@sharemybag.com` | `Admin123!` |
-| Démonstration | `demo@sharemybag.com` | `Demo123!` |
-| Expéditrice | `marie@example.com` | `Marie123!` |
-| Voyageur | `pierre@example.com` | `Pierre123!` |
+| Sender | `marie@example.com` | `Marie123!` |
+| Traveler | `pierre@example.com` | `Pierre123!` |
+| Demo | `demo@sharemybag.com` | `Demo123!` |
 
-Ce sont des identifiants de démonstration, sur des données générées par Faker :
-la VM n'a aucun réseau sortant et son image est publique.
+## Local Development
 
-La sandbox est reconstruite à chaque push sur `master` par
-[`.github/workflows/sandbox.yml`](.github/workflows/sandbox.yml) ; sa
-configuration tient dans [`railsbox.yml`](railsbox.yml).
-
-## Démarrer en local
-
-Prérequis : Ruby 3.3 (voir [`.ruby-version`](.ruby-version)), PostgreSQL 16,
-`libpq-dev`.
+Requirements: Ruby ≥ 3.2.3 (`.ruby-version`: 3.3), PostgreSQL 16, `libpq-dev`.
 
 ```bash
 bundle install
-rails db:create db:schema:load db:seed
-rails server
+bin/rails db:create db:schema:load db:seed
+bin/rails server
 ```
 
-Les identifiants PostgreSQL se règlent par variables d'environnement —
-`DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME_DEV`,
-`DB_NAME_TEST` — avec le socket Unix local par défaut. Les clés de services
-tiers (OAuth, Google Maps, Stripe, Twilio) passent par Figaro : copiez
-`config/application.yml.example` en `config/application.yml`. Elles sont
-toutes facultatives, l'application démarre sans.
-
-## Tests
+## Tests, Security & Accessibility
 
 ```bash
-rails test
+bin/rails zeitwerk:check
+bin/rails test
 ```
 
-La suite Minitest tourne aussi en intégration continue sur PostgreSQL 16, avec
-une vérification du chargement Zeitwerk et une précompilation des assets en
-environnement de production :
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml).
-
-## Documentation
-
-- [`CLAUDE.md`](CLAUDE.md) — architecture, modèles métier, points d'entrée.
-- [`PLAN_MISE_A_JOUR.md`](PLAN_MISE_A_JOUR.md) — plan de mise à jour.
-- [`users-stories/`](users-stories/) — user stories.
+The Minitest suite verifies:
+- Core model invariants and strict state-machine transitions (`test/models/`),
+- OWASP HTTP headers, strict CSP, HttpOnly/SameSite cookies, PII privacy, and anti-IDOR guards (`test/integration/security_and_auth_test.rb`, `test/integration/marketplace_authorization_test.rb`),
+- RGAA 4.1 AA structural accessibility checks (`test/integration/rgaa_accessibility_and_i18n_test.rb`),
+- End-to-end reverse auction workflow (`test/integration/end_to_end_reverse_auction_test.rb`).
