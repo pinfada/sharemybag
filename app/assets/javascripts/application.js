@@ -156,7 +156,45 @@ document.addEventListener("DOMContentLoaded", function () {
     updateRoi();
   }
 
-  // 3. Accessible confirmation on destructive or binding actions
+  // 3. Home Live Departure Desk 3-Party Settlement Simulator (RGAA 7.5 aria-live="polite")
+  var homeSim = document.querySelector("[data-home-trade-sim]");
+  if (homeSim) {
+    var homeKgInput = homeSim.querySelector("[data-home-sim-kg]");
+    var homeKgLabel = homeSim.querySelector("[data-home-sim-kg-label]");
+    var outSeller = homeSim.querySelector("[data-home-sim-seller]");
+    var outSellerPnr = homeSim.querySelector("[data-home-sim-seller-pnr]");
+    var outBuyer = homeSim.querySelector("[data-home-sim-buyer]");
+    var outBuyerSave = homeSim.querySelector("[data-home-sim-buyer-save]");
+    var outAirline = homeSim.querySelector("[data-home-sim-airline]");
+
+    var simPrice = parseFloat(homeSim.getAttribute("data-sim-price") || "7.5");
+    var simAirportFee = parseFloat(homeSim.getAttribute("data-sim-airport-fee") || "15");
+    var simComm = parseFloat(homeSim.getAttribute("data-sim-commission") || "0.25");
+    var simDuration = parseFloat(homeSim.getAttribute("data-sim-duration") || "5.5");
+    var simBurn = parseFloat(homeSim.getAttribute("data-sim-burn") || "0.035");
+
+    var updateHomeSim = function () {
+      var kg = parseInt(homeKgInput && homeKgInput.value, 10) || 8;
+      var gross = kg * simPrice;
+      var fee = gross * simComm;
+      var sellerPayout = gross - fee;
+      var fuelCost = kg * simBurn * simDuration * 1.10;
+      var netMargin = fee - fuelCost;
+      var savings = Math.max((simAirportFee - simPrice) * kg, 0);
+
+      if (homeKgLabel) homeKgLabel.textContent = kg + " kg";
+      if (outSeller) outSeller.textContent = "+" + formatEuros(sellerPayout);
+      if (outSellerPnr) outSellerPnr.textContent = "PNR 23 → " + (23 - kg) + " kg";
+      if (outBuyer) outBuyer.textContent = formatEuros(gross);
+      if (outBuyerSave) outBuyerSave.textContent = "Saves " + formatEuros(savings);
+      if (outAirline) outAirline.textContent = "+" + formatEuros(netMargin);
+    };
+
+    if (homeKgInput) homeKgInput.addEventListener("input", updateHomeSim);
+    updateHomeSim();
+  }
+
+  // 4. Accessible confirmation on destructive or binding actions
   document.querySelectorAll("form[data-confirm-message]").forEach(function (form) {
     form.addEventListener("submit", function (event) {
       var message = form.getAttribute("data-confirm-message");
@@ -166,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // 4. Move keyboard focus to error summary when a form returns validation errors (RGAA 11.10)
+  // 5. Move keyboard focus to error summary when a form returns validation errors (RGAA 11.10)
   var errorSummary = document.querySelector("[data-error-summary]");
   if (errorSummary) {
     errorSummary.focus();

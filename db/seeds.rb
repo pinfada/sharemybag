@@ -208,6 +208,24 @@ tu721 = Flight.create!(
   status: "open"
 )
 
+# Realistic adverse-state flight: past H-4h Weight & Balance cutoff with long carrier/city names
+sn372 = Flight.create!(
+  flight_number: "SN372",
+  airline_name: "Brussels Airlines — Intercontinental",
+  airline_code: "SN",
+  aircraft_type: aircraft["A330-200"],
+  departure_iata: "BRU",
+  departure_city: "Brussels National",
+  arrival_iata: "FIH",
+  arrival_city: "Kinshasa N'Djili",
+  departure_at: 2.5.hours.from_now,
+  flight_duration_hours: 8.2,
+  airport_excess_fee_per_kg_cents: 1600,
+  airline_commission_bps: 2500,
+  base_booked_baggage_kg: 4820.0,
+  status: "open"
+)
+
 # Helper to book a passenger on a flight
 def book!(user, flight, pnr, cabin: "economy")
   PassengerBooking.create!(
