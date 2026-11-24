@@ -68,20 +68,38 @@ class RgaaAccessibilityAndI18nTest < ActionDispatch::IntegrationTest
     assert_select "[aria-invalid='true']", { minimum: 1 }
   end
 
-  test "airline ROI page provides an accessible interactive fleet simulator with aria-live output" do
+  test "airline ROI page provides an accessible CFO fleet simulator with booking cannibalization & unused sensitivity controls" do
     get airline_roi_path
     assert_response :success
+    assert_select "[data-demo-disclaimer-banner]", 1
     assert_select "[data-roi-simulator]", 1
-    assert_select "[aria-live='polite'][data-roi-annual-margin]", 1
+    assert_select "[data-roi-booking-cannib]", 1
+    assert_select "[data-roi-unused-rate]", 1
+    assert_select "[aria-live='polite'][data-roi-incremental-range]", 1
   end
 
-  test "accessibility statement page declares RGAA 4.1 and WCAG 2.1 AA and is linked in footer" do
+  test "accessibility page states honest unaudited status against RGAA 4.1 / WCAG 2.1 guidelines and avoids false compliance claims in footer" do
     get root_path
+    assert_select "[data-demo-disclaimer-banner]", 1
     assert_select "footer a[href='#{accessibility_path}']", /Accessibility/i
+    assert_not_includes response.body, "Accessibility: RGAA 4.1 AA"
 
     get accessibility_path
     assert_response :success
+    assert_includes response.body, "Not formally audited"
     assert_includes response.body, "RGAA"
     assert_includes response.body, "WCAG 2.1"
+  end
+
+  test "order book provides accessible mobile Buy/Sell tabs and honest pre-fill wording" do
+    flight = create_flight(flight_number: "AF718")
+    passenger = create_user(name: "Marie Tab")
+    create_booking(user: passenger, flight: flight, pnr_code: "AF718T")
+    sign_in_as(passenger)
+
+    get flight_path(flight)
+    assert_response :success
+    assert_select "[data-orderbook-tabs] [role='tab']", 2
+    assert_not_includes response.body, "1-Click Instant Market Fill"
   end
 end

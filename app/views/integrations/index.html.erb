@@ -59,7 +59,7 @@
       <span class="smb-badge smb-badge--emerald">SSRF &amp; TLS Verified</span>
     </div>
     <div class="table-responsive">
-      <table class="table smb-orderbook-table align-middle mb-0">
+      <table class="table smb-orderbook-table smb-responsive-cards align-middle mb-0">
         <caption class="visually-hidden">Configured airline DCS and PSS connectors</caption>
         <thead>
           <tr>
@@ -73,19 +73,21 @@
         <tbody>
           <% @connectors.each do |c| %>
             <tr>
-              <td>
+              <td data-label="Carrier">
                 <div class="d-flex align-items-center gap-2">
                   <span class="smb-airline-code smb-airline-code--sm" aria-hidden="true"><%= c.airline_code %></span>
                   <strong><%= c.airline_name %></strong>
                 </div>
               </td>
-              <td class="smb-tabular"><code><%= c.accounting_prefix %></code></td>
-              <td><span class="fw-semibold text-dark"><%= c.provider_label %></span></td>
-              <td class="small">
-                <div><code><%= c.auth_mode %></code></div>
-                <div class="text-muted"><%= c.api_base_url.presence || "Internal sandbox transport" %></div>
+              <td data-label="IATA Prefix" class="smb-tabular"><code><%= c.accounting_prefix %></code></td>
+              <td data-label="Protocol"><span class="fw-semibold text-dark"><%= c.provider_label %></span></td>
+              <td data-label="Auth & Endpoint" class="small">
+                <div>
+                  <div><code><%= c.auth_mode %></code></div>
+                  <div class="text-muted"><%= c.api_base_url.presence || "Internal sandbox transport" %></div>
+                </div>
               </td>
-              <td>
+              <td data-label="Mode">
                 <span class="smb-badge <%= c.live_external? ? 'smb-badge--emerald' : 'smb-badge--sky' %>">
                   <%= c.live_external? ? "Live Gateway" : "Sandbox Ready" %>
                 </span>
@@ -107,7 +109,7 @@
       <span class="small text-muted">Latest <%= @recent_events.size %> events</span>
     </div>
     <div class="table-responsive">
-      <table class="table smb-orderbook-table align-middle mb-0">
+      <table class="table smb-orderbook-table smb-responsive-cards align-middle mb-0">
         <caption class="visually-hidden">Recent IATA EMD and DCS synchronization events</caption>
         <thead>
           <tr>
@@ -123,24 +125,28 @@
           <% if @recent_events.any? %>
             <% @recent_events.each do |ev| %>
               <tr>
-                <td>
-                  <div class="fw-bold text-dark"><%= ev.kilo_trade.flight.flight_number %></div>
-                  <div class="small text-muted">PNR <code><%= ev.pnr_code %></code></div>
+                <td data-label="Flight & PNR">
+                  <div>
+                    <div class="fw-bold text-dark"><%= ev.kilo_trade.flight.flight_number %></div>
+                    <div class="small text-muted">PNR <code><%= ev.pnr_code %></code></div>
+                  </div>
                 </td>
-                <td class="small">
-                  <code><%= ev.operation %></code>
-                  <div class="text-muted"><%= ev.airline_connector.provider %></div>
+                <td data-label="Operation" class="small">
+                  <div>
+                    <code><%= ev.operation %></code>
+                    <div class="text-muted"><%= ev.airline_connector.provider %></div>
+                  </div>
                 </td>
-                <td class="small smb-tabular">
+                <td data-label="IATA Codes" class="small smb-tabular">
                   <% if ev.iata_rfic.present? %>
                     RFIC <strong><%= ev.iata_rfic %></strong> · <%= ev.iata_rfisc %> · <%= ev.ssr_code %>
                   <% else %>
                     <%= ev.ssr_code %>
                   <% end %>
                 </td>
-                <td class="smb-tabular"><code><%= ev.external_reference || "—" %></code></td>
-                <td class="small smb-tabular"><%= ev.latency_ms ? "#{ev.latency_ms} ms" : "—" %></td>
-                <td>
+                <td data-label="Reference" class="smb-tabular"><code><%= ev.external_reference || "—" %></code></td>
+                <td data-label="Latency" class="small smb-tabular"><%= ev.latency_ms ? "#{ev.latency_ms} ms" : "—" %></td>
+                <td data-label="Status">
                   <span class="smb-badge <%= ev.status == 'synced' ? 'smb-badge--emerald' : (ev.status == 'compensated' ? 'smb-badge--amber' : 'smb-badge--muted') %>">
                     <%= ev.status.humanize %>
                   </span>

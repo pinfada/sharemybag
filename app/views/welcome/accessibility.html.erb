@@ -1,29 +1,31 @@
-<% provide(:title, "Accessibility Statement (RGAA 4.1 / WCAG 2.1 AA)") %>
+<% provide(:title, "Accessibility") %>
 
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-9">
-      <h1 class="h2 mb-3">Accessibility Statement — RGAA 4.1 &amp; WCAG 2.1 AA</h1>
-      <p class="lead text-muted mb-4">
-        ShareMyBag Exchange is designed and continuously verified against the French <strong>RGAA 4.1</strong> standard and <strong>WCAG 2.1 Level AA</strong> so all passengers and airline operators can use every screen comfortably, including with keyboard-only navigation and screen readers.
-      </p>
+      <h1 class="h2 mb-3">Accessibility Statement</h1>
+
+      <div class="alert alert-warning mb-4" role="note">
+        <strong>Compliance status: Not formally audited.</strong>
+        ShareMyBag Exchange is engineered following <strong>RGAA 4.1</strong> and <strong>WCAG 2.1 Level AA</strong> technical guidelines, but has not yet undergone a formal third-party accessibility audit grid required to claim official RGAA compliance.
+      </div>
 
       <div class="d-grid gap-4">
         <section class="smb-card p-4">
-          <h2 class="h5 mb-2">Key Accessibility Measures Implemented</h2>
+          <h2 class="h5 mb-2">Accessibility Practices Implemented</h2>
           <ul class="text-muted small mb-0 d-grid gap-2">
-            <li><strong>Language &amp; Landmarks (RGAA 8.3, 9.2, 12.7)</strong>: Explicit <code>lang="en"</code>, skip link directly to <code>#main-content</code>, semantic <code>header</code>, <code>nav[aria-label]</code>, <code>main</code>, <code>footer</code>, and a single <code>&lt;h1&gt;</code> per page.</li>
-            <li><strong>Accessible Financial &amp; Flight Data Tables (RGAA 5.6, 5.7)</strong>: Every flight table, Bid/Ask order book, and ROI breakdown uses semantic <code>&lt;table&gt;</code>, <code>&lt;caption&gt;</code>, and <code>&lt;th scope="col"&gt;</code> headers.</li>
-            <li><strong>Color Contrast &amp; Non-Color Cues (RGAA 3.1, 3.2, 3.3)</strong>: High-contrast palette (≥ 4.5:1 text, ≥ 3:1 UI borders/controls). Bid/Ask status never relies on color alone — explicit text labels (<code>BID</code>, <code>ASK</code>, <code>Open</code>, <code>Cutoff</code>) accompany every indicator.</li>
-            <li><strong>Accessible Forms &amp; Live Calculators (RGAA 7.5, 11.1, 11.5, 11.10)</strong>: Explicit labels, <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code> grouping, <code>aria-required</code>, <code>aria-invalid</code>, focusable error summaries (<code>role="alert"</code>), and polite live regions (<code>aria-live="polite"</code>) for the live trade settlement preview and interactive Annual Fleet ROI Simulator.</li>
-            <li><strong>Keyboard Focus &amp; Reduced Motion (RGAA 10.7)</strong>: High-visibility <code>:focus-visible</code> focus rings and full support for <code>prefers-reduced-motion: reduce</code>.</li>
+            <li><strong>Language &amp; Landmarks</strong>: Explicit <code>lang="en"</code>, skip link directly to <code>#main-content</code>, semantic <code>header</code>, <code>nav[aria-label]</code>, <code>main</code>, <code>footer</code>, and a single <code>&lt;h1&gt;</code> per page.</li>
+            <li><strong>Non-Color Signifiers</strong>: Buy/Sell prices, margins, and statuses never rely on color alone — explicit prefixes (<code>BID</code>, <code>ASK</code>, <code>+</code>, <code>−</code>, <code>Open</code>, <code>Cutoff</code>) accompany every figure.</li>
+            <li><strong>Accessible Data Tables &amp; Mobile Tabs</strong>: Semantic <code>&lt;table&gt;</code>, <code>&lt;caption&gt;</code>, and <code>&lt;th scope="col"&gt;</code> headers on desktop, collapsing into labeled stacked cards under 640 px and keyboard-accessible <code>role="tablist"</code> Buy/Sell tabs on narrow screens.</li>
+            <li><strong>Forms &amp; Live Regions</strong>: Explicit labels, <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code>, <code>aria-required</code>, <code>aria-invalid</code>, focusable error summaries (<code>role="alert"</code>), and polite live regions (<code>aria-live="polite"</code>) for order and fleet ROI calculators.</li>
+            <li><strong>Keyboard Focus &amp; Reduced Motion</strong>: Visible <code>:focus-visible</code> outlines and <code>prefers-reduced-motion: reduce</code> support.</li>
           </ul>
         </section>
 
         <section class="smb-card p-4">
-          <h2 class="h5 mb-2">Continuous Automated Testing</h2>
+          <h2 class="h5 mb-2">Automated Checks vs Formal Audit</h2>
           <p class="text-muted small mb-0">
-            Every pull request is verified by automated integration tests covering language declarations, landmark structure, table headers, form error announcements, <code>aria-current="page"</code>, and live-region availability across all core routes.
+            Automated integration tests check document language, landmarks, heading hierarchy, table scopes, form error states, and live regions on every build. A full manual screen-reader and RGAA 4.1 grid audit remains scheduled prior to carrier production deployment.
           </p>
         </section>
       </div>

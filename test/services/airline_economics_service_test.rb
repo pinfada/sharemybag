@@ -62,7 +62,7 @@ class AirlineEconomicsServiceTest < ActiveSupport::TestCase
     assert_equal 1, fleet[:flights_count]
   end
 
-  test "projects annual fleet ROI transparently including cannibalization haircut and check-in hours saved" do
+  test "projects annual fleet ROI transparently including pre-flight booking cannibalization, counter haircut, unused sensitivity, and conservative-to-base range" do
     projection = AirlineEconomicsService.annual_fleet_projection(
       daily_flights: 100,
       avg_matched_kg_per_flight: 180.0,
@@ -71,7 +71,10 @@ class AirlineEconomicsServiceTest < ActiveSupport::TestCase
       voucher_adoption_percent: 70.0,
       avg_flight_duration_hours: 4.5,
       airport_excess_fee_euros: 15.0,
-      cannibalization_percent: 15.0
+      cannibalization_percent: 6.0,
+      booking_cannibalization_percent: 15.0,
+      preflight_bag_fee_euros: 10.0,
+      unused_allowance_percent: 35.0
     )
 
     assert_equal 36_500, projection[:annual_flights]
@@ -79,10 +82,19 @@ class AirlineEconomicsServiceTest < ActiveSupport::TestCase
     assert_operator projection[:annual_gross_volume_cents], :>, 0
     assert_operator projection[:annual_net_margin_cents], :>, 0
     assert_operator projection[:annual_cannibalization_deduction_cents], :>, 0
-    assert_operator projection[:annual_incremental_profit_cents], :<, projection[:annual_net_margin_cents]
+    assert_operator projection[:annual_booking_cannibalization_deduction_cents], :>, 0
+    assert_operator projection[:annual_incremental_profit_low_cents], :<, projection[:annual_incremental_profit_cents]
     assert_operator projection[:annual_retained_voucher_cents], :>, 0
     assert_operator projection[:annual_passenger_savings_cents], :>, 0
     assert_operator projection[:annual_checkin_hours_saved], :>, 0
+
+    # Sensitivity: cutting unused allowance benchmark from 35% to 20% scales matched volume down proportionally
+    lower_unused = AirlineEconomicsService.annual_fleet_projection(
+      daily_flights: 100,
+      avg_matched_kg_per_flight: 180.0,
+      unused_allowance_percent: 20.0
+    )
+    assert_operator lower_unused[:annual_matched_kg], :<, projection[:annual_matched_kg]
   end
 
   test "calculates Ghost Allowance uncaptured opportunity, belly cargo comparison, and check-in minutes saved per flight" do

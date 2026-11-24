@@ -16,6 +16,14 @@
 
   <%= render "layouts/header" %>
 
+  <div class="smb-demo-disclaimer" role="note" data-demo-disclaimer-banner>
+    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-1">
+      <span>
+        <strong>Demo data — Fictional airline partnerships:</strong> flight order books, airline names, and DCS sync references shown here run in an isolated sandbox (no live carrier connection).
+      </span>
+    </div>
+  </div>
+
   <main id="main-content" class="smb-main" tabindex="-1">
     <% if flash.any? %>
       <div class="container pt-3">

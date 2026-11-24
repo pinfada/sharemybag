@@ -9,9 +9,10 @@
         </div>
       </div>
       <% sync_ok = (booking.dcs_sync_status == "synced") %>
+      <% live_dcs = AirlineConnector.find_by(airline_code: booking.flight.airline_code)&.live_external? %>
       <span class="smb-pass-pill <%= 'bg-warning text-dark' unless sync_ok %>">
         <i class="fas <%= sync_ok ? 'fa-check-circle' : 'fa-clock' %> me-1" aria-hidden="true"></i>
-        <%= sync_ok ? "DCS Synced" : booking.dcs_sync_status.humanize %>
+        <%= sync_ok ? (live_dcs ? "DCS Synced" : "Sandbox Synced") : booking.dcs_sync_status.humanize %>
       </span>
     </div>
   </div>

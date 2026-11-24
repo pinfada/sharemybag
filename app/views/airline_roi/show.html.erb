@@ -5,11 +5,11 @@
     <div>
       <span class="smb-b2b-pill mb-2">
         <i class="fas fa-chart-pie" aria-hidden="true"></i>
-        <span>CFO-Ready Business Case · Non-Cannibalization &amp; Jet-A1 Fuel Modeled</span>
+        <span>Bottom-Up Unit Economics · Booking &amp; Counter Cannibalization Modeled</span>
       </span>
-      <h1 class="h2 mb-1">Airline ROI &amp; Annual Fleet Simulator</h1>
+      <h1 class="h2 mb-1">Airline ROI: From One Flight to Fleet Projection</h1>
       <p class="text-muted mb-0">
-        Every euro below is auditable — including marginal Jet-A1 fuel burn, counter cannibalization haircut, retained voucher margin, and check-in queue time saved.
+        Start with real executed sandbox trades on a single flight, then stress-test annual fleet sensitivity against pre-flight booking bag cannibalization, airport counter diversion, unused allowance assumptions, and Jet-A1 fuel burn.
       </p>
     </div>
     <div class="d-flex flex-wrap gap-2">
@@ -22,49 +22,103 @@
     </div>
   </div>
 
-  <!-- Live Aggregated Fleet Performance -->
-  <section aria-labelledby="live-fleet-heading" class="mb-4">
-    <h2 id="live-fleet-heading" class="h5 mb-3">Live Exchange Performance (Executed Trades Across Demo Fleet)</h2>
-    <div class="row g-3">
-      <div class="col-6 col-lg-3">
+  <!-- STEP 1 (BOTTOM-UP PROOF FIRST): Single Flight Proof -> Demo Fleet Actuals -->
+  <section aria-labelledby="single-flight-proof-heading" class="mb-4">
+    <h2 id="single-flight-proof-heading" class="h5 mb-3">1. Bottom-Up Proof: Single Flight Actuals Before Scaling</h2>
+    <div class="row g-3 mb-3">
+      <% if @flagship_flight && @flagship_summary %>
+        <div class="col-md-6 col-lg-3">
+          <div class="smb-kpi-card smb-kpi-card--emerald">
+            <div class="smb-kpi-label">Single Flight (<%= @flagship_flight.flight_number %>)</div>
+            <div class="smb-kpi-value">+<%= format_euros(@flagship_summary[:airline_net_margin_cents]) %></div>
+            <div class="smb-kpi-sub">
+              Net margin on <%= format_kg(@flagship_summary[:matched_kg]) %> matched · Fuel −<%= format_euros(@flagship_summary[:estimated_fuel_cost_cents]) %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div class="col-md-6 col-lg-3">
+        <div class="smb-kpi-card smb-kpi-card--brand">
+          <div class="smb-kpi-label">Demo Fleet Net Margin</div>
+          <div class="smb-kpi-value">+<%= format_euros(@fleet_summary[:airline_net_margin_cents]) %></div>
+          <div class="smb-kpi-sub">
+            Commission <%= format_euros(@fleet_summary[:airline_commission_cents]) %> − Fuel <%= format_euros(@fleet_summary[:estimated_fuel_cost_cents]) %>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
         <div class="smb-kpi-card">
-          <div class="smb-kpi-label">Gross Traded Volume</div>
+          <div class="smb-kpi-label">Gross Volume &amp; Weight</div>
           <div class="smb-kpi-value"><%= format_euros(@fleet_summary[:gross_volume_cents]) %></div>
           <div class="smb-kpi-sub"><%= format_kg(@fleet_summary[:matched_kg]) %> across <%= @fleet_summary[:trades_count] %> trades</div>
         </div>
       </div>
-      <div class="col-6 col-lg-3">
-        <div class="smb-kpi-card smb-kpi-card--brand">
-          <div class="smb-kpi-label">Airline Commission (25%)</div>
-          <div class="smb-kpi-value"><%= format_euros(@fleet_summary[:airline_commission_cents]) %></div>
-          <div class="smb-kpi-sub">Fuel cost deducted: -<%= format_euros(@fleet_summary[:estimated_fuel_cost_cents]) %></div>
-        </div>
-      </div>
-      <div class="col-6 col-lg-3">
-        <div class="smb-kpi-card smb-kpi-card--emerald">
-          <div class="smb-kpi-label">Airline Net Margin</div>
-          <div class="smb-kpi-value"><%= format_euros(@fleet_summary[:airline_net_margin_cents]) %></div>
-          <div class="smb-kpi-sub">Voucher retained: <%= format_euros(@fleet_summary[:retained_voucher_cents]) %></div>
-        </div>
-      </div>
-      <div class="col-6 col-lg-3">
+      <div class="col-md-6 col-lg-3">
         <div class="smb-kpi-card smb-kpi-card--amber">
-          <div class="smb-kpi-label">Ghost Allowance Pool</div>
-          <div class="smb-kpi-value"><%= format_kg(@fleet_ghost_kg) %></div>
-          <div class="smb-kpi-sub">Flying empty across <%= @fleet_summary[:flights_count] %> live flights</div>
+          <div class="smb-kpi-label">Voucher Cash Retained</div>
+          <div class="smb-kpi-value"><%= format_euros(@fleet_summary[:retained_voucher_cents]) %></div>
+          <div class="smb-kpi-sub"><%= @fleet_summary[:voucher_adoption_percent] %>% of sellers chose flight credit</div>
         </div>
+      </div>
+    </div>
+
+    <!-- Flight-by-Flight Breakdown Table (Responsive Stacked Cards < 640px) -->
+    <div class="smb-card overflow-hidden">
+      <div class="px-4 py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h3 class="h6 mb-0">Live Flight-by-Flight Breakdown (Sandbox Actuals)</h3>
+        <span class="small text-muted">Modeled Ghost Allowance pool: <strong><%= format_kg(@fleet_ghost_kg) %></strong> (adjustable below)</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table smb-orderbook-table smb-responsive-cards mb-0">
+          <caption class="visually-hidden">Per-flight matched weight, gross volume, commission, fuel burn, and airline net margin</caption>
+          <thead>
+            <tr>
+              <th scope="col">Flight</th>
+              <th scope="col">Aircraft</th>
+              <th scope="col">Matched kg</th>
+              <th scope="col">Gross Volume</th>
+              <th scope="col">Airline Fee</th>
+              <th scope="col">Est. Fuel</th>
+              <th scope="col">Net Margin</th>
+              <th scope="col">Voucher Retained</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @flight_rows.each do |row| %>
+              <% flight = row[:flight] %>
+              <% s = row[:summary] %>
+              <tr>
+                <td data-label="Flight">
+                  <div>
+                    <%= link_to flight.flight_number, flight_path(flight), class: "fw-bold" %>
+                    <div class="small text-muted"><%= flight.route_label %></div>
+                  </div>
+                </td>
+                <td data-label="Aircraft" class="small"><%= flight.aircraft_type.code %> (<%= flight.flight_duration_hours %>h)</td>
+                <td data-label="Matched" class="smb-tabular fw-semibold"><%= format_kg(s[:matched_kg]) %></td>
+                <td data-label="Gross" class="smb-tabular"><%= format_euros(s[:gross_volume_cents]) %></td>
+                <td data-label="Fee (25%)" class="smb-tabular text-primary fw-semibold">+<%= format_euros(s[:airline_commission_cents]) %></td>
+                <td data-label="Est. Fuel" class="smb-tabular text-muted">−<%= format_euros(s[:estimated_fuel_cost_cents]) %></td>
+                <td data-label="Net Margin" class="smb-tabular text-success fw-bold">+<%= format_euros(s[:airline_net_margin_cents]) %></td>
+                <td data-label="Voucher" class="smb-tabular"><%= format_euros(s[:retained_voucher_cents]) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
-  <!-- CFO-Ready Interactive Annual Fleet ROI & Cannibalization Simulator -->
+  <!-- STEP 2: CFO Fleet Sensitivity Simulator (Conservative-to-Base Range + Dual Cannibalization) -->
   <section class="smb-card p-4 mb-4" aria-labelledby="simulator-heading" data-roi-simulator>
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
       <div>
-        <h2 id="simulator-heading" class="h4 mb-1">Interactive CFO Annual Fleet ROI &amp; Non-Cannibalization Simulator</h2>
-        <p class="text-muted small mb-0">Stress-test our revenue model against your fleet size, fuel burn, and airport counter cannibalization assumptions.</p>
+        <h2 id="simulator-heading" class="h4 mb-1">2. Fleet Extrapolation &amp; Revenue Management Sensitivity</h2>
+        <p class="text-muted small mb-0">
+          Stress-test the two real Revenue Management risks: <strong>pre-flight booking bag cannibalization</strong> (passengers skipping online extra-bag purchase at booking) and <strong>airport counter diversion</strong>, plus the <strong>unused allowance benchmark</strong>.
+        </p>
       </div>
-      <span class="smb-badge smb-badge--emerald">CFO Stress-Test Live</span>
+      <span class="smb-badge smb-badge--sky">Modeled Range · Stress-Test</span>
     </div>
 
     <div class="row g-4">
@@ -73,39 +127,57 @@
           <div class="col-sm-6">
             <label for="sim_daily_flights" class="form-label">Daily commercial flights</label>
             <input type="number" id="sim_daily_flights" class="form-control" value="120" min="1" max="5000" step="10" data-roi-daily-flights>
-            <div class="form-text">e.g. 120 flights/day = 43,800/yr</div>
+            <div class="form-text">120 flights/day = 43,800 departures/yr</div>
           </div>
           <div class="col-sm-6">
-            <label for="sim_kg_flight" class="form-label">Avg matched weight / flight (kg)</label>
-            <input type="number" id="sim_kg_flight" class="form-control" value="180" min="10" max="1500" step="10" data-roi-kg-per-flight>
-            <div class="form-text">~18–25 trades per departure</div>
+            <label for="sim_kg_flight" class="form-label">Base matched kg / flight (at 35% unused)</label>
+            <input type="number" id="sim_kg_flight" class="form-control" value="120" min="10" max="1000" step="10" data-roi-kg-per-flight>
+            <div class="form-text">~12 trades per departure</div>
+          </div>
+
+          <div class="col-sm-6">
+            <label for="sim_unused_rate" class="form-label">Unused “Ghost Allowance” assumption (%)</label>
+            <input type="number" id="sim_unused_rate" class="form-control" value="35" min="10" max="60" step="5" data-roi-unused-rate>
+            <div class="form-text">Illustrative benchmark — test 20% to 45%</div>
           </div>
           <div class="col-sm-6">
             <label for="sim_spot_price" class="form-label">Avg clearing price (€/kg)</label>
             <input type="number" id="sim_spot_price" class="form-control" value="7.50" min="2" max="25" step="0.50" data-roi-spot-price>
             <div class="form-text">vs €2.80/kg wholesale belly cargo</div>
           </div>
+
           <div class="col-sm-6">
-            <label for="sim_commission" class="form-label">Airline commission (%)</label>
+            <label for="sim_booking_cannib" class="form-label">Pre-flight booking bag cannibalization (%)</label>
+            <input type="number" id="sim_booking_cannib" class="form-control" value="15" min="0" max="60" step="5" data-roi-booking-cannib>
+            <div class="form-text">% who would have bought extra bag at booking</div>
+          </div>
+          <div class="col-sm-6">
+            <label for="sim_booking_fee" class="form-label">Online booking extra-bag price (€/kg)</label>
+            <input type="number" id="sim_booking_fee" class="form-control" value="10.00" min="3" max="25" step="0.50" data-roi-booking-fee>
+            <div class="form-text">Pre-paid ancillary bag rate at checkout</div>
+          </div>
+
+          <div class="col-sm-6">
+            <label for="sim_cannibalization" class="form-label">Airport counter cannibalization (%)</label>
+            <input type="number" id="sim_cannibalization" class="form-control" value="6" min="0" max="30" step="1" data-roi-cannibalization>
+            <div class="form-text">% who would have paid counter excess fee</div>
+          </div>
+          <div class="col-sm-6">
+            <label for="sim_airport_fee" class="form-label">Airport desk excess fee (€/kg)</label>
+            <input type="number" id="sim_airport_fee" class="form-control" value="15.00" min="5" max="40" step="1" data-roi-airport-fee>
+          </div>
+
+          <div class="col-sm-4">
+            <label for="sim_commission" class="form-label">Commission (%)</label>
             <input type="number" id="sim_commission" class="form-control" value="25" min="5" max="45" step="1" data-roi-commission>
           </div>
-          <div class="col-sm-6">
-            <label for="sim_voucher_rate" class="form-label">Seller voucher adoption (%)</label>
+          <div class="col-sm-4">
+            <label for="sim_voucher_rate" class="form-label">Voucher payout (%)</label>
             <input type="number" id="sim_voucher_rate" class="form-control" value="75" min="0" max="100" step="5" data-roi-voucher-rate>
-            <div class="form-text">Kept 100% in carrier ecosystem</div>
           </div>
-          <div class="col-sm-6">
-            <label for="sim_cannibalization" class="form-label">Counter cannibalization risk (%)</label>
-            <input type="number" id="sim_cannibalization" class="form-control" value="6" min="0" max="25" step="1" data-roi-cannibalization>
-            <div class="form-text">% of buyers who would have paid desk fee</div>
-          </div>
-          <div class="col-sm-6">
-            <label for="sim_duration" class="form-label">Avg flight duration (h)</label>
+          <div class="col-sm-4">
+            <label for="sim_duration" class="form-label">Avg flight (h)</label>
             <input type="number" id="sim_duration" class="form-control" value="4.5" min="1" max="14" step="0.5" data-roi-duration>
-          </div>
-          <div class="col-sm-6">
-            <label for="sim_airport_fee" class="form-label">Airport desk fee (€/kg)</label>
-            <input type="number" id="sim_airport_fee" class="form-control" value="15.00" min="5" max="40" step="1" data-roi-airport-fee>
           </div>
         </div>
       </div>
@@ -113,32 +185,45 @@
       <div class="col-lg-6">
         <div class="p-4 rounded bg-light border h-100 d-flex flex-column justify-content-between">
           <div>
-            <div class="small text-uppercase fw-bold text-muted mb-1">True Incremental Annual Profit (After Fuel &amp; Cannibalization)</div>
-            <div class="display-6 fw-bold text-success mb-3 smb-tabular" aria-live="polite" data-roi-incremental-profit>
-              <%= format_euros(@default_projection[:annual_incremental_profit_cents]) %>
+            <div class="small text-uppercase fw-bold text-muted mb-1">
+              Projected Annual Incremental Profit Range (Conservative – Base)
+            </div>
+            <div class="h2 fw-bold text-success mb-1 smb-tabular" aria-live="polite" data-roi-incremental-range>
+              <%= format_euros(@default_projection[:annual_incremental_profit_low_cents]) %> – <%= format_euros(@default_projection[:annual_incremental_profit_cents]) %> / yr
+            </div>
+            <div class="small text-muted mb-3">
+              Conservative floor applies a 30% execution variance buffer below base case.
             </div>
 
-            <!-- CFO Transparent P&L Waterfall -->
+            <!-- CFO Transparent Dual-Cannibalization P&L Waterfall -->
             <div class="mb-3">
               <div class="smb-waterfall-row">
                 <span class="text-muted">Gross Commission Revenue</span>
-                <span class="fw-bold text-dark smb-tabular" data-roi-annual-commission><%= format_euros(@default_projection[:annual_commission_cents]) %></span>
+                <span class="fw-bold text-dark smb-tabular" data-roi-annual-commission>+<%= format_euros(@default_projection[:annual_commission_cents]) %></span>
               </div>
               <div class="smb-waterfall-row">
                 <span class="text-muted">Marginal Jet-A1 Fuel Cost</span>
-                <span class="fw-semibold text-danger smb-tabular" data-roi-annual-fuel>-<%= format_euros(@default_projection[:annual_fuel_cost_cents]) %></span>
+                <span class="fw-semibold text-danger smb-tabular" data-roi-annual-fuel>−<%= format_euros(@default_projection[:annual_fuel_cost_cents]) %></span>
               </div>
               <div class="smb-waterfall-row">
                 <span class="text-muted">Direct Net Margin (Commission − Fuel)</span>
-                <span class="fw-bold text-dark smb-tabular" aria-live="polite" data-roi-annual-margin><%= format_euros(@default_projection[:annual_net_margin_cents]) %></span>
+                <span class="fw-bold text-dark smb-tabular" data-roi-annual-margin>+<%= format_euros(@default_projection[:annual_net_margin_cents]) %></span>
               </div>
               <div class="smb-waterfall-row">
-                <span class="text-muted">Voucher Re-booking Contribution (30% margin)</span>
+                <span class="text-muted">Voucher Re-booking Margin (30% est.)</span>
                 <span class="fw-semibold text-success smb-tabular" data-roi-voucher-margin>+<%= format_euros(@default_projection[:annual_voucher_rebooking_margin_cents]) %></span>
               </div>
               <div class="smb-waterfall-row">
-                <span class="text-muted">Airport Counter Cannibalization Haircut</span>
-                <span class="fw-semibold text-danger smb-tabular" data-roi-cannibalization-deduction>-<%= format_euros(@default_projection[:annual_cannibalization_deduction_cents]) %></span>
+                <span class="text-muted">Pre-Flight Booking Bag Cannibalization</span>
+                <span class="fw-semibold text-danger smb-tabular" data-roi-booking-cannib-deduction>−<%= format_euros(@default_projection[:annual_booking_cannibalization_deduction_cents]) %></span>
+              </div>
+              <div class="smb-waterfall-row">
+                <span class="text-muted">Airport Counter Excess Cannibalization</span>
+                <span class="fw-semibold text-danger smb-tabular" data-roi-cannibalization-deduction>−<%= format_euros(@default_projection[:annual_cannibalization_deduction_cents]) %></span>
+              </div>
+              <div class="smb-waterfall-row smb-waterfall-row--total">
+                <span class="text-dark">Base Incremental Annual Profit</span>
+                <span class="text-success smb-tabular" data-roi-incremental-profit>+<%= format_euros(@default_projection[:annual_incremental_profit_cents]) %></span>
               </div>
             </div>
 
@@ -152,7 +237,7 @@
                 <div class="fw-bold text-success smb-tabular" data-roi-annual-cash><%= format_euros(@default_projection[:annual_total_cash_retained_cents]) %></div>
               </div>
               <div class="col-4">
-                <div class="text-muted">Check-in Time Saved</div>
+                <div class="text-muted">Check-in Saved</div>
                 <div class="fw-bold text-dark smb-tabular" data-roi-checkin-hours><%= number_with_delimiter(@default_projection[:annual_checkin_hours_saved]) %> hrs/yr</div>
               </div>
             </div>
@@ -169,17 +254,16 @@
     </div>
   </section>
 
-  <!-- Auditable Formulas & Aviation Compliance Proof -->
-  <div class="row g-4 mb-4">
+  <!-- Auditable Formulas & Assumptions -->
+  <div class="row g-4">
     <div class="col-lg-6">
       <div class="smb-formula-box h-100">
-        <h2 class="h6 mb-2"><i class="fas fa-flask me-2 text-primary" aria-hidden="true"></i>Transparent Aviation Economics Formulas</h2>
+        <h2 class="h6 mb-2"><i class="fas fa-flask me-2 text-primary" aria-hidden="true"></i>Explicit Model Assumptions (Adjustable Above)</h2>
         <ul class="mb-0 ps-3 d-grid gap-1 text-muted">
-          <li><strong>Ghost Allowance</strong> = 35% of booked economy hold weight typically left unused by light passengers (fuel already planned).</li>
-          <li><strong>Airline Commission</strong> = Gross Volume × Commission Rate (default 25%).</li>
-          <li><strong>Marginal Jet-A1 Fuel Burn</strong> = Matched kg × 3.5%/hour × Flight Hours × €1.10/kg.</li>
-          <li><strong>Voucher Re-booking Margin</strong> = Conservative 30% incremental margin on airline flight credits redeemed on unsold future seats.</li>
-          <li><strong>Cannibalization Haircut</strong> = Explicitly deducts airport desk fees from the % of buyers who would have paid full counter penalties anyway.</li>
+          <li><strong>Unused Allowance Benchmark (35% default)</strong>: illustrative assumption representing light economy travelers using &lt;100% of checked hold allowance; calibrate directly from carrier DCS load history.</li>
+          <li><strong>Pre-Flight Booking Cannibalization (15% default)</strong>: deducts foregone online extra-bag revenue (€10/kg) for travelers who wait for the T-48h exchange instead of buying at checkout.</li>
+          <li><strong>Airport Counter Cannibalization (6% default)</strong>: deducts foregone airport desk excess fees (€15/kg) for distressed travelers who would have paid at check-in.</li>
+          <li><strong>Marginal Jet-A1 Fuel Burn</strong>: Matched kg × 3.5%/hour × Flight Hours × €1.10/kg.</li>
         </ul>
       </div>
     </div>
@@ -195,47 +279,4 @@
       </div>
     </div>
   </div>
-
-  <!-- Flight-by-Flight Breakdown Table -->
-  <section class="smb-card overflow-hidden" aria-labelledby="flight-breakdown-heading">
-    <div class="px-4 py-3 border-bottom">
-      <h2 id="flight-breakdown-heading" class="h6 mb-0">Live Flight-by-Flight Economics Breakdown</h2>
-    </div>
-    <div class="table-responsive">
-      <table class="table smb-orderbook-table mb-0">
-        <caption class="visually-hidden">Per-flight volume, commission, fuel burn, and airline net margin</caption>
-        <thead>
-          <tr>
-            <th scope="col">Flight</th>
-            <th scope="col">Aircraft</th>
-            <th scope="col">Matched kg</th>
-            <th scope="col">Gross Volume</th>
-            <th scope="col">Airline Fee</th>
-            <th scope="col">Est. Fuel</th>
-            <th scope="col">Net Margin</th>
-            <th scope="col">Voucher Retained</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @flight_rows.each do |row| %>
-            <% flight = row[:flight] %>
-            <% s = row[:summary] %>
-            <tr>
-              <td>
-                <%= link_to flight.flight_number, flight_path(flight), class: "fw-bold" %>
-                <div class="small text-muted"><%= flight.route_label %></div>
-              </td>
-              <td class="small"><%= flight.aircraft_type.code %> (<%= flight.flight_duration_hours %>h)</td>
-              <td class="smb-tabular fw-semibold"><%= format_kg(s[:matched_kg]) %></td>
-              <td class="smb-tabular"><%= format_euros(s[:gross_volume_cents]) %></td>
-              <td class="smb-tabular text-primary fw-semibold"><%= format_euros(s[:airline_commission_cents]) %></td>
-              <td class="smb-tabular text-muted">-<%= format_euros(s[:estimated_fuel_cost_cents]) %></td>
-              <td class="smb-tabular text-success fw-bold"><%= format_euros(s[:airline_net_margin_cents]) %></td>
-              <td class="smb-tabular"><%= format_euros(s[:retained_voucher_cents]) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </section>
 </div>

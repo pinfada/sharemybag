@@ -52,7 +52,7 @@
     </div>
   </section>
 
-  <!-- EXECUTIVE WOW DIAGNOSTIC: Aircraft Hold & Unmonetized "Ghost Allowance" Visualizer -->
+  <!-- Aircraft Hold & Ghost Allowance Diagnostic Card -->
   <section class="smb-ghost-card mb-4" aria-labelledby="ghost-allowance-heading" data-ghost-allowance-card>
     <div class="row gy-3 align-items-center justify-content-between mb-3">
       <div class="col-lg-7">
@@ -60,18 +60,20 @@
           <i class="fas fa-radar me-1" aria-hidden="true"></i>Aircraft Hold Opportunity Diagnostic (<%= @flight.aircraft_type.code %>)
         </div>
         <h2 id="ghost-allowance-heading" class="h5 mb-1">
-          <%= format_kg(@flight_opportunity[:ghost_allowance_kg]) %> of paid “Ghost Allowance” is currently scheduled to fly empty
+          <%= format_kg(@flight_opportunity[:ghost_allowance_kg]) %> of paid “Ghost Allowance” modeled as flying empty
         </h2>
         <p class="small text-muted mb-0">
-          Fuel and baggage payload are already planned for <%= format_kg(@flight_opportunity[:booked_baggage_kg]) %> booked hold weight (~35% unused by light travelers). Reallocating just 25% via ShareMyBag unlocks high-margin ancillary revenue at <strong><%= @flight_opportunity[:yield_multiplier_vs_cargo] %>× belly cargo yield</strong>.
+          Fuel and baggage payload are already planned for <%= format_kg(@flight_opportunity[:booked_baggage_kg]) %> booked hold weight (illustrative 35% unused assumption — <%= link_to "adjust sensitivity on Airline ROI", airline_roi_path %>). Reallocating 25% unlocks ancillary revenue at <strong><%= @flight_opportunity[:yield_multiplier_vs_cargo] %>× belly cargo yield</strong>.
         </p>
       </div>
       <div class="col-lg-5">
         <div class="row g-2 text-lg-end">
           <div class="col-4">
-            <div class="small text-muted">Uncaptured Margin</div>
-            <div class="fs-5 fw-bold text-success smb-tabular">+<%= format_euros(@flight_opportunity[:uncaptured_net_margin_cents]) %></div>
-            <div class="small text-muted">still on this flight</div>
+            <div class="small text-muted"><%= @flight.trading_open? ? "Uncaptured Margin" : "Missed Margin" %></div>
+            <div class="fs-5 fw-bold <%= @flight.trading_open? ? 'text-success' : 'text-warning' %> smb-tabular">
+              <%= @flight.trading_open? ? "+" : "" %><%= format_euros(@flight_opportunity[:uncaptured_net_margin_cents]) %>
+            </div>
+            <div class="small text-muted"><%= @flight.trading_open? ? "still on this flight" : "cutoff locked" %></div>
           </div>
           <div class="col-4">
             <div class="small text-muted">Yield vs Cargo</div>
@@ -87,7 +89,6 @@
       </div>
     </div>
 
-    <!-- 3-Segment Aircraft Hold Tonnage Breakdown (CSP-safe classes, zero inline styles) -->
     <div class="smb-hold-bar mb-2" role="img"
          aria-label="Aircraft baggage hold breakdown for <%= @flight.flight_number %>: <%= format_kg(@flight_opportunity[:used_baggage_kg]) %> active checked bags, <%= format_kg(@flight_opportunity[:matched_kg]) %> matched via ShareMyBag, <%= format_kg(@flight_opportunity[:ghost_unmatched_kg]) %> unmonetized ghost allowance, out of <%= format_kg(@flight.max_baggage_payload_kg) %> certified max payload.">
       <div class="smb-hold-seg--used <%= percent_width_class(@flight_opportunity[:used_percent]) %>"></div>
@@ -127,102 +128,118 @@
   <% end %>
 
   <div class="row g-4">
-    <!-- Left Column: Live Bid / Ask Order Book & Executed Trades -->
+    <!-- Left Column: Live Bid / Ask Order Book (Tabs on Mobile <768px, Side-by-Side on Desktop) -->
     <div class="col-lg-7">
-      <div class="row g-3 mb-4">
-        <!-- BUY / BID Book -->
-        <div class="col-md-6">
-          <section class="smb-card overflow-hidden h-100" aria-labelledby="bids-heading">
-            <div class="px-3 py-3 border-bottom d-flex align-items-center justify-content-between bg-white">
-              <div>
-                <h2 id="bids-heading" class="h6 mb-0 text-dark">BUY Orders (BID)</h2>
-                <div class="small text-muted">Heavy passengers buying kg</div>
-              </div>
-              <span class="smb-badge smb-badge--emerald"><%= format_kg(@flight.total_demand_kg) %></span>
-            </div>
-            <div class="table-responsive">
-              <table class="table smb-orderbook-table mb-0">
-                <caption class="visually-hidden">Active buy limit orders sorted by highest price first</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Price / kg</th>
-                    <th scope="col">Qty</th>
-                    <th scope="col">Depth</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% max_bid_qty = [@open_bids.map { |o| o.remaining_kg.to_f }.max.to_f, 1.0].max %>
-                  <% if @open_bids.any? %>
-                    <% @open_bids.each do |order| %>
-                      <% depth_pct = (order.remaining_kg.to_f / max_bid_qty) * 100.0 %>
-                      <tr>
-                        <td class="smb-price-bid"><%= format_euros(order.price_per_kg_cents) %></td>
-                        <td class="smb-tabular fw-semibold"><%= format_kg(order.remaining_kg) %></td>
-                        <td>
-                          <div class="smb-depth-track" aria-hidden="true">
-                            <div class="smb-depth-fill--bid <%= percent_width_class(depth_pct) %>"></div>
-                          </div>
-                          <span class="visually-hidden"><%= depth_pct.round %>% relative bid depth</span>
-                        </td>
-                      </tr>
-                    <% end %>
-                  <% else %>
-                    <tr>
-                      <td colspan="3" class="text-center text-muted py-4">No active buy orders yet.</td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-          </section>
+      <div class="mb-4" data-orderbook-scope>
+        <!-- Mobile Buy / Sell Switcher Tabs -->
+        <div class="smb-book-tabs rounded-top border border-bottom-0" role="tablist" aria-label="Order book side selector" data-orderbook-tabs>
+          <button type="button" class="smb-book-tab" role="tab" aria-selected="true" data-book-target="bids">
+            BUY / BID (<%= format_kg(@flight.total_demand_kg) %>)
+          </button>
+          <button type="button" class="smb-book-tab" role="tab" aria-selected="false" data-book-target="asks">
+            SELL / ASK (<%= format_kg(@flight.total_supply_kg) %>)
+          </button>
         </div>
 
-        <!-- SELL / ASK Book -->
-        <div class="col-md-6">
-          <section class="smb-card overflow-hidden h-100" aria-labelledby="asks-heading">
-            <div class="px-3 py-3 border-bottom d-flex align-items-center justify-content-between bg-white">
-              <div>
-                <h2 id="asks-heading" class="h6 mb-0 text-dark">SELL Orders (ASK)</h2>
-                <div class="small text-muted">Light passengers selling kg</div>
+        <div class="row g-3">
+          <!-- BUY / BID Book -->
+          <div class="col-md-6 is-mobile-active" role="tabpanel" data-book-panel="bids">
+            <section class="smb-card overflow-hidden h-100" aria-labelledby="bids-heading">
+              <div class="px-3 py-3 border-bottom d-flex align-items-center justify-content-between bg-white">
+                <div>
+                  <h2 id="bids-heading" class="h6 mb-0 text-dark">BUY Orders (BID)</h2>
+                  <div class="small text-muted">Heavy passengers buying kg</div>
+                </div>
+                <span class="smb-badge smb-badge--emerald">BID · <%= format_kg(@flight.total_demand_kg) %></span>
               </div>
-              <span class="smb-badge smb-badge--amber"><%= format_kg(@flight.total_supply_kg) %></span>
-            </div>
-            <div class="table-responsive">
-              <table class="table smb-orderbook-table mb-0">
-                <caption class="visually-hidden">Active sell limit orders sorted by lowest price first</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Price / kg</th>
-                    <th scope="col">Qty</th>
-                    <th scope="col">Payout</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% if @open_asks.any? %>
-                    <% @open_asks.each do |order| %>
+              <div class="table-responsive">
+                <table class="table smb-orderbook-table mb-0">
+                  <caption class="visually-hidden">Active buy limit orders sorted by highest price first</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Price / kg</th>
+                      <th scope="col">Qty</th>
+                      <th scope="col">Depth</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% max_bid_qty = [@open_bids.map { |o| o.remaining_kg.to_f }.max.to_f, 1.0].max %>
+                    <% if @open_bids.any? %>
+                      <% @open_bids.each do |order| %>
+                        <% depth_pct = (order.remaining_kg.to_f / max_bid_qty) * 100.0 %>
+                        <tr>
+                          <td class="smb-price-bid">
+                            <span class="smb-side-tag smb-side-tag--bid">BID</span><%= format_euros(order.price_per_kg_cents) %>
+                          </td>
+                          <td class="smb-tabular fw-semibold"><%= format_kg(order.remaining_kg) %></td>
+                          <td>
+                            <div class="smb-depth-track" aria-hidden="true">
+                              <div class="smb-depth-fill--bid <%= percent_width_class(depth_pct) %>"></div>
+                            </div>
+                            <span class="visually-hidden"><%= depth_pct.round %>% relative bid depth</span>
+                          </td>
+                        </tr>
+                      <% end %>
+                    <% else %>
                       <tr>
-                        <td class="smb-price-ask"><%= format_euros(order.price_per_kg_cents) %></td>
-                        <td class="smb-tabular fw-semibold"><%= format_kg(order.remaining_kg) %></td>
-                        <td>
-                          <span class="small text-muted text-capitalize">
-                            <%= order.payout_preference == "voucher" ? "Voucher" : "Cash" %>
-                          </span>
-                        </td>
+                        <td colspan="3" class="text-center text-muted py-4">No active buy orders yet.</td>
                       </tr>
                     <% end %>
-                  <% else %>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+
+          <!-- SELL / ASK Book -->
+          <div class="col-md-6" role="tabpanel" data-book-panel="asks">
+            <section class="smb-card overflow-hidden h-100" aria-labelledby="asks-heading">
+              <div class="px-3 py-3 border-bottom d-flex align-items-center justify-content-between bg-white">
+                <div>
+                  <h2 id="asks-heading" class="h6 mb-0 text-dark">SELL Orders (ASK)</h2>
+                  <div class="small text-muted">Light passengers selling kg</div>
+                </div>
+                <span class="smb-badge smb-badge--amber">ASK · <%= format_kg(@flight.total_supply_kg) %></span>
+              </div>
+              <div class="table-responsive">
+                <table class="table smb-orderbook-table mb-0">
+                  <caption class="visually-hidden">Active sell limit orders sorted by lowest price first</caption>
+                  <thead>
                     <tr>
-                      <td colspan="3" class="text-center text-muted py-4">No active sell orders yet.</td>
+                      <th scope="col">Price / kg</th>
+                      <th scope="col">Qty</th>
+                      <th scope="col">Payout</th>
                     </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-          </section>
+                  </thead>
+                  <tbody>
+                    <% if @open_asks.any? %>
+                      <% @open_asks.each do |order| %>
+                        <tr>
+                          <td class="smb-price-ask">
+                            <span class="smb-side-tag smb-side-tag--ask">ASK</span><%= format_euros(order.price_per_kg_cents) %>
+                          </td>
+                          <td class="smb-tabular fw-semibold"><%= format_kg(order.remaining_kg) %></td>
+                          <td>
+                            <span class="small text-muted text-capitalize">
+                              <%= order.payout_preference == "voucher" ? "Voucher" : "Cash" %>
+                            </span>
+                          </td>
+                        </tr>
+                      <% end %>
+                    <% else %>
+                      <tr>
+                        <td colspan="3" class="text-center text-muted py-4">No active sell orders yet.</td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
 
-      <!-- Executed Trades Tape -->
+      <!-- Executed Trades Tape (Stacked Cards < 640px) -->
       <section class="smb-card overflow-hidden mb-4" aria-labelledby="trades-heading">
         <div class="px-3 py-3 border-bottom d-flex align-items-center justify-content-between">
           <div>
@@ -232,7 +249,7 @@
           <span class="small fw-semibold text-muted"><%= @flight_economics[:trades_count] %> total trades</span>
         </div>
         <div class="table-responsive">
-          <table class="table smb-orderbook-table mb-0">
+          <table class="table smb-orderbook-table smb-responsive-cards mb-0">
             <caption class="visually-hidden">Recent executed baggage kilo trades on <%= @flight.flight_number %></caption>
             <thead>
               <tr>
@@ -248,12 +265,12 @@
               <% if @recent_trades.any? %>
                 <% @recent_trades.each do |trade| %>
                   <tr>
-                    <td class="small text-muted smb-tabular"><%= trade.executed_at.utc.strftime("%H:%M") %></td>
-                    <td class="fw-semibold smb-tabular"><%= format_kg(trade.quantity_kg) %></td>
-                    <td class="fw-bold text-primary smb-tabular"><%= format_euros(trade.execution_price_per_kg_cents) %>/kg</td>
-                    <td class="smb-tabular"><%= format_euros(trade.gross_amount_cents) %></td>
-                    <td class="text-success fw-semibold smb-tabular"><%= format_euros(trade.airline_fee_cents) %></td>
-                    <td>
+                    <td data-label="Time (UTC)" class="small text-muted smb-tabular"><%= trade.executed_at.utc.strftime("%H:%M") %></td>
+                    <td data-label="Weight" class="fw-semibold smb-tabular"><%= format_kg(trade.quantity_kg) %></td>
+                    <td data-label="Exec Price" class="fw-bold text-primary smb-tabular"><%= format_euros(trade.execution_price_per_kg_cents) %>/kg</td>
+                    <td data-label="Gross" class="smb-tabular"><%= format_euros(trade.gross_amount_cents) %></td>
+                    <td data-label="Airline Fee" class="text-success fw-semibold smb-tabular">+<%= format_euros(trade.airline_fee_cents) %></td>
+                    <td data-label="Settlement">
                       <span class="smb-badge <%= trade.payout_type == 'voucher' ? 'smb-badge--emerald' : 'smb-badge--slate' %>">
                         <%= trade.payout_type == "voucher" ? "Voucher retained" : "Cash" %>
                       </span>
@@ -286,15 +303,15 @@
           </div>
           <div class="col-6 col-sm-3">
             <div class="small text-muted">Commission (<%= @flight.commission_percent %>%)</div>
-            <div class="fw-bold text-primary fs-5 smb-tabular"><%= format_euros(@flight_economics[:airline_commission_cents]) %></div>
+            <div class="fw-bold text-primary fs-5 smb-tabular">+<%= format_euros(@flight_economics[:airline_commission_cents]) %></div>
           </div>
           <div class="col-6 col-sm-3">
             <div class="small text-muted">Est. Fuel Cost</div>
-            <div class="fw-bold text-dark fs-5 smb-tabular">-<%= format_euros(@flight_economics[:estimated_fuel_cost_cents]) %></div>
+            <div class="fw-bold text-dark fs-5 smb-tabular">−<%= format_euros(@flight_economics[:estimated_fuel_cost_cents]) %></div>
           </div>
           <div class="col-6 col-sm-3">
             <div class="small text-muted">Airline Net Margin</div>
-            <div class="fw-bold text-success fs-5 smb-tabular"><%= format_euros(@flight_economics[:airline_net_margin_cents]) %></div>
+            <div class="fw-bold text-success fs-5 smb-tabular">+<%= format_euros(@flight_economics[:airline_net_margin_cents]) %></div>
           </div>
         </div>
         <div class="mt-3 pt-3 border-top d-flex flex-wrap justify-content-between gap-2 small">
@@ -304,18 +321,17 @@
           </span>
           <span>
             <strong>Passenger Savings vs Airport Desk:</strong>
-            <span class="text-primary fw-bold"><%= format_euros(@flight_economics[:passenger_savings_cents]) %></span>
+            <span class="text-primary fw-bold">+<%= format_euros(@flight_economics[:passenger_savings_cents]) %></span>
           </span>
         </div>
       </section>
     </div>
 
-    <!-- Right Column: 1-Click Live Persona Bar, Digital PNR Pass & Order Ticket -->
+    <!-- Right Column: Demo Persona Switcher, Digital PNR Pass & Order Ticket -->
     <div class="col-lg-5">
-      <!-- 1-Click Executive Demo Persona Switcher (Test both sides of the market in 1 click) -->
       <section class="smb-demo-bar mb-3" aria-label="Interactive demo persona switcher">
         <div class="small fw-bold text-dark mb-2">
-          <i class="fas fa-user-check me-1 text-primary" aria-hidden="true"></i>1-Click Interactive Demo View
+          <i class="fas fa-user-check me-1 text-primary" aria-hidden="true"></i>Switch Demo Persona (Sandbox)
         </div>
         <div class="d-flex flex-wrap gap-2">
           <%= button_to demo_session_path(persona: "light_passenger", return_to: flight_path(@flight)),
@@ -344,9 +360,9 @@
 
         <% if !signed_in? %>
           <div class="p-3 rounded bg-light border mb-3">
-            <p class="mb-2 fw-semibold text-dark">Experience an instant live match on <%= @flight.flight_number %>.</p>
+            <p class="mb-2 fw-semibold text-dark">Sign in to test the order book on <%= @flight.flight_number %>.</p>
             <p class="small text-muted mb-3">
-              Click <strong>Marie (Sell unused kg)</strong> or <strong>Pierre (Buy extra kg)</strong> above to step into a verified passenger PNR in 1 click — or sign in with your own account.
+              Select <strong>Marie (Sell unused kg)</strong> or <strong>Pierre (Buy extra kg)</strong> above to open a verified sandbox PNR, or sign in with your own account.
             </p>
             <%= link_to "Sign in manually", signin_path, class: "btn btn-outline-primary w-100 btn-sm" %>
           </div>
@@ -354,12 +370,11 @@
           <div class="alert alert-info mb-0" role="status">
             <strong>No confirmed PNR on <%= @flight.flight_number %>.</strong>
             <p class="small mb-2 mt-1">
-              For aviation compliance, only passengers ticketed on this exact flight can trade digital baggage allowance here. Switch to a persona booked on this flight or view your booked flights.
+              For aviation compliance, only passengers ticketed on this exact flight can trade digital baggage allowance here.
             </p>
             <%= link_to "View my booked flights", my_bookings_path, class: "btn btn-sm btn-outline-primary" %>
           </div>
         <% else %>
-          <!-- Authentic Digital PNR DCS Baggage Pass -->
           <div class="mb-3">
             <%= render "shared/pnr_baggage_pass", booking: @user_booking %>
           </div>
@@ -374,10 +389,10 @@
               Trading on <%= @flight.flight_number %> is closed because the H-4h Weight &amp; Balance cutoff has been reached.
             </div>
           <% else %>
-            <!-- 1-Click Cross-the-Spread Quick-Fill Actions -->
+            <!-- Honest Pre-Fill Best Price Helpers -->
             <% if @flight.best_bid_cents || @flight.best_ask_cents %>
               <div class="mb-3">
-                <div class="small fw-semibold text-muted mb-1">1-Click Instant Market Fill (Cross the Spread):</div>
+                <div class="small fw-semibold text-muted mb-1">Pre-fill best market price (then review &amp; submit):</div>
                 <div class="d-flex flex-wrap gap-2">
                   <% if @flight.best_bid_cents && @user_booking.available_to_sell_kg >= 5 %>
                     <% quick_sell_qty = [@user_booking.available_to_sell_kg.floor, 8].min %>
@@ -386,7 +401,7 @@
                             data-quick-fill-side="sell"
                             data-quick-fill-qty="<%= quick_sell_qty %>"
                             data-quick-fill-price="<%= format('%.2f', @flight.best_bid_cents / 100.0) %>">
-                      <i class="fas fa-bolt me-1" aria-hidden="true"></i>Sell <%= quick_sell_qty %> kg @ <%= format_euros(@flight.best_bid_cents) %>
+                      Pre-fill Sell <%= quick_sell_qty %> kg @ <%= format_euros(@flight.best_bid_cents) %>
                     </button>
                   <% end %>
                   <% if @flight.best_ask_cents && @user_booking.available_to_buy_kg >= 5 %>
@@ -396,7 +411,7 @@
                             data-quick-fill-side="buy"
                             data-quick-fill-qty="<%= quick_buy_qty %>"
                             data-quick-fill-price="<%= format('%.2f', @flight.best_ask_cents / 100.0) %>">
-                      <i class="fas fa-bolt me-1" aria-hidden="true"></i>Buy <%= quick_buy_qty %> kg @ <%= format_euros(@flight.best_ask_cents) %>
+                      Pre-fill Buy <%= quick_buy_qty %> kg @ <%= format_euros(@flight.best_ask_cents) %>
                     </button>
                   <% end %>
                 </div>
@@ -490,7 +505,6 @@
         <% end %>
       </section>
 
-      <!-- User's Orders on This Flight -->
       <% if signed_in? && @user_orders.any? %>
         <section class="smb-card p-4" aria-labelledby="my-flight-orders-heading">
           <h2 id="my-flight-orders-heading" class="h6 mb-3">Your Orders on <%= @flight.flight_number %></h2>

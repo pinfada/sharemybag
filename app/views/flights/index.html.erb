@@ -74,7 +74,7 @@
   <% if @flights.any? %>
     <div class="smb-card overflow-hidden">
       <div class="table-responsive">
-        <table class="table smb-orderbook-table align-middle mb-0">
+        <table class="table smb-orderbook-table smb-responsive-cards align-middle mb-0">
           <caption class="visually-hidden">Commercial flights with open baggage allowance Bid/Ask order books</caption>
           <thead>
             <tr>
@@ -91,7 +91,7 @@
             <% @flights.each do |flight| %>
               <% econ = AirlineEconomicsService.flight_summary(flight) %>
               <tr>
-                <td>
+                <td data-label="Flight">
                   <div class="d-flex align-items-center gap-2">
                     <span class="smb-airline-code" aria-hidden="true"><%= flight.airline_code %></span>
                     <div>
@@ -100,51 +100,59 @@
                     </div>
                   </div>
                 </td>
-                <td>
-                  <div class="fw-bold text-dark"><%= flight.departure_iata %> → <%= flight.arrival_iata %></div>
-                  <div class="small text-muted"><%= flight.departure_city %> to <%= flight.arrival_city %></div>
-                  <div class="small">
-                    <% if flight.trading_open? %>
-                      <span class="text-success fw-semibold">Closes in <%= flight.hours_until_cutoff %>h</span>
-                    <% else %>
-                      <span class="text-muted">Cutoff reached</span>
-                    <% end %>
+                <td data-label="Route & Cutoff">
+                  <div>
+                    <div class="fw-bold text-dark"><%= flight.departure_iata %> → <%= flight.arrival_iata %></div>
+                    <div class="small text-muted"><%= flight.departure_city %> to <%= flight.arrival_city %></div>
+                    <div class="small">
+                      <% if flight.trading_open? %>
+                        <span class="text-success fw-semibold">Closes in <%= flight.hours_until_cutoff %>h</span>
+                      <% else %>
+                        <span class="text-muted">Cutoff reached</span>
+                      <% end %>
+                    </div>
                   </div>
                 </td>
-                <td class="smb-tabular">
+                <td data-label="Bid / Ask" class="smb-tabular">
                   <div>
                     <span class="smb-price-bid">BID <%= format_euros(flight.best_bid_cents) %></span>
                     <span class="text-muted mx-1">/</span>
                     <span class="smb-price-ask">ASK <%= format_euros(flight.best_ask_cents) %></span>
-                  </div>
-                  <div class="small text-muted">
-                    Airport desk: <%= format_euros(flight.airport_excess_fee_per_kg_cents) %>/kg
-                    <% if flight.estimated_savings_percent_vs_airport > 0 %>
-                      · <strong class="text-success">-<%= flight.estimated_savings_percent_vs_airport %>%</strong>
-                    <% end %>
-                  </div>
-                </td>
-                <td class="smb-tabular">
-                  <div class="small"><strong>Demand:</strong> <%= format_kg(flight.total_demand_kg) %></div>
-                  <div class="small"><strong>Supply:</strong> <%= format_kg(flight.total_supply_kg) %></div>
-                  <div class="small text-muted">Matched: <%= format_kg(flight.total_matched_kg) %></div>
-                </td>
-                <td>
-                  <div class="small fw-semibold text-dark mb-1">
-                    <%= format_kg(flight.current_total_baggage_kg) %> / <%= format_kg(flight.max_baggage_payload_kg) %> (<%= flight.payload_utilization_percent %>%)
-                  </div>
-                  <div class="smb-payload-meter" role="progressbar"
-                       aria-label="Payload utilization for <%= flight.flight_number %>"
-                       aria-valuenow="<%= flight.payload_utilization_percent.round %>"
-                       aria-valuemin="0" aria-valuemax="100">
-                    <div class="smb-payload-bar <%= percent_width_class(flight.payload_utilization_percent) %>"></div>
+                    <div class="small text-muted">
+                      Desk: <%= format_euros(flight.airport_excess_fee_per_kg_cents) %>/kg
+                      <% if flight.estimated_savings_percent_vs_airport > 0 %>
+                        · <strong class="text-success">−<%= flight.estimated_savings_percent_vs_airport %>%</strong>
+                      <% end %>
+                    </div>
                   </div>
                 </td>
-                <td class="smb-tabular">
-                  <div class="fw-bold text-success"><%= format_euros(econ[:airline_net_margin_cents]) %></div>
-                  <div class="small text-muted">Fee: <%= format_euros(econ[:airline_commission_cents]) %> (<%= flight.commission_percent %>%)</div>
+                <td data-label="Book Depth" class="smb-tabular">
+                  <div>
+                    <div class="small"><strong>Demand:</strong> <%= format_kg(flight.total_demand_kg) %></div>
+                    <div class="small"><strong>Supply:</strong> <%= format_kg(flight.total_supply_kg) %></div>
+                    <div class="small text-muted">Matched: <%= format_kg(flight.total_matched_kg) %></div>
+                  </div>
                 </td>
-                <td class="text-end">
+                <td data-label="Payload">
+                  <div class="w-100">
+                    <div class="small fw-semibold text-dark mb-1">
+                      <%= format_kg(flight.current_total_baggage_kg) %> / <%= format_kg(flight.max_baggage_payload_kg) %> (<%= flight.payload_utilization_percent %>%)
+                    </div>
+                    <div class="smb-payload-meter" role="progressbar"
+                         aria-label="Payload utilization for <%= flight.flight_number %>"
+                         aria-valuenow="<%= flight.payload_utilization_percent.round %>"
+                         aria-valuemin="0" aria-valuemax="100">
+                      <div class="smb-payload-bar <%= percent_width_class(flight.payload_utilization_percent) %>"></div>
+                    </div>
+                  </div>
+                </td>
+                <td data-label="Net Margin" class="smb-tabular">
+                  <div>
+                    <div class="fw-bold text-success">+<%= format_euros(econ[:airline_net_margin_cents]) %></div>
+                    <div class="small text-muted">Fee: +<%= format_euros(econ[:airline_commission_cents]) %> (<%= flight.commission_percent %>%)</div>
+                  </div>
+                </td>
+                <td data-label="" class="text-end">
                   <%= link_to "Open Order Book", flight_path(flight), class: "btn btn-sm btn-primary" %>
                 </td>
               </tr>
