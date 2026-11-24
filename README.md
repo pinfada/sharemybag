@@ -1,19 +1,21 @@
-# ShareMyBag Exchange — B2B Airline Baggage Allowance Exchange (`lab/b2b-airline-exchange`)
+# ShareMyBag Exchange — B2B Airline Baggage Allowance Exchange
 
-> **Branch Note:** `master` keeps the standalone P2P parcel reverse-auction demo. This `lab/b2b-airline-exchange` branch implements the **B2B white-label Airline Baggage Allowance Exchange** where airlines monetize unused hold baggage capacity on every commercial departure.
+[![Try with railsbox](https://pinfada.github.io/tchopmygrinds/badge.svg)](https://pinfada.github.io/sharemybag/)
 
-## Core Feature (One Focused Problem, Solved End-to-End)
+**ShareMyBag Exchange** is a white-label **B2B flight-level baggage allowance exchange** enabling airlines to monetize unused hold baggage capacity ("Ghost Allowance") on every commercial departure:
 
-Between **T-48h and T-4h** before departure, ticketed passengers on the **same commercial flight** trade **digital baggage weight allowance** on a live **Bid / Ask order book**:
+1. **Zero Physical Parcel Handover** — Between **T-48h and T-4h**, ticketed passengers on the **same commercial flight** trade **digital PNR weight allowance** on a live Bid/Ask order book. Every passenger packs and checks only their own suitcase — eliminating airport security (DGAC/TSA/ICAO Annex 17), customs, and airline liability blockers.
+2. **Atomic Price-Time Priority Matching Engine** — `OrderBookMatchingService` matches crossing limit orders inside a locked PostgreSQL transaction with fractional fills, maker-price execution, overdraft protection, anti-wash-trading, IATA 32 kg single-bag health notice, and certified aircraft payload limits (`A350-900`, `B777-300ER`, `A330-200`, `B737-800`, `A320neo`).
+3. **Carrier-Agnostic DCS / PSS Integration Layer (`/integrations`)** — Pluggable adapters (`IataNdcAdapter` for Amadeus Altéa/Sabre ONE Order, `NavitaireRestAdapter`, `WebhookRestAdapter` with HMAC-SHA256, `SandboxAdapter`) orchestrated by `AirlineDcs::SettlementOrchestrator` with idempotent IATA EMD-A/EMD-S issuance, automatic Saga compensation (EMD-Void + PNR rollback), SSRF/TLS validation, and signed inbound webhooks (`POST /api/v1/dcs/webhooks/:airline_code`).
+4. **CFO-Ready Airline ROI & Fleet Simulator (`/airline-roi`)** — Auditable unit economics including 25% commission, 100% retained flight voucher treasury, marginal Jet-A1 fuel burn deduction (`3.5%/h × flight hours × €1.10/kg`), counter cannibalization stress-test, belly cargo yield comparison, and check-in agent hours saved.
 
-1. **Zero Physical Parcel Handover** — Passengers pack and check only their own suitcase. Only digital weight entitlements move 1:1 between two PNRs on the same flight, eliminating airport security (DGAC/TSA/ICAO Annex 17), customs, and airline terms blockers.
-2. **Price-Time Priority Matching Engine** — `OrderBookMatchingService` matches crossing limit orders atomically inside a locked PostgreSQL transaction with fractional fills, maker-price execution, overdraft protection, anti-wash-trading, and strict certified aircraft payload limits (`A350-900`, `B777-300ER`, `A330-200`, `B737-800`, `A320neo`).
-3. **IATA 32 kg Single-Bag Health Limit & H-4h Weight & Balance Cutoff** — PNR allowance can scale up to 46 kg (with mandatory 2-bag split notice above 32 kg) and trading freezes 4 hours before departure.
-4. **Auditable Airline ROI & Annual Fleet Simulator** — `AirlineEconomicsService` reports real-time gross volume, 25% airline commission, 100% retained voucher treasury, marginal Jet-A1 fuel burn (`3.5%/h × flight hours × €1.10/kg`), net ancillary margin, and passenger savings vs airport excess fees.
+Built with **Ruby on Rails 7.0** and **PostgreSQL 16**, accessible to **RGAA 4.1 / WCAG 2.1 Level AA**, hardened to **OWASP** standards (strict CSP, zero inline scripts/styles, `Rack::Attack`), and zero ExecJS dependency (fully compatible with `railsbox`).
 
-Built with **Ruby on Rails 7.0** and **PostgreSQL 16**, accessible to **RGAA 4.1 / WCAG 2.1 Level AA**, hardened to **OWASP** standards (strict CSP, zero inline scripts/styles, `Rack::Attack`), and zero ExecJS dependency.
+## Live Playable Demo
 
-## Pre-Seeded Demo Accounts (`db/seeds.rb`)
+**→ [pinfada.github.io/sharemybag](https://pinfada.github.io/sharemybag/)**
+
+1-click demo personas pre-booked on **AF718 (CDG → DKR)**:
 
 | Persona | Email | Password |
 | --- | --- | --- |
@@ -25,7 +27,7 @@ Built with **Ruby on Rails 7.0** and **PostgreSQL 16**, accessible to **RGAA 4.1
 
 ```bash
 bundle install
-bin/rails db:create db:migrate db:seed
+bin/rails db:create db:schema:load db:seed
 bin/rails zeitwerk:check
 bin/rails test
 bin/rails server
