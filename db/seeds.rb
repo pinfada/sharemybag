@@ -5,12 +5,24 @@ puts "Seeding ShareMyBag B2B Airline Baggage Allowance Exchange..."
 
 # Idempotent reset of exchange records so re-seeding always yields a clean live market
 Notification.delete_all
+DcsSyncEvent.delete_all
 KiloTrade.delete_all
 KiloOrder.delete_all
 PassengerBooking.delete_all
 Flight.delete_all
 AircraftType.delete_all
+AirlineConnector.delete_all
 User.delete_all
+
+# 0. Carrier-Agnostic DCS / PSS Connectors (demonstrating multi-protocol plug-in readiness)
+[
+  { airline_code: "AF", airline_name: "Air France",                         provider: "iata_ndc",       accounting_prefix: "057", api_base_url: "https://ndc.airfrance-klm.example/v21.3", auth_mode: "oauth2_mtls",               credentials_ref: "DCS_TOKEN_AF", webhook_signing_secret_ref: "DCS_WEBHOOK_SECRET_AF" },
+  { airline_code: "BA", airline_name: "British Airways",                    provider: "iata_ndc",       accounting_prefix: "125", api_base_url: "https://ndc.ba.example/v21.3",            auth_mode: "oauth2_mtls",               credentials_ref: "DCS_TOKEN_BA", webhook_signing_secret_ref: "DCS_WEBHOOK_SECRET_BA" },
+  { airline_code: "TS", airline_name: "Air Transat",                        provider: "navitaire_rest", accounting_prefix: "649", api_base_url: "https://nsk.airtransat.example/api/nsk",  auth_mode: "oauth2_client_credentials", credentials_ref: "DCS_TOKEN_TS", webhook_signing_secret_ref: "DCS_WEBHOOK_SECRET_TS" },
+  { airline_code: "AT", airline_name: "Royal Air Maroc",                    provider: "webhook_rest",   accounting_prefix: "147", api_base_url: "https://gateway.royalairmaroc.example",   auth_mode: "hmac_bearer",               credentials_ref: "DCS_TOKEN_AT", webhook_signing_secret_ref: "DCS_WEBHOOK_SECRET_AT" },
+  { airline_code: "TU", airline_name: "Tunisair",                           provider: "sandbox",        accounting_prefix: "199", api_base_url: nil,                                       auth_mode: "sandbox",                   credentials_ref: nil,            webhook_signing_secret_ref: "DCS_WEBHOOK_SECRET_TU" },
+  { airline_code: "SN", airline_name: "Brussels Airlines — Intercontinental", provider: "iata_ndc",     accounting_prefix: "082", api_base_url: "https://ndc.lufthansagroup.example/v21",  auth_mode: "oauth2_mtls",               credentials_ref: "DCS_TOKEN_SN", webhook_signing_secret_ref: "DCS_WEBHOOK_SECRET_SN" }
+].each { |attrs| AirlineConnector.create!(attrs) }
 
 # 1. Commercial Aircraft Types (certified baggage payload envelopes)
 aircraft = {

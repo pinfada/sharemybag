@@ -1,7 +1,7 @@
 class OrderBookMatchingService
   Result = Struct.new(:order, :trades, keyword_init: true)
 
-  def self.place_and_match!(flight:, booking:, user:, side:, quantity_kg:, price_per_kg_cents:, payout_preference: "voucher")
+  def self.place_and_match!(flight:, booking:, user:, side:, quantity_kg:, price_per_kg_cents:, payout_preference: "voucher", sync_dcs: true)
     new(
       flight: flight,
       booking: booking,
@@ -9,11 +9,12 @@ class OrderBookMatchingService
       side: side,
       quantity_kg: quantity_kg,
       price_per_kg_cents: price_per_kg_cents,
-      payout_preference: payout_preference
+      payout_preference: payout_preference,
+      sync_dcs: sync_dcs
     ).call!
   end
 
-  def initialize(flight:, booking:, user:, side:, quantity_kg:, price_per_kg_cents:, payout_preference:)
+  def initialize(flight:, booking:, user:, side:, quantity_kg:, price_per_kg_cents:, payout_preference:, sync_dcs: true)
     @flight = flight
     @booking = booking
     @user = user
@@ -21,6 +22,7 @@ class OrderBookMatchingService
     @quantity_kg = quantity_kg.to_d
     @price_per_kg_cents = price_per_kg_cents.to_i
     @payout_preference = payout_preference.presence || "voucher"
+    @sync_dcs = sync_dcs
   end
 
   def call!
@@ -113,6 +115,11 @@ class OrderBookMatchingService
         notify_counterparties!(trade, buyer_booking, seller_booking)
         trades << trade
       end
+    end
+
+    # Synchronize with the carrier's DCS/PSS outside the PostgreSQL row lock
+    if @sync_dcs
+      trades.each { |trade| AirlineDcs::SettlementOrchestrator.sync_trade!(trade) }
     end
 
     Result.new(order: incoming_order, trades: trades)

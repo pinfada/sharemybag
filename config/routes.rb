@@ -27,7 +27,15 @@ Rails.application.routes.draw do
   get "/my-bookings", to: "passenger_bookings#index", as: :my_bookings
 
   # Airline Executive ROI Dashboard & Annual Fleet Simulator
-  get "/airline-roi", to: "airline_roi#show", as: :airline_roi
+  get "/airline-roi",  to: "airline_roi#show",   as: :airline_roi
+  get "/integrations", to: "integrations#index", as: :integrations
+
+  # Signed Inbound Airline DCS / PSS Webhook API (HMAC-SHA256)
+  namespace :api do
+    namespace :v1 do
+      post "dcs/webhooks/:airline_code", to: "dcs_webhooks#create", as: :dcs_webhook
+    end
+  end
 
   # Notifications
   resources :notifications, only: [:index] do

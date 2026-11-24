@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_11_24_000002) do
+ActiveRecord::Schema[7.0].define(version: 2026_11_24_000003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,6 +25,48 @@ ActiveRecord::Schema[7.0].define(version: 2026_11_24_000002) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_aircraft_types_on_code", unique: true
+  end
+
+  create_table "airline_connectors", force: :cascade do |t|
+    t.string "airline_code", null: false
+    t.string "airline_name", null: false
+    t.string "provider", default: "sandbox", null: false
+    t.string "accounting_prefix", default: "057", null: false
+    t.string "api_base_url"
+    t.string "auth_mode", default: "oauth2_mtls", null: false
+    t.string "credentials_ref"
+    t.string "webhook_signing_secret_ref"
+    t.integer "timeout_seconds", default: 5, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["airline_code"], name: "index_airline_connectors_on_airline_code", unique: true
+  end
+
+  create_table "dcs_sync_events", force: :cascade do |t|
+    t.bigint "kilo_trade_id", null: false
+    t.bigint "airline_connector_id", null: false
+    t.string "idempotency_key", null: false
+    t.string "operation", null: false
+    t.string "pnr_code", null: false
+    t.string "status", default: "pending", null: false
+    t.string "external_reference"
+    t.string "iata_rfic"
+    t.string "iata_rfisc"
+    t.string "ssr_code"
+    t.jsonb "request_payload", default: {}, null: false
+    t.jsonb "response_payload", default: {}, null: false
+    t.string "error_message"
+    t.integer "latency_ms"
+    t.integer "attempts", default: 0, null: false
+    t.datetime "synced_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["airline_connector_id"], name: "index_dcs_sync_events_on_airline_connector_id"
+    t.index ["idempotency_key"], name: "index_dcs_sync_events_on_idempotency_key", unique: true
+    t.index ["kilo_trade_id", "operation"], name: "index_dcs_sync_events_on_kilo_trade_id_and_operation"
+    t.index ["kilo_trade_id"], name: "index_dcs_sync_events_on_kilo_trade_id"
+    t.index ["status"], name: "index_dcs_sync_events_on_status"
   end
 
   create_table "flights", force: :cascade do |t|
@@ -88,6 +130,10 @@ ActiveRecord::Schema[7.0].define(version: 2026_11_24_000002) do
     t.datetime "executed_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "dcs_sync_status", default: "pending", null: false
+    t.string "buyer_emd_reference"
+    t.string "seller_voucher_emd_reference"
+    t.datetime "dcs_synced_at"
     t.index ["buy_order_id"], name: "index_kilo_trades_on_buy_order_id"
     t.index ["buyer_id"], name: "index_kilo_trades_on_buyer_id"
     t.index ["flight_id", "executed_at"], name: "index_kilo_trades_on_flight_id_and_executed_at"
@@ -120,6 +166,9 @@ ActiveRecord::Schema[7.0].define(version: 2026_11_24_000002) do
     t.decimal "max_allowance_kg", precision: 5, scale: 2, default: "46.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "dcs_sync_status", default: "synced", null: false
+    t.string "last_dcs_reference"
+    t.datetime "last_dcs_synced_at"
     t.index ["flight_id"], name: "index_passenger_bookings_on_flight_id"
     t.index ["pnr_code"], name: "index_passenger_bookings_on_pnr_code", unique: true
     t.index ["user_id", "flight_id"], name: "index_passenger_bookings_on_user_id_and_flight_id", unique: true
@@ -146,6 +195,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_11_24_000002) do
     t.index ["remember_token"], name: "index_users_on_remember_token", unique: true
   end
 
+  add_foreign_key "dcs_sync_events", "airline_connectors"
+  add_foreign_key "dcs_sync_events", "kilo_trades"
   add_foreign_key "flights", "aircraft_types"
   add_foreign_key "kilo_orders", "flights"
   add_foreign_key "kilo_orders", "passenger_bookings"

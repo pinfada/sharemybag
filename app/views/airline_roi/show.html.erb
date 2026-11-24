@@ -12,9 +12,14 @@
         Every euro below is auditable — including marginal Jet-A1 fuel burn, counter cannibalization haircut, retained voucher margin, and check-in queue time saved.
       </p>
     </div>
-    <%= link_to flights_path, class: "btn btn-primary" do %>
-      <i class="fas fa-exchange-alt me-2" aria-hidden="true"></i>Open Live Flight Order Books
-    <% end %>
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to flights_path, class: "btn btn-primary" do %>
+        <i class="fas fa-exchange-alt me-2" aria-hidden="true"></i>Open Live Flight Order Books
+      <% end %>
+      <%= link_to integrations_path, class: "btn btn-outline-secondary" do %>
+        <i class="fas fa-plug me-2" aria-hidden="true"></i>DCS / API Architecture
+      <% end %>
+    </div>
   </div>
 
   <!-- Live Aggregated Fleet Performance -->

@@ -8,8 +8,10 @@
           <div class="smb-pass-sub">PNR <strong><%= booking.pnr_code %></strong> · <%= booking.cabin_class.humanize %></div>
         </div>
       </div>
-      <span class="smb-pass-pill">
-        <i class="fas fa-check-circle me-1" aria-hidden="true"></i>DCS Synced
+      <% sync_ok = (booking.dcs_sync_status == "synced") %>
+      <span class="smb-pass-pill <%= 'bg-warning text-dark' unless sync_ok %>">
+        <i class="fas <%= sync_ok ? 'fa-check-circle' : 'fa-clock' %> me-1" aria-hidden="true"></i>
+        <%= sync_ok ? "DCS Synced" : booking.dcs_sync_status.humanize %>
       </span>
     </div>
   </div>
@@ -32,6 +34,11 @@
         <div class="small text-muted mt-1">
           <%= booking.requires_split_bags? ? "2 checked pieces required (max 32 kg/bag)" : "1 checked piece (within 32 kg IATA limit)" %>
         </div>
+        <% if booking.last_dcs_reference.present? %>
+          <div class="small text-muted mt-1">
+            IATA Ref: <code><%= booking.last_dcs_reference %></code>
+          </div>
+        <% end %>
       </div>
       <div class="col-5 text-end">
         <svg class="smb-pass-barcode" viewBox="0 0 120 36" width="120" height="36" role="img"
