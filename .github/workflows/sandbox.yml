@@ -19,8 +19,6 @@ on:
 
 jobs:
   sandbox:
-    uses: pinfada/railsbox/.github/workflows/construire-sandbox.yml@fix/reseau-i386-docker-29-4-2
-    with:
-      railsbox-ref: fix/reseau-i386-docker-29-4-2
+    uses: pinfada/railsbox/.github/workflows/construire-sandbox.yml@main
     permissions:
       contents: write
