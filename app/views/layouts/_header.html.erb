@@ -12,11 +12,18 @@
 
       <div class="collapse navbar-collapse" id="smbMainNav">
         <ul class="navbar-nav me-auto ms-lg-3 gap-1">
-          <% requests_active = (controller_name == 'shipping_requests' && action_name == 'index') %>
+          <% flights_active = (controller_name == "flights") %>
           <li class="nav-item">
-            <%= link_to "Shipping requests", shipping_requests_path,
-                class: "nav-link #{'active' if requests_active}",
-                aria: (requests_active ? { current: "page" } : {}) %>
+            <%= link_to "Live Flights", flights_path,
+                class: "nav-link #{'active' if flights_active}",
+                aria: (flights_active ? { current: "page" } : {}) %>
+          </li>
+
+          <% roi_active = (controller_name == "airline_roi") %>
+          <li class="nav-item">
+            <%= link_to "Airline ROI", airline_roi_path,
+                class: "nav-link #{'active' if roi_active}",
+                aria: (roi_active ? { current: "page" } : {}) %>
           </li>
 
           <% how_active = current_page?(how_it_works_path) %>
@@ -27,47 +34,20 @@
           </li>
 
           <% if signed_in? %>
-            <li class="nav-item dropdown">
-              <button class="nav-link dropdown-toggle btn btn-link border-0 #{'active' if action_name.in?(%w[my_requests my_bids])}"
-                      type="button" id="activityMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                My activity
-              </button>
-              <ul class="dropdown-menu shadow-sm border" aria-labelledby="activityMenu">
-                <li>
-                  <%= link_to my_requests_shipping_requests_path, class: "dropdown-item py-2" do %>
-                    <i class="fas fa-box me-2 text-primary" aria-hidden="true"></i>My shipping requests
-                  <% end %>
-                </li>
-                <li>
-                  <%= link_to my_bids_bids_path, class: "dropdown-item py-2" do %>
-                    <i class="fas fa-gavel me-2 text-success" aria-hidden="true"></i>My offers
-                  <% end %>
-                </li>
-              </ul>
-            </li>
-
-            <% msgs_active = (controller_name == 'conversations') %>
+            <% bookings_active = (controller_name == "passenger_bookings") %>
             <li class="nav-item">
-              <%= link_to conversations_path,
-                  class: "nav-link d-inline-flex align-items-center gap-1 #{'active' if msgs_active}",
-                  aria: (msgs_active ? { current: "page" } : {}) do %>
-                <span>Messages</span>
-                <% unread_msgs = current_user.unread_messages_count %>
-                <% if unread_msgs > 0 %>
-                  <span class="badge rounded-pill text-bg-primary smb-notif-dot">
-                    <%= unread_msgs > 9 ? "9+" : unread_msgs %>
-                    <span class="visually-hidden">unread messages</span>
-                  </span>
-                <% end %>
-              <% end %>
+              <%= link_to "My bookings", my_bookings_path,
+                  class: "nav-link #{'active' if bookings_active}",
+                  aria: (bookings_active ? { current: "page" } : {}) %>
             </li>
           <% end %>
         </ul>
 
         <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
           <% if signed_in? %>
-            <%= link_to new_shipping_request_path, class: "btn btn-primary btn-sm px-3" do %>
-              <i class="fas fa-plus me-1" aria-hidden="true"></i>Post a parcel
+            <%= link_to my_bookings_path, class: "btn btn-outline-success btn-sm px-3 fw-semibold" do %>
+              <i class="fas fa-ticket-alt me-1" aria-hidden="true"></i>
+              Voucher: <%= format_euros(current_user.voucher_balance_cents) %>
             <% end %>
 
             <% unread_notifs = current_user.unread_notifications_count %>
@@ -93,11 +73,15 @@
                 <li class="px-3 py-2">
                   <div class="fw-bold text-dark"><%= current_user.name %></div>
                   <div class="small text-muted">
-                    <i class="fas fa-star smb-star-filled me-1" aria-hidden="true"></i>
-                    <%= current_user.reviews_count > 0 ? "#{current_user.average_rating}/5 (#{current_user.reviews_count})" : "New member" %>
+                    <%= current_user.airline_admin? ? "Airline Revenue Admin" : "Ticketed Passenger" %>
                   </div>
                 </li>
                 <li><hr class="dropdown-divider"></li>
+                <li>
+                  <%= link_to my_bookings_path, class: "dropdown-item py-2" do %>
+                    <i class="fas fa-suitcase-rolling me-2" aria-hidden="true"></i>My PNR bookings
+                  <% end %>
+                </li>
                 <li>
                   <%= link_to user_path(current_user), class: "dropdown-item py-2" do %>
                     <i class="far fa-user me-2" aria-hidden="true"></i>My profile
@@ -118,7 +102,7 @@
             </div>
           <% else %>
             <%= link_to "Sign in", signin_path, class: "btn btn-outline-secondary btn-sm px-3" %>
-            <%= link_to "Post a parcel", new_shipping_request_path, class: "btn btn-primary btn-sm px-3" %>
+            <%= link_to "Open Live Exchange", flights_path, class: "btn btn-primary btn-sm px-3" %>
           <% end %>
         </div>
       </div>

@@ -1,70 +1,80 @@
-<% provide(:title, "How it works") %>
+<% provide(:title, "How It Works") %>
 
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-9">
-      <div class="mb-5">
-        <h1 class="mb-2">How ShareMyBag works</h1>
-        <p class="lead text-muted">
-          One transparent 5-step process designed for both parcel senders and travelers.
-        </p>
+      <span class="smb-b2b-pill mb-2">
+        <i class="fas fa-cogs" aria-hidden="true"></i>
+        <span>Zero Physical Handover · 100% Digital PNR Settlement</span>
+      </span>
+      <h1 class="h2 mb-3">How ShareMyBag Airline Exchange Works</h1>
+      <p class="lead text-muted mb-5">
+        Instead of strangers handing physical parcels at airports, ShareMyBag lets an airline run a live Bid/Ask exchange for <strong>digital baggage allowance</strong> inside each commercial flight between T-48h and T-4h before departure.
+      </p>
+
+      <div class="row g-4 mb-5">
+        <div class="col-md-4">
+          <div class="smb-card p-4 h-100">
+            <div class="smb-step-number mb-3" aria-hidden="true">1</div>
+            <h2 class="h5 mb-2">Verified Flight PNR</h2>
+            <p class="text-muted small mb-0">
+              Only ticketed passengers booked on the exact same flight can enter its order book. Each passenger's PNR allowance (typically 23 kg) is verified against the aircraft's certified baggage envelope.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="smb-card p-4 h-100">
+            <div class="smb-step-number mb-3" aria-hidden="true">2</div>
+            <h2 class="h5 mb-2">Bid / Ask Matching</h2>
+            <p class="text-muted small mb-0">
+              Light travelers post ASK orders for unused kg; heavy travelers post BID orders for exact extra kg. Our Price-Time Priority engine supports instant fractional fills at the resting maker price.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="smb-card p-4 h-100">
+            <div class="smb-step-number mb-3" aria-hidden="true">3</div>
+            <h2 class="h5 mb-2">Atomic PNR &amp; Revenue</h2>
+            <p class="text-muted small mb-0">
+              Both PNRs update atomically (e.g., 23→13 kg and 23→33 kg), the seller receives instant airline flight voucher credit, and the carrier books a 25% ancillary margin with zero extra check-in friction.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <ol class="d-flex flex-column gap-3 list-unstyled mb-5">
-        <li class="smb-card p-4 d-flex gap-3 align-items-start">
-          <div class="smb-step-number" aria-hidden="true">1</div>
-          <div>
-            <h2 class="h5 mb-1">Post your shipping request</h2>
-            <p class="text-muted mb-0">
-              Specify your route, parcel weight (up to 50 kg), desired date, and an optional maximum budget. Every sender must confirm that the parcel contains no prohibited or dangerous goods.
+      <section class="smb-card p-4 mb-4" aria-labelledby="compliance-heading">
+        <h2 id="compliance-heading" class="h4 mb-3">Why Airport Security, Customs &amp; Airlines Approve This Model</h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <h3 class="h6 text-dark">Airport Security (DGAC / TSA / ICAO Annex 17)</h3>
+            <p class="small text-muted mb-0">
+              Passengers never carry someone else's items. Every traveler packs, secures, and checks only their own suitcase — eliminating the "unaccompanied or unknown third-party item" prohibition completely.
             </p>
           </div>
-        </li>
-
-        <li class="smb-card p-4 d-flex gap-3 align-items-start">
-          <div class="smb-step-number" aria-hidden="true">2</div>
-          <div>
-            <h2 class="h5 mb-1">Receive traveler offers (reverse auction)</h2>
-            <p class="text-muted mb-0">
-              Travelers with spare luggage space on your route propose their price per kilo, available capacity, flight date, and handover availability. Total cost is calculated automatically.
+          <div class="col-md-6">
+            <h3 class="h6 text-dark">Customs &amp; Border Liability</h3>
+            <p class="small text-muted mb-0">
+              Each traveler remains 100% legally responsible for the contents of their own personal luggage. Only digital weight entitlement on the carrier's reservation system is reallocated.
             </p>
           </div>
-        </li>
-
-        <li class="smb-card p-4 d-flex gap-3 align-items-start">
-          <div class="smb-step-number" aria-hidden="true">3</div>
-          <div>
-            <h2 class="h5 mb-1">Accept one offer & lock the shipment</h2>
-            <p class="text-muted mb-0">
-              Compare offers and verified profile ratings, then accept your preferred traveler. Competing pending offers are closed automatically and a dedicated secure tracking workspace is created.
+          <div class="col-md-6">
+            <h3 class="h6 text-dark">Aircraft Weight &amp; Balance Safety</h3>
+            <p class="small text-muted mb-0">
+              Every trade transfers weight 1:1 inside the aircraft's certified baggage payload cap and closes strictly at <strong>T-4h</strong> before departure so loadsheets are finalized normally.
             </p>
           </div>
-        </li>
-
-        <li class="smb-card p-4 d-flex gap-3 align-items-start">
-          <div class="smb-step-number" aria-hidden="true">4</div>
-          <div>
-            <h2 class="h5 mb-1">Verify handover & delivery with secret codes</h2>
-            <p class="text-muted mb-0">
-              The sender receives two confidential 8-character codes: a <strong>handover code</strong> (shared in person when handing over the parcel) and a <strong>delivery code</strong> (shared upon arrival to prove delivery). The traveler submits each code to advance the shipment state.
+          <div class="col-md-6">
+            <h3 class="h6 text-dark">IATA 32 kg Single-Bag Health Limit</h3>
+            <p class="small text-muted mb-0">
+              A passenger's PNR allowance can scale up to <strong>46 kg</strong>, while preserving the mandatory <strong>32 kg maximum per individual bag</strong> (split across 2 pieces above 32 kg).
             </p>
           </div>
-        </li>
-
-        <li class="smb-card p-4 d-flex gap-3 align-items-start">
-          <div class="smb-step-number" aria-hidden="true">5</div>
-          <div>
-            <h2 class="h5 mb-1">Confirm receipt & exchange reviews</h2>
-            <p class="text-muted mb-0">
-              Once the sender confirms delivery, both participants can publish a single verified review (1 to 5 stars) to strengthen trust across the community.
-            </p>
-          </div>
-        </li>
-      </ol>
+        </div>
+      </section>
 
       <div class="d-flex flex-wrap gap-2">
-        <%= link_to "Post a shipping request", new_shipping_request_path, class: "btn btn-primary px-4" %>
-        <%= link_to "Browse open requests", shipping_requests_path, class: "btn btn-outline-secondary px-4 bg-white" %>
+        <%= link_to "Explore Live Flight Order Books", flights_path, class: "btn btn-primary" %>
+        <%= link_to "Inspect Airline ROI & Fleet Simulator", airline_roi_path, class: "btn btn-outline-secondary" %>
       </div>
     </div>
   </div>

@@ -1,100 +1,57 @@
 <% provide(:title, @user.name) %>
 
 <div class="container py-5">
-  <div class="row gy-4">
-    <aside class="col-lg-4" aria-label="Member summary">
-      <div class="smb-card p-4">
-        <div class="d-flex align-items-center gap-3 mb-3">
-          <%= user_avatar(@user, size: :lg) %>
-          <div>
-            <h1 class="h4 mb-1"><%= @user.name %></h1>
-            <% if @user.city.present? || @user.country.present? %>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <section class="smb-card p-4 p-md-5">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+          <div class="d-flex align-items-center gap-3">
+            <%= user_avatar(@user, size: :lg) %>
+            <div>
+              <h1 class="h3 mb-1"><%= @user.name %></h1>
               <div class="small text-muted">
-                <i class="fas fa-map-marker-alt me-1" aria-hidden="true"></i>
-                <%= [@user.city, @user.country].compact_blank.join(", ") %>
+                <% if @user.city.present? || @user.country.present? %>
+                  <i class="fas fa-map-marker-alt me-1" aria-hidden="true"></i>
+                  <%= [@user.city, @user.country].compact_blank.join(", ") %> ·
+                <% end %>
+                <%= @user.airline_admin? ? "Airline Revenue Administrator" : "Verified Exchange Passenger" %>
               </div>
-            <% end %>
+            </div>
           </div>
+
+          <% if current_user?(@user) %>
+            <div class="d-flex gap-2">
+              <%= link_to "My PNR Bookings", my_bookings_path, class: "btn btn-primary btn-sm" %>
+              <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-outline-secondary btn-sm" %>
+            </div>
+          <% end %>
         </div>
 
         <% if @user.bio.present? %>
-          <p class="text-muted small mb-3"><%= @user.bio %></p>
+          <p class="text-muted mb-4"><%= @user.bio %></p>
         <% end %>
 
-        <div class="row g-2 text-center border-top border-bottom py-3 my-3">
-          <div class="col-6 border-end">
-            <div class="fw-bold text-dark fs-5">
-              <%= @user.reviews_count > 0 ? "#{@user.average_rating}/5" : "—" %>
+        <div class="row g-3">
+          <div class="col-sm-4">
+            <div class="smb-kpi-card">
+              <div class="smb-kpi-label">Completed Transfers</div>
+              <div class="smb-kpi-value"><%= @completed_trades_count %></div>
             </div>
-            <div class="small text-muted"><%= pluralize(@user.reviews_count, "review") %></div>
           </div>
-          <div class="col-6">
-            <div class="fw-bold text-dark fs-5"><%= @user.completed_shipments_count %></div>
-            <div class="small text-muted"><%= pluralize(@user.completed_shipments_count, "confirmed delivery", "confirmed deliveries") %></div>
+          <div class="col-sm-4">
+            <div class="smb-kpi-card">
+              <div class="smb-kpi-label">Active Bookings</div>
+              <div class="smb-kpi-value"><%= @booked_flights_count %></div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="smb-kpi-card">
+              <div class="smb-kpi-label">Member Since</div>
+              <div class="smb-kpi-value fs-4"><%= @user.created_at.strftime("%b %Y") %></div>
+            </div>
           </div>
         </div>
-
-        <div class="small text-muted mb-3">
-          Member since <%= l(@user.created_at.to_date, format: "%B %Y") %>
-        </div>
-
-        <% if current_user?(@user) %>
-          <div class="small text-muted mb-3">
-            <i class="far fa-envelope me-1" aria-hidden="true"></i><%= @user.email %>
-            <span class="smb-badge smb-badge--slate ms-1">Private</span>
-          </div>
-          <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-outline-primary w-100" %>
-        <% elsif signed_in? %>
-          <%= button_to "Send a message", conversations_path(recipient_id: @user.id), method: :post, class: "btn btn-outline-primary w-100" %>
-        <% end %>
-      </div>
-    </aside>
-
-    <div class="col-lg-8">
-      <section class="smb-card p-4 mb-4" aria-labelledby="reviews-heading">
-        <h2 id="reviews-heading" class="h5 mb-3">Received reviews (<%= @user.reviews_count %>)</h2>
-        <% if @reviews.any? %>
-          <ul class="d-flex flex-column gap-3 list-unstyled mb-0">
-            <% @reviews.each do |review| %>
-              <li class="border-bottom pb-3">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                  <div class="d-flex align-items-center gap-2">
-                    <%= user_avatar(review.reviewer, size: :sm) %>
-                    <strong><%= link_to review.reviewer.name, user_path(review.reviewer), class: "text-dark" %></strong>
-                    <span class="smb-badge smb-badge--slate">
-                      <%= review.role == "sender" ? "Sender" : "Traveler" %>
-                    </span>
-                  </div>
-                  <div class="small">
-                    <%= render_stars(review.rating) %>
-                  </div>
-                </div>
-                <% if review.comment.present? %>
-                  <p class="mb-1 text-muted"><%= review.comment %></p>
-                <% end %>
-                <div class="small text-muted">
-                  Route: <%= review.shipping_request.departure_city %> to <%= review.shipping_request.arrival_city %> · <%= l(review.created_at.to_date, format: :short) %>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="text-muted mb-0">No reviews received yet.</p>
-        <% end %>
       </section>
-
-      <% if @open_requests.any? %>
-        <section aria-labelledby="member-requests-heading">
-          <h2 id="member-requests-heading" class="h5 mb-3">Open requests</h2>
-          <div class="row g-3">
-            <% @open_requests.each do |req| %>
-              <div class="col-md-6">
-                <%= render "shipping_requests/card", shipping_request: req %>
-              </div>
-            <% end %>
-          </div>
-        </section>
-      <% end %>
     </div>
   </div>
 </div>

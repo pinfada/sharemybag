@@ -571,3 +571,210 @@ code {
   border-radius: 0.3rem;
   font-size: 0.875em;
 }
+
+// =============================================================================
+// B2B Airline Baggage Allowance Exchange — Executive & Trading UI Components
+// =============================================================================
+
+.smb-b2b-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  border: 1px solid #7dd3fc;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.smb-fomo-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--smb-shadow-md);
+
+  .smb-fomo-muted {
+    color: #cbd5e1;
+  }
+
+  .smb-fomo-highlight {
+    color: #7dd3fc;
+    font-weight: 800;
+  }
+}
+
+.smb-kpi-card {
+  background: var(--smb-surface);
+  border: 1px solid var(--smb-border);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  box-shadow: var(--smb-shadow-sm);
+  height: 100%;
+
+  .smb-kpi-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--smb-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .smb-kpi-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--smb-ink);
+    line-height: 1.15;
+  }
+
+  .smb-kpi-sub {
+    font-size: 0.85rem;
+    color: var(--smb-muted);
+    margin-top: 0.35rem;
+  }
+}
+
+.smb-kpi-card--emerald {
+  border-top: 4px solid var(--smb-emerald);
+  .smb-kpi-value { color: #065f46; }
+}
+
+.smb-kpi-card--brand {
+  border-top: 4px solid var(--smb-brand);
+  .smb-kpi-value { color: #084298; }
+}
+
+.smb-kpi-card--amber {
+  border-top: 4px solid #b45309;
+  .smb-kpi-value { color: #92400e; }
+}
+
+.smb-orderbook-table {
+  margin-bottom: 0;
+  font-size: 0.92rem;
+
+  thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--smb-muted);
+    background: var(--smb-subtle);
+    border-bottom: 2px solid var(--smb-border);
+    padding: 0.65rem 0.85rem;
+    font-weight: 700;
+  }
+
+  tbody td {
+    padding: 0.7rem 0.85rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .smb-price-bid {
+    font-weight: 800;
+    color: #065f46;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .smb-price-ask {
+    font-weight: 800;
+    color: #9a3412;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .smb-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.smb-depth-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+}
+
+.smb-depth-fill--bid {
+  height: 100%;
+  background: #047857;
+}
+
+.smb-depth-fill--ask {
+  height: 100%;
+  background: #c2410c;
+}
+
+.smb-payload-meter {
+  height: 12px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+  border: 1px solid #94a3b8;
+
+  .smb-payload-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0b5ed7 0%, #047857 100%);
+  }
+}
+
+.smb-iata-notice {
+  background: #fef3c7;
+  border: 1px solid #d97706;
+  border-left: 4px solid #b45309;
+  color: #78350f;
+  border-radius: 0.625rem;
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+}
+
+.smb-formula-box {
+  background: #f8fafc;
+  border: 1px solid var(--smb-border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+.smb-flight-route-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--smb-ink);
+  letter-spacing: 0.02em;
+}
+
+.smb-airline-code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.625rem;
+  background: var(--smb-ink);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+// Progress width utility classes (0% to 100% in 5% steps) — zero inline styles (strict CSP)
+@for $i from 0 through 20 {
+  .smb-w-#{$i * 5} {
+    width: #{$i * 5}#{"%"};
+  }
+}
+
+.smb-card .table-responsive {
+  overflow-y: hidden;
+}
+

@@ -1,12 +1,16 @@
 class WelcomeController < ApplicationController
   def home
-    @featured_requests = ShippingRequest.active
-                                        .includes(:sender, :bids)
-                                        .order(created_at: :desc)
-                                        .limit(6)
-    @open_requests_count = ShippingRequest.active.count
-    @completed_shipments_count = ShipmentTracking.where(status: "confirmed").count
-    @travelers_count = User.count
+    @featured_flights = Flight.includes(:aircraft_type, :kilo_orders, :kilo_trades)
+                              .upcoming
+                              .limit(3)
+    @fleet_summary = AirlineEconomicsService.fleet_summary(Flight.all)
+    @stats = {
+      live_flights: Flight.active_exchange.count,
+      matched_kg: @fleet_summary[:matched_kg],
+      airline_net_margin_cents: @fleet_summary[:airline_net_margin_cents],
+      retained_cash_cents: @fleet_summary[:total_cash_retained_cents],
+      passenger_savings_cents: @fleet_summary[:passenger_savings_cents]
+    }
   end
 
   def how_it_works

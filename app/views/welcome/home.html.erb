@@ -1,183 +1,214 @@
-<% provide(:title, "Home") %>
+<% provide(:title, "Airline Baggage Allowance Exchange") %>
+<% provide(:meta_description, "White-label B2B Bid/Ask exchange allowing passengers on the same flight to trade digital baggage weight allowance between T-48h and T-4h before departure.") %>
 
-<section class="smb-hero" aria-labelledby="hero-heading">
+<section class="smb-hero">
   <div class="container">
-    <div class="row align-items-center gy-5">
+    <div class="row align-items-center gy-4">
       <div class="col-lg-7">
-        <h1 id="hero-heading" class="smb-hero-title mb-3">
-          Send parcels with verified travelers, at a fair price.
+        <div class="smb-b2b-pill mb-3">
+          <i class="fas fa-plane-departure" aria-hidden="true"></i>
+          <span>B2B White-Label Ancillary Engine for Airlines</span>
+        </div>
+
+        <h1 class="display-5 mb-3">
+          Turn unused passenger baggage allowance into <span class="text-primary">high-margin ancillary revenue</span>.
         </h1>
-        <p class="smb-hero-lead mb-4">
-          Post your route and parcel weight. Travelers already flying that route submit their price per kilo. Compare offers, choose your carrier, and verify every handover with confidential codes.
+
+        <p class="lead text-muted mb-4">
+          Between <strong>T-48h and T-4h</strong> before departure, passengers on the same flight trade <strong>digital PNR weight allowance</strong> on a live Bid/Ask order book. No physical parcels change hands — zero airport security or customs risk, strict aircraft payload compliance, and instant 25% ancillary margin for the airline.
         </p>
 
         <div class="d-flex flex-wrap gap-2 mb-4">
-          <%= link_to new_shipping_request_path, class: "btn btn-primary btn-lg px-4" do %>
-            <i class="fas fa-paper-plane me-2" aria-hidden="true"></i>Post a shipping request
+          <%= link_to flights_path, class: "btn btn-primary btn-lg px-4" do %>
+            <i class="fas fa-chart-line me-2" aria-hidden="true"></i>Explore Live Flight Order Books
           <% end %>
-          <%= link_to shipping_requests_path, class: "btn btn-outline-secondary btn-lg px-4 bg-white" do %>
-            Browse open requests
+          <%= link_to airline_roi_path, class: "btn btn-outline-secondary btn-lg px-4" do %>
+            <i class="fas fa-calculator me-2" aria-hidden="true"></i>Airline ROI &amp; Fleet Simulator
           <% end %>
         </div>
 
-        <ul class="list-inline d-flex flex-wrap gap-4 small text-muted pt-1 mb-0">
-          <li class="list-inline-item m-0"><strong class="text-dark"><%= @open_requests_count %></strong> open <%= "request".pluralize(@open_requests_count) %></li>
-          <li class="list-inline-item m-0"><strong class="text-dark"><%= @completed_shipments_count %></strong> confirmed <%= "delivery".pluralize(@completed_shipments_count) %></li>
-          <li class="list-inline-item m-0"><strong class="text-dark"><%= @travelers_count %></strong> registered <%= "member".pluralize(@travelers_count) %></li>
-        </ul>
+        <div class="row g-3 pt-2">
+          <div class="col-6 col-sm-3">
+            <div class="fw-bold fs-4 text-dark"><%= @stats[:live_flights] %></div>
+            <div class="small text-muted">Active flight markets</div>
+          </div>
+          <div class="col-6 col-sm-3">
+            <div class="fw-bold fs-4 text-dark"><%= format_kg(@stats[:matched_kg]) %></div>
+            <div class="small text-muted">PNR weight matched</div>
+          </div>
+          <div class="col-6 col-sm-3">
+            <div class="fw-bold fs-4 text-success"><%= format_euros(@stats[:retained_cash_cents]) %></div>
+            <div class="small text-muted">Airline cash retained</div>
+          </div>
+          <div class="col-6 col-sm-3">
+            <div class="fw-bold fs-4 text-primary"><%= format_euros(@stats[:passenger_savings_cents]) %></div>
+            <div class="small text-muted">Saved vs airport desk</div>
+          </div>
+        </div>
       </div>
 
       <div class="col-lg-5">
-        <div class="smb-search-panel">
-          <h2 class="h5 mb-3">Find a parcel along your route</h2>
-          <%= form_with url: shipping_requests_path, method: :get, local: true, role: "search", aria: { label: "Search open shipping requests" } do %>
-            <div class="mb-3">
-              <%= label_tag :departure_city, "Departure city or country", class: "form-label" %>
-              <%= text_field_tag :departure_city, nil, class: "form-control", placeholder: "e.g. London, Paris, Lyon" %>
-            </div>
-            <div class="mb-3">
-              <%= label_tag :arrival_city, "Arrival city or country", class: "form-label" %>
-              <%= text_field_tag :arrival_city, nil, class: "form-control", placeholder: "e.g. Dakar, Montreal, Casablanca" %>
-            </div>
-            <div class="row g-2 mb-3">
-              <div class="col-6">
-                <%= label_tag :max_weight, "Max weight (kg)", class: "form-label" %>
-                <%= number_field_tag :max_weight, nil, class: "form-control", placeholder: "e.g. 10", min: 0.5, max: 50, step: 0.5 %>
+        <div class="smb-card p-4">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="fw-bold text-dark">Why Airlines Deploy ShareMyBag</span>
+            <span class="smb-badge smb-badge--emerald">100% Digital PNR</span>
+          </div>
+
+          <ul class="list-unstyled d-grid gap-3 mb-4">
+            <li class="d-flex gap-3">
+              <div class="smb-step-number flex-shrink-0" aria-hidden="true">1</div>
+              <div>
+                <div class="fw-bold text-dark">Zero airport security or customs blockers</div>
+                <div class="small text-muted">Passengers pack and check only their own suitcase. Only digital kg entitlements move between two PNRs on the same flight.</div>
               </div>
-              <div class="col-6">
-                <%= label_tag :date_from, "Earliest date", class: "form-label" %>
-                <%= date_field_tag :date_from, nil, class: "form-control", min: Date.current %>
+            </li>
+            <li class="d-flex gap-3">
+              <div class="smb-step-number flex-shrink-0" aria-hidden="true">2</div>
+              <div>
+                <div class="fw-bold text-dark">Zero aircraft payload creep</div>
+                <div class="small text-muted">Every trade transfers weight 1:1 inside the aircraft's certified baggage envelope and closes automatically at T-4h Weight &amp; Balance cutoff.</div>
               </div>
-            </div>
-            <button type="submit" class="btn btn-primary w-100 py-2">
-              <i class="fas fa-search me-2" aria-hidden="true"></i>View matching requests
-            </button>
-          <% end %>
+            </li>
+            <li class="d-flex gap-3">
+              <div class="smb-step-number flex-shrink-0" aria-hidden="true">3</div>
+              <div>
+                <div class="fw-bold text-dark">25% margin + 100% voucher treasury retention</div>
+                <div class="small text-muted">Sellers receive airline flight credits for future bookings, keeping up to 100% of trade liquidity inside the carrier's ecosystem.</div>
+              </div>
+            </li>
+          </ul>
+
+          <div class="p-3 rounded bg-light border small text-muted">
+            <strong class="text-dark">Try a live match in 10 seconds:</strong> sign in with our pre-booked demo passenger accounts on <%= link_to "Sign in", signin_path %> and execute a Bid/Ask order on flight AF718.
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="py-5" aria-labelledby="how-heading">
+<section class="py-5">
   <div class="container">
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
       <div>
-        <h2 id="how-heading" class="h3 mb-1">One clear model: reverse auction</h2>
-        <p class="text-muted mb-0">A single end-to-end flow designed for transparent pricing and accountable handovers.</p>
+        <h2 class="h3 mb-1">Live Commercial Flight Exchanges</h2>
+        <p class="text-muted mb-0">Real-time Bid/Ask order books anchored to each aircraft's certified baggage payload.</p>
       </div>
-      <%= link_to "Read how it works →", how_it_works_path, class: "fw-semibold" %>
+      <%= link_to flights_path, class: "btn btn-outline-primary btn-sm" do %>
+        View all flights <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i>
+      <% end %>
     </div>
 
-    <ol class="row g-4 list-unstyled mb-0">
-      <li class="col-md-4">
-        <div class="smb-card p-4 h-100">
-          <div class="smb-step-number mb-3" aria-hidden="true">1</div>
-          <h3 class="h5 mb-2">Describe your parcel</h3>
-          <p class="text-muted mb-0">
-            Enter your route, parcel weight, desired date, optional budget cap, and confirm the prohibited items safety pledge.
-          </p>
-        </div>
-      </li>
-      <li class="col-md-4">
-        <div class="smb-card p-4 h-100">
-          <div class="smb-step-number mb-3" aria-hidden="true">2</div>
-          <h3 class="h5 mb-2">Compare traveler offers</h3>
-          <p class="text-muted mb-0">
-            Travelers flying your route propose their price per kilo. Compare the exact total, travel date, and past reviews side by side.
-          </p>
-        </div>
-      </li>
-      <li class="col-md-4">
-        <div class="smb-card p-4 h-100">
-          <div class="smb-step-number mb-3" aria-hidden="true">3</div>
-          <h3 class="h5 mb-2">Track with secret codes</h3>
-          <p class="text-muted mb-0">
-            Two unique 8-character codes verify in-person handover and final delivery before unlocking mutual profile reviews.
-          </p>
-        </div>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<section class="py-4" aria-labelledby="recent-heading">
-  <div class="container">
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-      <div>
-        <h2 id="recent-heading" class="h3 mb-1">Recent shipping requests</h2>
-        <p class="text-muted mb-0">Submit a price per kilo if you have spare luggage space on one of these routes.</p>
-      </div>
-      <%= link_to "View all requests →", shipping_requests_path, class: "fw-semibold" %>
-    </div>
-
-    <% if @featured_requests.any? %>
+    <% if @featured_flights.any? %>
       <div class="row g-4">
-        <% @featured_requests.each do |req| %>
-          <div class="col-md-6 col-lg-4">
-            <%= render "shipping_requests/card", shipping_request: req %>
+        <% @featured_flights.each do |flight| %>
+          <% econ = AirlineEconomicsService.flight_summary(flight) %>
+          <div class="col-md-4">
+            <article class="smb-card smb-card--interactive p-4 h-100 d-flex flex-column">
+              <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="smb-airline-code" aria-hidden="true"><%= flight.airline_code %></span>
+                  <div>
+                    <div class="fw-bold text-dark"><%= flight.flight_number %> · <%= flight.airline_name %></div>
+                    <div class="small text-muted"><%= flight.aircraft_type.aircraft_name %> (<%= flight.aircraft_type.seat_capacity %> seats)</div>
+                  </div>
+                </div>
+                <span class="<%= status_badge_class(flight.trading_open? ? 'open' : 'closed') %>">
+                  <%= flight.trading_open? ? "Open" : "Cutoff" %>
+                </span>
+              </div>
+
+              <div class="smb-flight-route-badge mb-1">
+                <span><%= flight.departure_iata %></span>
+                <i class="fas fa-arrow-right text-primary small" aria-hidden="true"></i>
+                <span><%= flight.arrival_iata %></span>
+              </div>
+              <div class="small text-muted mb-3">
+                <%= flight.departure_city %> to <%= flight.arrival_city %> · Departs <%= l(flight.departure_at, format: :short) %> UTC
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <div class="p-2 rounded bg-light border">
+                    <div class="small text-muted">Spot price</div>
+                    <div class="fw-bold text-primary"><%= format_euros(flight.spot_price_cents) %>/kg</div>
+                    <div class="small text-success">vs <%= format_euros(flight.airport_excess_fee_per_kg_cents) %> desk</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="p-2 rounded bg-light border">
+                    <div class="small text-muted">Active demand</div>
+                    <div class="fw-bold text-dark"><%= format_kg(flight.total_demand_kg) %></div>
+                    <div class="small text-muted">Supply: <%= format_kg(flight.total_supply_kg) %></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small mb-1">
+                  <span class="text-muted">Aircraft baggage load</span>
+                  <span class="fw-semibold text-dark"><%= flight.payload_utilization_percent %>% of <%= format_kg(flight.max_baggage_payload_kg) %></span>
+                </div>
+                <div class="smb-payload-meter" role="progressbar"
+                     aria-label="Aircraft baggage payload utilization for <%= flight.flight_number %>"
+                     aria-valuenow="<%= flight.payload_utilization_percent.round %>"
+                     aria-valuemin="0" aria-valuemax="100">
+                  <div class="smb-payload-bar <%= percent_width_class(flight.payload_utilization_percent) %>"></div>
+                </div>
+              </div>
+
+              <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                <div class="small text-muted">
+                  Airline margin: <strong class="text-success"><%= format_euros(econ[:airline_net_margin_cents]) %></strong>
+                </div>
+                <%= link_to flight_path(flight), class: "btn btn-sm btn-primary" do %>
+                  Open order book
+                <% end %>
+              </div>
+            </article>
           </div>
         <% end %>
       </div>
     <% else %>
       <div class="smb-empty-state">
-        <h3 class="h5 mb-2">No active requests yet</h3>
-        <p class="text-muted mb-3">Publish the first shipping request and start receiving traveler offers.</p>
-        <%= link_to "Post a shipping request", new_shipping_request_path, class: "btn btn-primary" %>
+        <p class="mb-0 text-muted">No live flights scheduled yet.</p>
       </div>
     <% end %>
   </div>
 </section>
 
-<section class="py-5" aria-labelledby="trust-heading">
+<section class="py-5 bg-white border-top">
   <div class="container">
-    <div class="smb-card p-4 p-lg-5">
-      <div class="row align-items-center gy-4">
-        <div class="col-lg-5">
-          <h2 id="trust-heading" class="h3 mb-2">Built for trust and clarity</h2>
-          <p class="text-muted mb-0">
-            No feature bloat: every safeguard directly protects parcel handover, delivery verification, and member privacy.
-          </p>
-        </div>
-        <div class="col-lg-7">
-          <ul class="row g-3 list-unstyled mb-0">
-            <li class="col-sm-6">
-              <div class="d-flex gap-3">
-                <i class="fas fa-key text-primary mt-1" aria-hidden="true"></i>
-                <div>
-                  <h3 class="h6 mb-1">Confidential codes</h3>
-                  <p class="small text-muted mb-0">Visible only to the sender and verified in constant time on the server.</p>
-                </div>
-              </div>
-            </li>
-            <li class="col-sm-6">
-              <div class="d-flex gap-3">
-                <i class="fas fa-clipboard-check text-success mt-1" aria-hidden="true"></i>
-                <div>
-                  <h3 class="h6 mb-1">Safety pledge</h3>
-                  <p class="small text-muted mb-0">Every sender attests that their parcel contains no prohibited items.</p>
-                </div>
-              </div>
-            </li>
-            <li class="col-sm-6">
-              <div class="d-flex gap-3">
-                <i class="fas fa-comments text-primary mt-1" aria-hidden="true"></i>
-                <div>
-                  <h3 class="h6 mb-1">Direct messaging</h3>
-                  <p class="small text-muted mb-0">Coordinate pickup and delivery without exposing private email addresses.</p>
-                </div>
-              </div>
-            </li>
-            <li class="col-sm-6">
-              <div class="d-flex gap-3">
-                <i class="fas fa-star smb-star-filled mt-1" aria-hidden="true"></i>
-                <div>
-                  <h3 class="h6 mb-1">Verified reviews</h3>
-                  <p class="small text-muted mb-0">Only participants of a confirmed delivery can rate each other.</p>
-                </div>
-              </div>
-            </li>
-          </ul>
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-5">
+        <h2 class="h3 mb-3">Solving the exact airline pain point — nothing more, nothing less.</h2>
+        <p class="text-muted mb-0">
+          On every commercial departure, aircraft fuel and payload envelopes are planned around booked baggage weight. Rigid 23 kg allowances leave ~40% of passengers flying light while 15% pay punitive €15/kg airport counter fees or abandon luggage at check-in.
+        </p>
+      </div>
+      <div class="col-lg-7">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="smb-kpi-card smb-kpi-card--emerald">
+              <div class="smb-kpi-label">Light Passenger (ASK)</div>
+              <div class="smb-kpi-value">+€50–€80</div>
+              <div class="smb-kpi-sub">Monetizes unused kg into instant airline flight vouchers.</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="smb-kpi-card smb-kpi-card--brand">
+              <div class="smb-kpi-label">Heavy Passenger (BID)</div>
+              <div class="smb-kpi-value">-45% to -55%</div>
+              <div class="smb-kpi-sub">Buys exact needed kg pre-flight instead of airport desk penalties.</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="smb-kpi-card smb-kpi-card--amber">
+              <div class="smb-kpi-label">Airline Operator</div>
+              <div class="smb-kpi-value">25% + Voucher</div>
+              <div class="smb-kpi-sub">Captures pure ancillary margin while cutting check-in queues.</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

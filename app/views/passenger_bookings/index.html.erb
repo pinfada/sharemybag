@@ -1,0 +1,168 @@
+<% provide(:title, "My PNR Bookings & Allowance Wallet") %>
+
+<div class="container py-4">
+  <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+    <div>
+      <h1 class="h2 mb-1">My PNR Bookings &amp; Allowance Wallet</h1>
+      <p class="text-muted mb-0">
+        Your verified flight bookings, updated digital baggage allowances, active Bid/Ask orders, and earned flight voucher credits.
+      </p>
+    </div>
+    <div class="smb-kpi-card smb-kpi-card--emerald py-2 px-4">
+      <div class="smb-kpi-label mb-0">Airline Voucher Balance</div>
+      <div class="fs-4 fw-bold text-success smb-tabular"><%= format_euros(current_user.voucher_balance_cents) %></div>
+    </div>
+  </div>
+
+  <!-- Confirmed PNRs -->
+  <section class="mb-5" aria-labelledby="pnr-list-heading">
+    <h2 id="pnr-list-heading" class="h5 mb-3">Confirmed Flight Bookings (<%= @bookings.size %>)</h2>
+    <% if @bookings.any? %>
+      <div class="row g-4">
+        <% @bookings.each do |booking| %>
+          <% flight = booking.flight %>
+          <div class="col-md-6">
+            <article class="smb-card p-4 h-100 d-flex flex-column">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="smb-airline-code" aria-hidden="true"><%= flight.airline_code %></span>
+                  <div>
+                    <div class="fw-bold text-dark"><%= flight.flight_number %> · <%= flight.route_label %></div>
+                    <div class="small text-muted"><%= flight.airline_name %> · <%= flight.aircraft_type.aircraft_name %></div>
+                  </div>
+                </div>
+                <code>PNR <%= booking.pnr_code %></code>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-4">
+                  <div class="p-2 rounded bg-light border">
+                    <div class="small text-muted">Base Allowance</div>
+                    <div class="fw-bold text-dark"><%= format_kg(booking.base_allowance_kg) %></div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="p-2 rounded bg-light border">
+                    <div class="small text-muted">Current PNR</div>
+                    <div class="fw-bold text-primary fs-5"><%= format_kg(booking.current_allowance_kg) %></div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="p-2 rounded bg-light border">
+                    <div class="small text-muted">Net Traded</div>
+                    <% delta = booking.net_traded_kg %>
+                    <div class="fw-bold <%= delta > 0 ? 'text-primary' : (delta < 0 ? 'text-success' : 'text-muted') %>">
+                      <%= delta > 0 ? "+#{format_kg(delta)}" : format_kg(delta) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <% if booking.requires_split_bags? %>
+                <div class="smb-iata-notice mb-3" role="note">
+                  <strong>IATA 32 kg single-bag limit:</strong> Your total PNR allowance is <strong><%= format_kg(booking.current_allowance_kg) %></strong>. Please pack across <strong>2 separate checked bags</strong> (max 32 kg per individual suitcase).
+                </div>
+              <% end %>
+
+              <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                <div class="small text-muted">
+                  Departs <%= l(flight.departure_at, format: :short) %> UTC
+                </div>
+                <%= link_to "Trade on #{flight.flight_number} →", flight_path(flight), class: "btn btn-sm btn-primary" %>
+              </div>
+            </article>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="smb-empty-state">
+        <p class="mb-2 fw-semibold text-dark">You have no confirmed flight bookings linked yet.</p>
+        <p class="small text-muted mb-3">Browse open commercial flights to inspect live order books or sign in with a pre-booked demo account.</p>
+        <%= link_to "Explore Live Flights", flights_path, class: "btn btn-primary btn-sm" %>
+      </div>
+    <% end %>
+  </section>
+
+  <div class="row g-4">
+    <!-- Active Orders -->
+    <div class="col-lg-6">
+      <section class="smb-card p-4 h-100" aria-labelledby="active-orders-heading">
+        <h2 id="active-orders-heading" class="h5 mb-3">Active Open Orders (<%= @active_orders.size %>)</h2>
+        <% if @active_orders.any? %>
+          <div class="d-grid gap-2">
+            <% @active_orders.each do |order| %>
+              <div class="p-3 rounded border bg-white d-flex flex-wrap align-items-center justify-content-between gap-2">
+                <div>
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="<%= status_badge_class(order.side) %>"><%= order.buy? ? "BID" : "ASK" %></span>
+                    <%= link_to order.flight.flight_number, flight_path(order.flight), class: "fw-bold" %>
+                    <span class="text-dark fw-semibold"><%= format_kg(order.remaining_kg) %> remaining @ <%= format_euros(order.price_per_kg_cents) %>/kg</span>
+                  </div>
+                  <div class="small text-muted">
+                    PNR <%= order.passenger_booking.pnr_code %> · Original: <%= format_kg(order.quantity_kg) %>
+                  </div>
+                </div>
+                <%= button_to "Cancel",
+                    cancel_flight_kilo_order_path(order.flight, order),
+                    method: :patch,
+                    class: "btn btn-sm btn-outline-danger",
+                    form: { "data-confirm-message": "Cancel this open order?" } %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted small mb-0">You have no resting orders on any flight right now.</p>
+        <% end %>
+      </section>
+    </div>
+
+    <!-- Trade History -->
+    <div class="col-lg-6">
+      <section class="smb-card p-4 h-100" aria-labelledby="trade-history-heading">
+        <h2 id="trade-history-heading" class="h5 mb-3">My Executed PNR Transfers</h2>
+        <% if @recent_trades.any? %>
+          <div class="table-responsive">
+            <table class="table smb-orderbook-table mb-0">
+              <caption class="visually-hidden">Your executed baggage allowance transfers</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Flight</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Weight</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Net Impact</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @recent_trades.each do |trade| %>
+                  <% is_buyer = (trade.buyer_id == current_user.id) %>
+                  <tr>
+                    <td><%= link_to trade.flight.flight_number, flight_path(trade.flight), class: "fw-bold" %></td>
+                    <td>
+                      <span class="smb-badge <%= is_buyer ? 'smb-badge--brand' : 'smb-badge--emerald' %>">
+                        <%= is_buyer ? "Bought" : "Sold" %>
+                      </span>
+                    </td>
+                    <td class="smb-tabular"><%= format_kg(trade.quantity_kg) %></td>
+                    <td class="smb-tabular"><%= format_euros(trade.execution_price_per_kg_cents) %>/kg</td>
+                    <td class="smb-tabular fw-semibold">
+                      <% if is_buyer %>
+                        Paid <%= format_euros(trade.gross_amount_cents) %>
+                        <div class="small text-success">Saved <%= format_euros(trade.buyer_savings_cents) %></div>
+                      <% else %>
+                        +<%= format_euros(trade.seller_payout_cents) %>
+                        <div class="small text-muted"><%= trade.payout_type == "voucher" ? "Flight voucher" : "Cash" %></div>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-muted small mb-0">No executed transfers yet.</p>
+        <% end %>
+      </section>
+    </div>
+  </div>
+</div>

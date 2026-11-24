@@ -1,37 +1,32 @@
-<% provide(:title, "Accessibility Statement (RGAA 4.1)") %>
+<% provide(:title, "Accessibility Statement (RGAA 4.1 / WCAG 2.1 AA)") %>
 
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <h1 class="mb-2">Accessibility Statement</h1>
-      <p class="text-muted mb-4">
-        ShareMyBag is committed to making its web application accessible in accordance with the French <strong>RGAA 4.1</strong> standard and <strong>WCAG 2.1 Level AA</strong> guidelines.
+    <div class="col-lg-9">
+      <h1 class="h2 mb-3">Accessibility Statement — RGAA 4.1 &amp; WCAG 2.1 AA</h1>
+      <p class="lead text-muted mb-4">
+        ShareMyBag Exchange is designed and continuously verified against the French <strong>RGAA 4.1</strong> standard and <strong>WCAG 2.1 Level AA</strong> so all passengers and airline operators can use every screen comfortably, including with keyboard-only navigation and screen readers.
       </p>
 
-      <section class="smb-card p-4 mb-4" aria-labelledby="a11y-status-heading">
-        <h2 id="a11y-status-heading" class="h5 mb-2">Compliance status</h2>
-        <p class="text-muted mb-0">
-          This interface has been designed and verified against the core criteria of <strong>RGAA 4.1 (Level AA)</strong>, covering semantic structure, color contrast, keyboard navigation, accessible forms, and assistive technology announcements.
-        </p>
-      </section>
+      <div class="d-grid gap-4">
+        <section class="smb-card p-4">
+          <h2 class="h5 mb-2">Key Accessibility Measures Implemented</h2>
+          <ul class="text-muted small mb-0 d-grid gap-2">
+            <li><strong>Language &amp; Landmarks (RGAA 8.3, 9.2, 12.7)</strong>: Explicit <code>lang="en"</code>, skip link directly to <code>#main-content</code>, semantic <code>header</code>, <code>nav[aria-label]</code>, <code>main</code>, <code>footer</code>, and a single <code>&lt;h1&gt;</code> per page.</li>
+            <li><strong>Accessible Financial &amp; Flight Data Tables (RGAA 5.6, 5.7)</strong>: Every flight table, Bid/Ask order book, and ROI breakdown uses semantic <code>&lt;table&gt;</code>, <code>&lt;caption&gt;</code>, and <code>&lt;th scope="col"&gt;</code> headers.</li>
+            <li><strong>Color Contrast &amp; Non-Color Cues (RGAA 3.1, 3.2, 3.3)</strong>: High-contrast palette (≥ 4.5:1 text, ≥ 3:1 UI borders/controls). Bid/Ask status never relies on color alone — explicit text labels (<code>BID</code>, <code>ASK</code>, <code>Open</code>, <code>Cutoff</code>) accompany every indicator.</li>
+            <li><strong>Accessible Forms &amp; Live Calculators (RGAA 7.5, 11.1, 11.5, 11.10)</strong>: Explicit labels, <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code> grouping, <code>aria-required</code>, <code>aria-invalid</code>, focusable error summaries (<code>role="alert"</code>), and polite live regions (<code>aria-live="polite"</code>) for the live trade settlement preview and interactive Annual Fleet ROI Simulator.</li>
+            <li><strong>Keyboard Focus &amp; Reduced Motion (RGAA 10.7)</strong>: High-visibility <code>:focus-visible</code> focus rings and full support for <code>prefers-reduced-motion: reduce</code>.</li>
+          </ul>
+        </section>
 
-      <section class="smb-card p-4 mb-4" aria-labelledby="a11y-measures-heading">
-        <h2 id="a11y-measures-heading" class="h5 mb-2">Key accessibility measures implemented</h2>
-        <ul class="text-muted mb-0 ps-3">
-          <li class="mb-2"><strong>Document structure & landmarks (RGAA 8 & 12):</strong> explicit <code>lang="en"</code>, unique page titles, skip link to main content, ARIA landmarks (<code>banner</code>, <code>navigation</code>, <code>main</code>, <code>contentinfo</code>), single <code>&lt;h1&gt;</code> and strict heading hierarchy.</li>
-          <li class="mb-2"><strong>Color contrast (RGAA 3.2 & 3.3):</strong> text contrast ≥ 4.5:1 across all body text, badges, and buttons; UI control border contrast ≥ 3:1; information never conveyed by color alone.</li>
-          <li class="mb-2"><strong>Keyboard navigation & focus (RGAA 10.7):</strong> 100% keyboard-operable workflows with high-contrast <code>:focus-visible</code> indicators and full support for <code>prefers-reduced-motion</code>.</li>
-          <li class="mb-2"><strong>Accessible forms (RGAA 11):</strong> explicit <code>&lt;label&gt;</code> bindings, logical <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code> groupings, <code>aria-required</code>, <code>aria-invalid</code>, <code>autocomplete</code> hints, and focusable <code>role="alert"</code> error summaries.</li>
-          <li><strong>Dynamic updates (RGAA 7):</strong> live total price estimates, status banners, and code-copy confirmations announced politely via <code>aria-live</code> regions.</li>
-        </ul>
-      </section>
-
-      <section class="smb-card p-4" aria-labelledby="a11y-feedback-heading">
-        <h2 id="a11y-feedback-heading" class="h5 mb-2">Feedback and continuous improvement</h2>
-        <p class="text-muted mb-0">
-          Automated RGAA structural checks run continuously in our test suite. If you encounter any accessibility barrier while using ShareMyBag, please report it through our repository issue tracker so we can resolve it promptly.
-        </p>
-      </section>
+        <section class="smb-card p-4">
+          <h2 class="h5 mb-2">Continuous Automated Testing</h2>
+          <p class="text-muted small mb-0">
+            Every pull request is verified by automated integration tests covering language declarations, landmark structure, table headers, form error announcements, <code>aria-current="page"</code>, and live-region availability across all core routes.
+          </p>
+        </section>
+      </div>
     </div>
   </div>
 </div>

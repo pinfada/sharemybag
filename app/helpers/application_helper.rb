@@ -1,12 +1,23 @@
 module ApplicationHelper
   def full_title(page_title = "")
     base_title = "ShareMyBag"
-    page_title.present? ? "#{page_title} — #{base_title}" : "#{base_title} — Peer-to-peer parcel delivery by reverse auction"
+    page_title.present? ? "#{page_title} — #{base_title}" : "#{base_title} — B2B Airline Baggage Allowance Exchange"
   end
 
   def format_euros(cents)
     return "—" if cents.nil?
     number_to_currency(cents.to_f / 100.0, unit: "€", separator: ".", delimiter: ",", format: "%u%n")
+  end
+
+  def format_kg(weight)
+    return "—" if weight.nil?
+    val = weight.to_f
+    val == val.to_i ? "#{val.to_i} kg" : format("%.1f kg", val)
+  end
+
+  def percent_width_class(percent)
+    step = ((percent.to_f.clamp(0.0, 100.0)) / 5.0).round * 5
+    "smb-w-#{step}"
   end
 
   def flash_bootstrap_class(key)
@@ -28,13 +39,12 @@ module ApplicationHelper
 
   def status_badge_class(status)
     case status.to_s
-    when "open"        then "smb-badge smb-badge--emerald"
-    when "bidding"     then "smb-badge smb-badge--sky"
-    when "accepted", "handed_over", "in_progress", "in_transit" then "smb-badge smb-badge--brand"
-    when "delivered"   then "smb-badge smb-badge--amber"
-    when "completed", "confirmed" then "smb-badge smb-badge--emerald"
-    when "pending"     then "smb-badge smb-badge--slate"
-    when "rejected", "cancelled", "withdrawn" then "smb-badge smb-badge--muted"
+    when "open", "filled"           then "smb-badge smb-badge--emerald"
+    when "partially_filled"         then "smb-badge smb-badge--sky"
+    when "buy"                      then "smb-badge smb-badge--emerald"
+    when "sell"                     then "smb-badge smb-badge--amber"
+    when "closed", "departed"       then "smb-badge smb-badge--slate"
+    when "cancelled"                then "smb-badge smb-badge--muted"
     else "smb-badge smb-badge--slate"
     end
   end
@@ -43,16 +53,6 @@ module ApplicationHelper
     palette = %w[brand sky emerald amber slate]
     tone = palette[user.id.to_i % palette.length]
     content_tag(:span, user.initials, class: "smb-avatar smb-avatar--#{size} smb-avatar--#{tone}", "aria-hidden": "true")
-  end
-
-  def render_stars(rating)
-    score = rating.to_f.round
-    stars = (1..5).map do |i|
-      css = i <= score ? "fas fa-star smb-star-filled" : "far fa-star smb-star-empty"
-      content_tag(:i, "", class: css, "aria-hidden": "true")
-    end
-    label = content_tag(:span, "#{rating} out of 5 stars", class: "visually-hidden")
-    content_tag(:span, safe_join(stars + [label]), class: "d-inline-flex align-items-center gap-1")
   end
 
   def field_a11y_attrs(object, attribute, required: false, describedby: nil)
@@ -68,12 +68,8 @@ module ApplicationHelper
 
   def notification_target_path(notification)
     case notification.notifiable
-    when ShippingRequest
-      shipping_request_path(notification.notifiable)
-    when ShipmentTracking
-      shipment_tracking_path(notification.notifiable)
-    when Conversation
-      conversation_path(notification.notifiable)
+    when Flight
+      flight_path(notification.notifiable)
     else
       notifications_path
     end
