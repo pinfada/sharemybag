@@ -778,3 +778,148 @@ code {
   overflow-y: hidden;
 }
 
+// --- Ghost Allowance 3-Segment Aircraft Hold Visualizer ----------------------
+.smb-ghost-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid var(--smb-brand);
+  border-radius: 0.875rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--smb-shadow-sm);
+}
+
+.smb-hold-bar {
+  display: flex;
+  width: 100%;
+  height: 16px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #e2e8f0;
+  border: 1px solid #94a3b8;
+}
+
+.smb-hold-seg--used {
+  background: #334155;
+  height: 100%;
+}
+
+.smb-hold-seg--ghost {
+  background: repeating-linear-gradient(
+    -45deg,
+    #d97706,
+    #d97706 6px,
+    #f59e0b 6px,
+    #f59e0b 12px
+  );
+  height: 100%;
+}
+
+.smb-hold-seg--matched {
+  background: #047857;
+  height: 100%;
+}
+
+.smb-legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 0.35rem;
+}
+
+.smb-legend-dot--used { background: #334155; }
+.smb-legend-dot--ghost { background: #d97706; }
+.smb-legend-dot--matched { background: #047857; }
+.smb-legend-dot--headroom { background: #cbd5e1; border: 1px solid #64748b; }
+
+// --- 1-Click Demo Persona Bar ------------------------------------------------
+.smb-demo-bar {
+  background: #f1f5f9;
+  border: 1px solid var(--smb-border);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+}
+
+// --- Digital PNR Baggage Allowance Pass (DCS Receipt) ------------------------
+.smb-baggage-pass {
+  border: 1px solid var(--smb-border);
+  border-radius: 0.875rem;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: var(--smb-shadow-sm);
+}
+
+.smb-baggage-pass__top {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px dashed #475569;
+}
+
+.smb-pass-sub {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+}
+
+.smb-pass-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: #065f46;
+  color: #ecfdf5;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.smb-baggage-pass__body {
+  padding: 0.9rem 1rem;
+}
+
+.smb-airline-code--sm {
+  min-width: 2rem;
+  height: 2rem;
+  font-size: 0.75rem;
+  background: #1e3a5f;
+}
+
+.smb-pass-barcode {
+  display: inline-block;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  max-width: 100%;
+  height: auto;
+}
+
+.smb-pass-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  color: var(--smb-muted);
+  letter-spacing: 0.06em;
+  margin-top: 0.2rem;
+}
+
+// --- CFO Waterfall Table -----------------------------------------------------
+.smb-waterfall-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.smb-waterfall-row--total {
+  border-top: 2px solid var(--smb-ink);
+  border-bottom: 0;
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+  font-weight: 800;
+}
+
+

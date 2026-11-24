@@ -15,7 +15,9 @@ class AirlineRoiController < ApplicationController
       commission_percent: 25.0,
       voucher_adoption_percent: 75.0,
       avg_flight_duration_hours: 4.5,
-      airport_excess_fee_euros: 15.0
+      airport_excess_fee_euros: 15.0,
+      cannibalization_percent: 6.0
     )
+    @fleet_ghost_kg = @flights.sum { |f| AirlineEconomicsService.flight_opportunity(f)[:ghost_allowance_kg] }.round(1)
   end
 end

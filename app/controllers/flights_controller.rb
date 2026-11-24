@@ -36,6 +36,7 @@ class FlightsController < ApplicationController
     @open_asks = @flight.open_asks.includes(:user)
     @recent_trades = @flight.kilo_trades.includes(:buyer, :seller).recent.limit(15)
     @flight_economics = AirlineEconomicsService.flight_summary(@flight)
+    @flight_opportunity = AirlineEconomicsService.flight_opportunity(@flight)
     @user_booking = signed_in? ? @flight.passenger_bookings.find_by(user_id: current_user.id) : nil
     @user_orders = signed_in? ? @flight.kilo_orders.where(user_id: current_user.id).recent : KiloOrder.none
   end

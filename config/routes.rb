@@ -7,9 +7,10 @@ Rails.application.routes.draw do
   get "/accessibility", to: "welcome#accessibility", as: :accessibility
 
   # Authentication & profile
-  get    "/signup",  to: "users#new",        as: :signup
-  get    "/signin",  to: "sessions#new",     as: :signin
-  delete "/signout", to: "sessions#destroy", as: :signout
+  get    "/signup",       to: "users#new",           as: :signup
+  get    "/signin",       to: "sessions#new",        as: :signin
+  delete "/signout",      to: "sessions#destroy",    as: :signout
+  post   "/demo-session", to: "demo_sessions#create", as: :demo_session
   resources :sessions, only: [:new, :create, :destroy]
   resources :users, only: [:new, :create, :show, :edit, :update]
 

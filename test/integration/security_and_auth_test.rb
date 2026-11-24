@@ -112,4 +112,28 @@ class SecurityAndAuthTest < ActionDispatch::IntegrationTest
     post sessions_path, params: { session: { email: user.email, password: "Password123" } }
     assert_redirected_to my_bookings_path
   end
+
+  test "1-click demo persona switcher enforces strict persona whitelist and rejects arbitrary emails or open redirects" do
+    marie = create_user(name: "Marie Demo", email: "marie@example.com")
+    flight = create_flight
+    create_booking(user: marie, flight: flight, pnr_code: "AF718D")
+
+    post demo_session_path, params: { persona: "light_passenger", return_to: flight_path(flight) }
+    assert_redirected_to flight_path(flight)
+    assert_match(/remember_token=/i, response.headers["Set-Cookie"].to_s)
+    follow_redirect!
+    assert_response :success
+    assert_includes response.body, "AF718D"
+
+    # Open redirect attempt is ignored and falls back safely to flights_path
+    post demo_session_path, params: { persona: "light_passenger", return_to: "https://evil.example.com" }
+    assert_redirected_to flights_path
+
+    # Unknown persona is rejected after signout
+    delete signout_path
+    post demo_session_path, params: { persona: "admin_override" }
+    assert_redirected_to signin_path
+    get my_bookings_path
+    assert_redirected_to signin_url
+  end
 end

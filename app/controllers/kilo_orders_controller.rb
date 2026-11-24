@@ -83,6 +83,7 @@ class KiloOrdersController < ApplicationController
     @open_asks = @flight.open_asks.includes(:user)
     @recent_trades = @flight.kilo_trades.includes(:buyer, :seller).recent.limit(15)
     @flight_economics = AirlineEconomicsService.flight_summary(@flight)
+    @flight_opportunity = AirlineEconomicsService.flight_opportunity(@flight)
     @user_orders = @flight.kilo_orders.where(user_id: current_user.id).recent
   end
 end

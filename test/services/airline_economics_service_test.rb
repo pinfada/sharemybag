@@ -62,7 +62,7 @@ class AirlineEconomicsServiceTest < ActiveSupport::TestCase
     assert_equal 1, fleet[:flights_count]
   end
 
-  test "projects annual fleet ROI transparently" do
+  test "projects annual fleet ROI transparently including cannibalization haircut and check-in hours saved" do
     projection = AirlineEconomicsService.annual_fleet_projection(
       daily_flights: 100,
       avg_matched_kg_per_flight: 180.0,
@@ -70,14 +70,38 @@ class AirlineEconomicsServiceTest < ActiveSupport::TestCase
       commission_percent: 25.0,
       voucher_adoption_percent: 70.0,
       avg_flight_duration_hours: 4.5,
-      airport_excess_fee_euros: 15.0
+      airport_excess_fee_euros: 15.0,
+      cannibalization_percent: 15.0
     )
 
     assert_equal 36_500, projection[:annual_flights]
     assert_in_delta 6_570_000.0, projection[:annual_matched_kg], 0.1
     assert_operator projection[:annual_gross_volume_cents], :>, 0
     assert_operator projection[:annual_net_margin_cents], :>, 0
+    assert_operator projection[:annual_cannibalization_deduction_cents], :>, 0
+    assert_operator projection[:annual_incremental_profit_cents], :<, projection[:annual_net_margin_cents]
     assert_operator projection[:annual_retained_voucher_cents], :>, 0
     assert_operator projection[:annual_passenger_savings_cents], :>, 0
+    assert_operator projection[:annual_checkin_hours_saved], :>, 0
+  end
+
+  test "calculates Ghost Allowance uncaptured opportunity, belly cargo comparison, and check-in minutes saved per flight" do
+    aircraft = create_aircraft_type(max_baggage_payload_kg: 7452.0, fuel_burn_rate_per_kg_hour: 0.035)
+    flight = create_flight(
+      aircraft_type: aircraft,
+      base_booked_baggage_kg: 5600.0,
+      flight_duration_hours: 5.5,
+      airport_excess_fee_per_kg_cents: 1500,
+      airline_commission_bps: 2500
+    )
+
+    opp = AirlineEconomicsService.flight_opportunity(flight)
+    assert_in_delta 1960.0, opp[:ghost_allowance_kg], 0.1 # 35% of 5600 kg booked allowance typically flies empty
+    assert_in_delta 3640.0, opp[:used_baggage_kg], 0.1
+    assert_operator opp[:capturable_kg], :>, 0
+    assert_operator opp[:uncaptured_net_margin_cents], :>, 0
+    assert_equal 280, opp[:belly_cargo_yield_per_kg_cents]
+    assert_operator opp[:exchange_gross_yield_per_kg_cents], :>, opp[:belly_cargo_yield_per_kg_cents]
+    assert_operator opp[:checkin_minutes_saved], :>=, 0
   end
 end

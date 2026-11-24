@@ -2,7 +2,7 @@
 
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
+    <div class="col-md-9 col-lg-7">
       <div class="smb-card p-4 p-md-5 mb-4">
         <div class="text-center mb-4">
           <div class="mb-2 d-inline-block"><%= render "shared/brand_logo", size: 38 %></div>
@@ -42,39 +42,54 @@
         </div>
       </div>
 
-      <!-- Pre-seeded B2B Demo Accounts -->
+      <!-- 1-Click Pre-seeded B2B Demo Accounts -->
       <section class="smb-card p-4 bg-white" aria-labelledby="demo-accounts-heading">
         <h2 id="demo-accounts-heading" class="h6 mb-2">
-          <i class="fas fa-key me-2 text-primary" aria-hidden="true"></i>Instant B2B Demo Accounts (Pre-booked on Live Flights)
+          <i class="fas fa-bolt me-2 text-primary" aria-hidden="true"></i>1-Click Interactive Demo Personas (Pre-booked on AF718)
         </h2>
         <p class="small text-muted mb-3">
-          Use these seeded accounts to test a live Bid/Ask match on <strong>AF718 (CDG → DKR)</strong> and watch PNR allowances &amp; airline net margin update immediately:
+          Enter any persona in 1 click to execute a live Bid/Ask match on <strong>AF718 (CDG → DKR)</strong> and watch PNR allowances, digital baggage passes, and airline net margin update immediately:
         </p>
         <div class="table-responsive">
-          <table class="table table-sm mb-0 small">
-            <caption class="visually-hidden">Pre-configured demo credentials for testing</caption>
+          <table class="table table-sm align-middle mb-0 small">
+            <caption class="visually-hidden">Pre-configured demo accounts with 1-click sign-in</caption>
             <thead>
               <tr>
                 <th scope="col">Persona</th>
-                <th scope="col">Email</th>
-                <th scope="col">Password</th>
+                <th scope="col">Credentials</th>
+                <th scope="col" class="text-end"><span class="visually-hidden">Action</span></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Light Traveler (Seller)</strong></td>
-                <td><code>marie@example.com</code></td>
-                <td><code>Marie123!</code></td>
+                <td>
+                  <strong>Marie Laurent</strong>
+                  <div class="text-muted">Light Traveler · Sell unused kg (ASK)</div>
+                </td>
+                <td><code>marie@example.com</code> / <code>Marie123!</code></td>
+                <td class="text-end">
+                  <%= button_to "Enter as Marie", demo_session_path(persona: "light_passenger"), method: :post, class: "btn btn-sm btn-outline-primary", form_class: "m-0" %>
+                </td>
               </tr>
               <tr>
-                <td><strong>Heavy Traveler (Buyer)</strong></td>
-                <td><code>pierre@example.com</code></td>
-                <td><code>Pierre123!</code></td>
+                <td>
+                  <strong>Pierre Diallo</strong>
+                  <div class="text-muted">Heavy Traveler · Buy extra kg (BID)</div>
+                </td>
+                <td><code>pierre@example.com</code> / <code>Pierre123!</code></td>
+                <td class="text-end">
+                  <%= button_to "Enter as Pierre", demo_session_path(persona: "heavy_passenger"), method: :post, class: "btn btn-sm btn-outline-primary", form_class: "m-0" %>
+                </td>
               </tr>
               <tr>
-                <td><strong>Airline Revenue VP</strong></td>
-                <td><code>vp@airfrance-demo.com</code></td>
-                <td><code>Airline123!</code></td>
+                <td>
+                  <strong>Claire Delacroix</strong>
+                  <div class="text-muted">Airline Revenue VP · Admin View</div>
+                </td>
+                <td><code>vp@airfrance-demo.com</code> / <code>Airline123!</code></td>
+                <td class="text-end">
+                  <%= button_to "Enter as VP", demo_session_path(persona: "airline_vp"), method: :post, class: "btn btn-sm btn-outline-secondary", form_class: "m-0" %>
+                </td>
               </tr>
             </tbody>
           </table>

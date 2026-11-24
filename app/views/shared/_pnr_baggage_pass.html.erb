@@ -1,0 +1,69 @@
+<div class="smb-baggage-pass" data-pnr-baggage-pass>
+  <div class="smb-baggage-pass__top">
+    <div class="d-flex align-items-center justify-content-between gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <span class="smb-airline-code smb-airline-code--sm" aria-hidden="true"><%= booking.flight.airline_code %></span>
+        <div>
+          <div class="fw-bold text-white small"><%= booking.flight.flight_number %> · <%= booking.flight.route_label %></div>
+          <div class="smb-pass-sub">PNR <strong><%= booking.pnr_code %></strong> · <%= booking.cabin_class.humanize %></div>
+        </div>
+      </div>
+      <span class="smb-pass-pill">
+        <i class="fas fa-check-circle me-1" aria-hidden="true"></i>DCS Synced
+      </span>
+    </div>
+  </div>
+
+  <div class="smb-baggage-pass__body">
+    <div class="row g-2 align-items-center">
+      <div class="col-7">
+        <div class="small text-muted">Active Check-in Allowance</div>
+        <div class="d-flex align-items-baseline gap-2">
+          <span class="fs-3 fw-bold text-dark smb-tabular"><%= format_kg(booking.current_allowance_kg) %></span>
+          <% delta = booking.net_traded_kg %>
+          <% if delta != 0 %>
+            <span class="smb-badge <%= delta > 0 ? 'smb-badge--brand' : 'smb-badge--emerald' %>">
+              <%= delta > 0 ? "+#{format_kg(delta)} bought" : "#{format_kg(delta)} sold" %>
+            </span>
+          <% else %>
+            <span class="small text-muted">Base <%= format_kg(booking.base_allowance_kg) %></span>
+          <% end %>
+        </div>
+        <div class="small text-muted mt-1">
+          <%= booking.requires_split_bags? ? "2 checked pieces required (max 32 kg/bag)" : "1 checked piece (within 32 kg IATA limit)" %>
+        </div>
+      </div>
+      <div class="col-5 text-end">
+        <svg class="smb-pass-barcode" viewBox="0 0 120 36" width="120" height="36" role="img"
+             aria-label="Digital DCS baggage tag barcode for PNR <%= booking.pnr_code %>">
+          <rect x="0" y="0" width="120" height="36" fill="#ffffff"/>
+          <g fill="#0f172a">
+            <rect x="4" y="4" width="3" height="28"/>
+            <rect x="9" y="4" width="1.5" height="28"/>
+            <rect x="13" y="4" width="4" height="28"/>
+            <rect x="20" y="4" width="2" height="28"/>
+            <rect x="24" y="4" width="3.5" height="28"/>
+            <rect x="30" y="4" width="1.5" height="28"/>
+            <rect x="34" y="4" width="4" height="28"/>
+            <rect x="41" y="4" width="2" height="28"/>
+            <rect x="45" y="4" width="1.5" height="28"/>
+            <rect x="49" y="4" width="4.5" height="28"/>
+            <rect x="56" y="4" width="2" height="28"/>
+            <rect x="61" y="4" width="3" height="28"/>
+            <rect x="66" y="4" width="1.5" height="28"/>
+            <rect x="70" y="4" width="4" height="28"/>
+            <rect x="77" y="4" width="2" height="28"/>
+            <rect x="81" y="4" width="3.5" height="28"/>
+            <rect x="87" y="4" width="1.5" height="28"/>
+            <rect x="91" y="4" width="4" height="28"/>
+            <rect x="98" y="4" width="2" height="28"/>
+            <rect x="103" y="4" width="3" height="28"/>
+            <rect x="108" y="4" width="1.5" height="28"/>
+            <rect x="112" y="4" width="4" height="28"/>
+          </g>
+        </svg>
+        <div class="smb-pass-code"><%= booking.flight.airline_code %>·<%= booking.pnr_code %>·<%= booking.current_allowance_kg.to_i %>KG</div>
+      </div>
+    </div>
+  </div>
+</div>

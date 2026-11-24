@@ -84,19 +84,28 @@ class B2bFlightExchangeE2eTest < ActionDispatch::IntegrationTest
     assert_in_delta 33.0, pierre_booking.reload.current_allowance_kg.to_f, 0.01
     assert_equal 4875, marie.reload.voucher_balance_cents
 
-    # Pierre checks /my-bookings -> sees 33 kg allowance and IATA 32 kg split-bag safety notice
+    # Pierre checks /my-bookings -> sees 33 kg allowance, IATA 32 kg split-bag notice, and digital PNR baggage tag
     get my_bookings_path
     assert_response :success
     assert_includes response.body, "AF718P"
     assert_includes response.body, "33"
     assert_includes response.body, "32 kg"
+    assert_select "[data-pnr-baggage-pass]", 1
 
-    # Airline ROI dashboard reflects the real executed trade transparently
+    # Flight show page displays Ghost Allowance diagnostic & uncaptured margin
+    get flight_path(flight)
+    assert_response :success
+    assert_includes response.body, "Ghost Allowance"
+    assert_select "[data-ghost-allowance-card]", 1
+
+    # Airline ROI dashboard reflects the real executed trade and includes honest cannibalization modeling
     get airline_roi_path
     assert_response :success
     assert_includes response.body, "€65.00"
     assert_includes response.body, "€16.25"
     assert_includes response.body, "€48.75"
+    assert_select "[data-roi-cannibalization]", 1
+    assert_select "[data-roi-incremental-profit]", 1
 
     delete signout_path
 
