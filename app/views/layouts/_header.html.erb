@@ -1,246 +1,127 @@
-<!-- Header ShareMyBag - Navigation moderne avec effet glass -->
-<nav class="navbar navbar-expand-lg navbar-smb fixed-top" id="mainNavbar">
-  <div class="container">
-    <!-- Logo -->
-    <%= link_to root_path, class: "navbar-brand" do %>
-      <span class="navbar-brand-icon">
-        <i class="fas fa-suitcase-rolling"></i>
-      </span>
-      <span class="navbar-brand-text">ShareMyBag</span>
-    <% end %>
+<header role="banner">
+  <nav class="navbar navbar-expand-lg smb-navbar sticky-top" aria-label="Main navigation">
+    <div class="container">
+      <%= link_to root_path, class: "navbar-brand", aria: { label: "ShareMyBag — Home" } do %>
+        <%= render "shared/brand_logo", size: 36 %>
+      <% end %>
 
-    <!-- Mobile Toggle -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
-            aria-controls="navbarMain" aria-expanded="false" aria-label="Menu de navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <button class="navbar-toggler border" type="button" data-bs-toggle="collapse" data-bs-target="#smbMainNav"
+              aria-controls="smbMainNav" aria-expanded="false" aria-label="Toggle navigation menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <!-- Navigation principale -->
-    <div class="collapse navbar-collapse" id="navbarMain">
-      <ul class="navbar-nav me-auto align-items-center gap-1 gap-lg-2">
-        <!-- Accueil -->
-        <li class="nav-item">
-          <%= link_to root_path, class: "nav-link #{'active' if current_page?(root_path)}" do %>
-            <i class="fas fa-home me-1"></i><span class="nav-link-text">Accueil</span>
-          <% end %>
-        </li>
-
-        <!-- Marketplace Dropdown -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="marketplaceDropdown" role="button"
-             data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-store me-1"></i><span class="nav-link-text">Marketplace</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-smb shadow-lg" aria-labelledby="marketplaceDropdown">
-            <li>
-              <%= link_to shipping_requests_path, class: "dropdown-item" do %>
-                <span class="dropdown-icon bg-primary-subtle text-primary"><i class="fas fa-box"></i></span>
-                Envoyer un colis
-              <% end %>
-            </li>
-            <li>
-              <%= link_to kilo_offers_path, class: "dropdown-item" do %>
-                <span class="dropdown-icon bg-success-subtle text-success"><i class="fas fa-plane"></i></span>
-                Proposer des kilos
-              <% end %>
-            </li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              <%= link_to listevol_path, class: "dropdown-item" do %>
-                <span class="dropdown-icon bg-info-subtle text-info"><i class="fas fa-search"></i></span>
-                Parcourir les vols
-              <% end %>
-            </li>
-          </ul>
-        </li>
-
-        <% if signed_in? %>
-          <!-- Mon Activité -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="activityDropdown" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-chart-line me-1"></i><span class="nav-link-text">Mon activité</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-smb shadow-lg" aria-labelledby="activityDropdown">
-              <li>
-                <%= link_to my_requests_shipping_requests_path, class: "dropdown-item" do %>
-                  <i class="fas fa-paper-plane me-2 text-primary"></i> Mes demandes
-                <% end %>
-              </li>
-              <li>
-                <%= link_to my_offers_kilo_offers_path, class: "dropdown-item" do %>
-                  <i class="fas fa-hand-holding-box me-2 text-success"></i> Mes offres
-                <% end %>
-              </li>
-              <li>
-                <%= link_to my_bids_bids_path, class: "dropdown-item" do %>
-                  <i class="fas fa-gavel me-2 text-warning"></i> Mes enchères
-                <% end %>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <%= link_to conversations_path, class: "dropdown-item" do %>
-                  <i class="fas fa-comments me-2 text-info"></i> Messages
-                <% end %>
-              </li>
-            </ul>
-          </li>
-
-          <!-- Communauté -->
+      <div class="collapse navbar-collapse" id="smbMainNav">
+        <ul class="navbar-nav me-auto ms-lg-3 gap-1">
+          <% requests_active = (controller_name == 'shipping_requests' && action_name == 'index') %>
           <li class="nav-item">
-            <%= link_to users_path, class: "nav-link #{'active' if current_page?(users_path)}" do %>
-              <i class="fas fa-users me-1"></i><span class="nav-link-text">Communauté</span>
-            <% end %>
+            <%= link_to "Shipping requests", shipping_requests_path,
+                class: "nav-link #{'active' if requests_active}",
+                aria: (requests_active ? { current: "page" } : {}) %>
           </li>
-        <% end %>
 
-        <!-- Ressources (À propos, Aide, Contact) -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button"
-             data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-ellipsis-h me-1"></i><span class="nav-link-text">Plus</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-smb shadow-lg" aria-labelledby="resourcesDropdown">
-            <li><%= link_to "À propos", propos_path, class: "dropdown-item" %></li>
-            <li><%= link_to "Notre équipe", team_path, class: "dropdown-item" %></li>
-            <li><%= link_to "Centre d'aide", help_path, class: "dropdown-item" %></li>
-            <li><%= link_to "Contact", contact_path, class: "dropdown-item" %></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><%= link_to "Politique de confidentialité", policy_path, class: "dropdown-item small text-muted" %></li>
-          </ul>
-        </li>
-      </ul>
+          <% how_active = current_page?(how_it_works_path) %>
+          <li class="nav-item">
+            <%= link_to "How it works", how_it_works_path,
+                class: "nav-link #{'active' if how_active}",
+                aria: (how_active ? { current: "page" } : {}) %>
+          </li>
 
-      <!-- Zone droite : Recherche + Actions -->
-      <div class="navbar-actions d-flex align-items-center gap-2 gap-lg-3">
-        <!-- Barre de recherche compacte -->
-        <div class="navbar-search d-none d-lg-block">
-          <%= render 'shared/search' %>
-        </div>
-
-        <% if signed_in? %>
-          <ul class="navbar-nav flex-row align-items-center gap-1">
-            <!-- Notifications -->
-            <li class="nav-item">
-              <%= link_to notifications_path, class: "nav-link nav-link-icon position-relative px-2" do %>
-                <i class="fas fa-bell"></i>
-                <% unread = current_user.respond_to?(:notifications) ? current_user.notifications.unread.count : 0 %>
-                <% if unread > 0 %>
-                  <span class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-danger notification-badge">
-                    <%= unread > 9 ? "9+" : unread %>
-                    <span class="visually-hidden">notifications non lues</span>
-                  </span>
-                <% end %>
-              <% end %>
-            </li>
-
-            <!-- Compte Utilisateur -->
+          <% if signed_in? %>
             <li class="nav-item dropdown">
-            <a class="nav-link nav-link-account dropdown-toggle d-flex align-items-center gap-2" href="#"
-               id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <% if current_user.avatar_url? %>
-                <%= image_tag current_user.avatar_url, class: "avatar-sm rounded-circle", width: "36", height: "36", alt: current_user.name %>
-              <% else %>
-                <div class="avatar-circle avatar-sm">
-                  <%= current_user.name.first.upcase %>
-                </div>
-              <% end %>
-              <span class="account-info d-none d-xl-flex flex-column align-items-start">
-                <span class="account-name"><%= current_user.name.split.first %></span>
-                <% if current_user.verified? %>
-                  <span class="account-badge verified">
-                    <i class="fas fa-check-circle me-1"></i>Vérifié
-                  </span>
-                <% end %>
-              </span>
-              <i class="fas fa-chevron-down account-chevron d-none d-xl-inline"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-smb shadow-lg dropdown-menu-account" aria-labelledby="accountDropdown">
-              <li class="dropdown-header-account">
-                <div class="d-flex align-items-center gap-2">
-                  <% if current_user.avatar_url? %>
-                    <%= image_tag current_user.avatar_url, class: "rounded-circle", width: "48", height: "48", alt: current_user.name %>
-                  <% else %>
-                    <div class="avatar-circle avatar-md">
-                      <%= current_user.name.first.upcase %>
-                    </div>
-                  <% end %>
-                  <div>
-                    <strong><%= current_user.name %></strong>
-                    <% if current_user.verified? %>
-                      <span class="badge bg-success-subtle text-success ms-1">Vérifié</span>
-                    <% end %>
-                  </div>
-                </div>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <%= link_to current_user, class: "dropdown-item" do %>
-                  <i class="fas fa-user me-2"></i> Mon profil
-                <% end %>
-              </li>
-              <li>
-                <%= link_to edit_user_path(current_user), class: "dropdown-item" do %>
-                  <i class="fas fa-cog me-2"></i> Paramètres
-                <% end %>
-              </li>
-              <li>
-                <%= link_to identity_verification_path, class: "dropdown-item" do %>
-                  <i class="fas fa-id-card me-2"></i>
-                  <%= current_user.verified? ? "Identité vérifiée" : "Vérifier mon identité" %>
-                <% end %>
-              </li>
-
-              <% if current_user.admin == true %>
-                <li><hr class="dropdown-divider"></li>
+              <button class="nav-link dropdown-toggle btn btn-link border-0 #{'active' if action_name.in?(%w[my_requests my_bids])}"
+                      type="button" id="activityMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                My activity
+              </button>
+              <ul class="dropdown-menu shadow-sm border" aria-labelledby="activityMenu">
                 <li>
-                  <%= link_to rails_admin_path, class: "dropdown-item text-danger" do %>
-                    <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                  <%= link_to my_requests_shipping_requests_path, class: "dropdown-item py-2" do %>
+                    <i class="fas fa-box me-2 text-primary" aria-hidden="true"></i>My shipping requests
                   <% end %>
                 </li>
-              <% end %>
-
-              <li><hr class="dropdown-divider"></li>
-              <li class="dropdown-header">Connexions</li>
-              <li>
-                <div class="dropdown-item-socials d-flex gap-2 px-3 py-2">
-                  <%= link_to "/auth/twitter", class: "social-connect-btn", title: "Twitter" do %>
-                    <i class="fab fa-twitter"></i>
+                <li>
+                  <%= link_to my_bids_bids_path, class: "dropdown-item py-2" do %>
+                    <i class="fas fa-gavel me-2 text-success" aria-hidden="true"></i>My offers
                   <% end %>
-                  <%= link_to "/auth/facebook", class: "social-connect-btn", title: "Facebook" do %>
-                    <i class="fab fa-facebook-f"></i>
-                  <% end %>
-                  <%= link_to "/auth/github", class: "social-connect-btn", title: "GitHub" do %>
-                    <i class="fab fa-github"></i>
-                  <% end %>
-                </div>
-              </li>
-
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <%= link_to signout_path, method: "delete", class: "dropdown-item dropdown-item-logout",
-                    data: { "turbo-method": "delete" } do %>
-                  <i class="fas fa-sign-out-alt me-2"></i> Déconnexion
-                <% end %>
-              </li>
-            </ul>
+                </li>
+              </ul>
             </li>
-          </ul>
-        <% else %>
-          <!-- Connexion / Inscription (visiteurs) -->
-          <div class="d-flex align-items-center gap-2">
-            <%= link_to signin_path, class: "btn btn-sm btn-outline-light" do %>
-              Connexion
+
+            <% msgs_active = (controller_name == 'conversations') %>
+            <li class="nav-item">
+              <%= link_to conversations_path,
+                  class: "nav-link d-inline-flex align-items-center gap-1 #{'active' if msgs_active}",
+                  aria: (msgs_active ? { current: "page" } : {}) do %>
+                <span>Messages</span>
+                <% unread_msgs = current_user.unread_messages_count %>
+                <% if unread_msgs > 0 %>
+                  <span class="badge rounded-pill text-bg-primary smb-notif-dot">
+                    <%= unread_msgs > 9 ? "9+" : unread_msgs %>
+                    <span class="visually-hidden">unread messages</span>
+                  </span>
+                <% end %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+          <% if signed_in? %>
+            <%= link_to new_shipping_request_path, class: "btn btn-primary btn-sm px-3" do %>
+              <i class="fas fa-plus me-1" aria-hidden="true"></i>Post a parcel
             <% end %>
-            <%= link_to signup_path, class: "btn btn-sm btn-primary btn-smb-primary rounded-pill px-3" do %>
-              <i class="fas fa-user-plus me-1"></i> Inscription
+
+            <% unread_notifs = current_user.unread_notifications_count %>
+            <%= link_to notifications_path,
+                class: "btn btn-light btn-sm position-relative border",
+                aria: { label: unread_notifs > 0 ? "Notifications (#{unread_notifs} unread)" : "Notifications" } do %>
+              <i class="far fa-bell" aria-hidden="true"></i>
+              <% if unread_notifs > 0 %>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger smb-notif-dot" aria-hidden="true">
+                  <%= unread_notifs > 9 ? "9+" : unread_notifs %>
+                </span>
+              <% end %>
             <% end %>
-          </div>
-        <% end %>
+
+            <div class="dropdown">
+              <button class="btn btn-light btn-sm border d-inline-flex align-items-center gap-2 dropdown-toggle"
+                      type="button" id="accountMenu" data-bs-toggle="dropdown" aria-expanded="false"
+                      aria-label="Account menu for <%= current_user.name %>">
+                <%= user_avatar(current_user, size: :sm) %>
+                <span class="d-none d-xl-inline fw-semibold"><%= current_user.name.split.first %></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm border" aria-labelledby="accountMenu">
+                <li class="px-3 py-2">
+                  <div class="fw-bold text-dark"><%= current_user.name %></div>
+                  <div class="small text-muted">
+                    <i class="fas fa-star smb-star-filled me-1" aria-hidden="true"></i>
+                    <%= current_user.reviews_count > 0 ? "#{current_user.average_rating}/5 (#{current_user.reviews_count})" : "New member" %>
+                  </div>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <%= link_to user_path(current_user), class: "dropdown-item py-2" do %>
+                    <i class="far fa-user me-2" aria-hidden="true"></i>My profile
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to edit_user_path(current_user), class: "dropdown-item py-2" do %>
+                    <i class="fas fa-sliders-h me-2" aria-hidden="true"></i>Profile settings
+                  <% end %>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <%= button_to signout_path, method: :delete, class: "dropdown-item py-2 text-danger", form_class: "m-0" do %>
+                    <i class="fas fa-sign-out-alt me-2" aria-hidden="true"></i>Sign out
+                  <% end %>
+                </li>
+              </ul>
+            </div>
+          <% else %>
+            <%= link_to "Sign in", signin_path, class: "btn btn-outline-secondary btn-sm px-3" %>
+            <%= link_to "Post a parcel", new_shipping_request_path, class: "btn btn-primary btn-sm px-3" %>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
-
-<!-- Spacer pour le header fixe -->
-<div class="header-spacer"></div>
+  </nav>
+</header>

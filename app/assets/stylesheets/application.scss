@@ -1,0 +1,573 @@
+// =============================================================================
+// ShareMyBag — Design System (Bootstrap 5.3 + RGAA 4.1 AA High-Contrast Tokens)
+// =============================================================================
+
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$primary: #0b5ed7;     // 5.78:1 contrast on white / with white text
+$secondary: #334155;   // 10.1:1 contrast on white
+$success: #047857;     // 5.48:1 contrast with white text (RGAA 3.2 AA)
+$info: #0369a1;        // 5.93:1 contrast with white text (RGAA 3.2 AA)
+$warning: #b45309;     // 5.02:1 contrast on white (RGAA 3.2 AA)
+$danger: #b91c1c;      // 6.47:1 contrast with white text (RGAA 3.2 AA)
+$text-muted: #475569;  // 7.58:1 contrast on white, 6.90:1 on #f1f5f9 (AAA)
+$body-bg: #f8fafc;
+$body-color: #1e293b;
+$border-color: #cbd5e1;
+$border-radius: 0.625rem;
+$border-radius-lg: 0.875rem;
+$btn-font-weight: 600;
+
+@import "bootstrap";
+@import "font-awesome";
+
+:root {
+  --smb-ink: #0f172a;
+  --smb-text: #1e293b;
+  --smb-muted: #475569;
+  --smb-surface: #ffffff;
+  --smb-canvas: #f8fafc;
+  --smb-subtle: #f1f5f9;
+  --smb-border: #cbd5e1;
+  --smb-input-border: #64748b; // 4.76:1 non-text contrast on white (RGAA 3.3)
+  --smb-brand: #0b5ed7;
+  --smb-brand-dark: #084298;
+  --smb-brand-soft: #eff6ff;
+  --smb-emerald: #047857;
+  --smb-emerald-soft: #ecfdf5;
+  --smb-sky: #0369a1;
+  --smb-sky-soft: #f0f9ff;
+  --smb-amber: #92400e;
+  --smb-amber-soft: #fef3c7;
+  --smb-danger: #b91c1c;
+  --smb-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --smb-shadow-md: 0 4px 16px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.05);
+}
+
+html, body {
+  min-height: 100%;
+  background-color: var(--smb-canvas);
+  color: var(--smb-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main.smb-main {
+  flex: 1 0 auto;
+}
+
+h1, h2, h3, h4, h5, .smb-heading {
+  color: var(--smb-ink);
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+a {
+  color: var(--smb-brand);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+
+  &:hover {
+    color: var(--smb-brand-dark);
+  }
+}
+
+.navbar a, .btn, .smb-card-link, .dropdown-item {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.btn:hover, .navbar-brand:hover {
+  text-decoration: none;
+}
+
+// --- RGAA 12.7: Skip Link ----------------------------------------------------
+.smb-skip-link {
+  position: absolute;
+  top: -120px;
+  left: 1rem;
+  z-index: 2000;
+  background: var(--smb-ink);
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.35);
+
+  &:focus {
+    top: 0.75rem;
+    color: #ffffff;
+    outline: 3px solid #38bdf8;
+    outline-offset: 2px;
+  }
+}
+
+// --- RGAA 10.7: Visible Keyboard Focus on Every Interactive Element ----------
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--smb-brand);
+  outline-offset: 2px;
+}
+
+// --- RGAA / WCAG 2.3.3: Reduced Motion Support -------------------------------
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// --- Navbar ------------------------------------------------------------------
+.smb-navbar {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--smb-border);
+  padding: 0.75rem 0;
+
+  .navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.03em;
+    color: var(--smb-ink);
+  }
+
+  .smb-logo-svg {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .nav-link {
+    color: var(--smb-text);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:hover, &.active, &[aria-current="page"] {
+      color: var(--smb-brand-dark);
+      background-color: var(--smb-brand-soft);
+    }
+  }
+}
+
+.smb-notif-dot {
+  font-size: 0.72rem;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// --- Surfaces & Cards --------------------------------------------------------
+.smb-card {
+  background: var(--smb-surface);
+  border: 1px solid var(--smb-border);
+  border-radius: 0.875rem;
+  box-shadow: var(--smb-shadow-sm);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.smb-card--interactive:hover {
+  border-color: var(--smb-input-border);
+  box-shadow: var(--smb-shadow-md);
+  transform: translateY(-2px);
+}
+
+.smb-card--highlight {
+  border-color: #047857;
+  background: #fcfffd;
+}
+
+// --- Hero Section ------------------------------------------------------------
+.smb-hero {
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  border-bottom: 1px solid var(--smb-border);
+  padding: 4.25rem 0 3.75rem;
+
+  .smb-hero-title {
+    font-size: clamp(2rem, 4vw, 3.1rem);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    color: var(--smb-ink);
+  }
+
+  .smb-hero-lead {
+    font-size: 1.125rem;
+    line-height: 1.65;
+    color: var(--smb-muted);
+    max-width: 38rem;
+  }
+}
+
+.smb-search-panel {
+  background: var(--smb-surface);
+  border: 1px solid var(--smb-border);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: var(--smb-shadow-md);
+}
+
+// --- Route Pill / Header -----------------------------------------------------
+.smb-route {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  font-weight: 700;
+  color: var(--smb-ink);
+  font-size: 1.05rem;
+
+  .smb-route-arrow {
+    color: var(--smb-brand);
+    font-size: 0.85rem;
+  }
+
+  .smb-route-country {
+    font-weight: 500;
+    color: var(--smb-muted);
+    font-size: 0.875rem;
+  }
+}
+
+// --- Semantic Badges (all >= 5.5:1 RGAA AA/AAA contrast) ---------------------
+.smb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  line-height: 1.2;
+}
+
+.smb-badge--emerald { background: var(--smb-emerald-soft); color: #065f46; }
+.smb-badge--sky     { background: var(--smb-sky-soft);     color: #075985; }
+.smb-badge--brand   { background: var(--smb-brand-soft);   color: #1e40af; }
+.smb-badge--amber   { background: var(--smb-amber-soft);   color: #92400e; }
+.smb-badge--slate   { background: var(--smb-subtle);       color: #1e293b; }
+.smb-badge--muted   { background: #e2e8f0;                 color: #334155; }
+
+// --- Accessible Star Rating --------------------------------------------------
+.smb-star-filled { color: #b45309; } // 5.02:1 contrast on white
+.smb-star-empty  { color: #64748b; }
+
+// --- Avatars -----------------------------------------------------------------
+.smb-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.smb-avatar--sm { width: 32px; height: 32px; font-size: 0.75rem; }
+.smb-avatar--md { width: 42px; height: 42px; font-size: 0.9rem; }
+.smb-avatar--lg { width: 64px; height: 64px; font-size: 1.35rem; }
+
+.smb-avatar--brand   { background: #dbeafe; color: #1e40af; }
+.smb-avatar--sky     { background: #e0f2fe; color: #075985; }
+.smb-avatar--emerald { background: #d1fae5; color: #065f46; }
+.smb-avatar--amber   { background: #fef3c7; color: #92400e; }
+.smb-avatar--slate   { background: #e2e8f0; color: #1e293b; }
+
+// --- Stepper (Tracking Timeline) ---------------------------------------------
+.smb-timeline {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  @media (max-width: 767.98px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+.smb-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.75rem;
+  background: var(--smb-canvas);
+  border: 1px solid var(--smb-border);
+
+  &.is-reached {
+    background: var(--smb-emerald-soft);
+    border-color: #047857;
+  }
+
+  &.is-current {
+    background: var(--smb-brand-soft);
+    border-color: var(--smb-brand);
+  }
+
+  .smb-step-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    background: #cbd5e1;
+    color: var(--smb-ink);
+  }
+
+  &.is-reached .smb-step-icon {
+    background: var(--smb-emerald);
+    color: #ffffff;
+  }
+
+  &.is-current .smb-step-icon {
+    background: var(--smb-brand);
+    color: #ffffff;
+  }
+}
+
+// --- Security Code Box -------------------------------------------------------
+.smb-code-box {
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .smb-code-label {
+    color: #cbd5e1; // 11.7:1 contrast on #0f172a
+    font-size: 0.85rem;
+  }
+
+  .smb-code-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: #7dd3fc; // 11.5:1 contrast on #0f172a
+  }
+}
+
+// --- Process Step Cards ------------------------------------------------------
+.smb-step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--smb-brand-soft);
+  color: #1e40af;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+// --- Messaging ---------------------------------------------------------------
+.smb-message-list {
+  max-height: 460px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--smb-canvas);
+  border-radius: 0.75rem;
+  border: 1px solid var(--smb-border);
+  list-style: none;
+  margin: 0;
+}
+
+.smb-bubble {
+  max-width: 78%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.875rem;
+  line-height: 1.45;
+  font-size: 0.9375rem;
+}
+
+.smb-bubble--mine {
+  align-self: flex-end;
+  background: var(--smb-brand);
+  color: #ffffff;
+  border-bottom-right-radius: 0.25rem;
+
+  .smb-bubble-time { color: #dbeafe; }
+}
+
+.smb-bubble--theirs {
+  align-self: flex-start;
+  background: var(--smb-surface);
+  color: var(--smb-ink);
+  border: 1px solid var(--smb-border);
+  border-bottom-left-radius: 0.25rem;
+
+  .smb-bubble-time { color: var(--smb-muted); }
+}
+
+// --- Forms & Fieldsets (RGAA 3.3, 11.5, 11.6, 11.10) -------------------------
+fieldset.smb-fieldset {
+  border: 1px solid var(--smb-border);
+  border-radius: 0.875rem;
+  background: var(--smb-surface);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--smb-shadow-sm);
+
+  legend {
+    float: none;
+    width: auto;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--smb-ink);
+    margin-bottom: 1rem;
+    padding: 0;
+  }
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--smb-ink);
+}
+
+.smb-required {
+  color: var(--smb-danger);
+  font-weight: 700;
+}
+
+.form-text {
+  color: var(--smb-muted);
+}
+
+.form-control, .form-select, .form-check-input {
+  border-color: var(--smb-input-border);
+  color: var(--smb-ink);
+
+  &::placeholder {
+    color: var(--smb-muted);
+    opacity: 1;
+  }
+
+  &:focus {
+    border-color: var(--smb-brand);
+    box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.2);
+  }
+
+  &[aria-invalid="true"] {
+    border-color: var(--smb-danger);
+    border-width: 2px;
+  }
+}
+
+.form-control, .form-select {
+  padding: 0.6rem 0.85rem;
+}
+
+.smb-price-preview {
+  background: var(--smb-brand-soft);
+  border: 1px solid #93c5fd;
+  border-radius: 0.625rem;
+  padding: 0.75rem 1rem;
+  color: var(--smb-ink);
+}
+
+// --- Pagination (will_paginate) ----------------------------------------------
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 1.5rem;
+
+  a, em, span {
+    padding: 0.45rem 0.85rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--smb-input-border);
+    background: var(--smb-surface);
+    color: var(--smb-ink);
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-style: normal;
+    text-decoration: none;
+  }
+
+  em.current {
+    background: var(--smb-brand);
+    border-color: var(--smb-brand);
+    color: #ffffff;
+  }
+
+  span.disabled {
+    color: var(--smb-muted);
+    border-color: var(--smb-border);
+  }
+}
+
+// --- Footer ------------------------------------------------------------------
+.smb-footer {
+  background: var(--smb-surface);
+  border-top: 1px solid var(--smb-border);
+  color: var(--smb-muted);
+  font-size: 0.9rem;
+  padding: 2.25rem 0;
+  margin-top: 4rem;
+
+  a {
+    color: var(--smb-text);
+    &:hover { color: var(--smb-brand); }
+  }
+}
+
+.smb-empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: var(--smb-surface);
+  border: 1px dashed var(--smb-input-border);
+  border-radius: 1rem;
+}
+
+.smb-wordmark {
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.smb-wordmark-dark { color: var(--smb-ink); }
+.smb-wordmark-accent { color: var(--smb-brand); }
+
+code {
+  color: #1e40af;
+  background: #eff6ff;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.3rem;
+  font-size: 0.875em;
+}

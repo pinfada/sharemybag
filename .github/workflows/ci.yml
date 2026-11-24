@@ -50,7 +50,7 @@ jobs:
       - name: Installer Ruby et les gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version-file: .ruby-version
+          ruby-version: '3.3'
           bundler-cache: true
 
       - name: Préparer la base de test
@@ -84,7 +84,7 @@ jobs:
       - name: Installer Ruby et les gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version-file: .ruby-version
+          ruby-version: '3.3'
           bundler-cache: true
 
       - name: Précompiler les assets

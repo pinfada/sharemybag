@@ -1,31 +1,47 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1><i class="fa fa-bell"></i> <%= t('notifications.title') %></h1>
-    <% if @notifications.any? { |n| !n.read? } %>
-      <%= link_to t('notifications.mark_all_read'), mark_all_as_read_notifications_path,
-          method: :patch, class: "btn btn-outline-secondary btn-sm" %>
-    <% end %>
-  </div>
+<% provide(:title, "Notifications") %>
 
-  <% if @notifications.empty? %>
-    <div class="alert alert-info"><%= t('notifications.none') %></div>
-  <% else %>
-    <div class="list-group">
-      <% @notifications.each do |notification| %>
-        <div class="list-group-item <%= notification.read? ? '' : 'list-group-item-warning' %>">
-          <div class="d-flex justify-content-between">
-            <p class="mb-0"><%= notification.message %></p>
-            <div>
-              <small class="text-muted"><%= time_ago_in_words(notification.created_at) %> <%= t('common.ago') %></small>
-              <% unless notification.read? %>
-                <%= link_to mark_as_read_notification_path(notification), method: :patch, class: "ml-2" do %>
-                  <i class="fa fa-check"></i>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <div>
+          <h1 class="h2 mb-1">Notifications</h1>
+          <p class="text-muted mb-0">Updates on your shipping requests, offers, and delivery stages.</p>
+        </div>
+        <% if @notifications.any? { |n| !n.read? } %>
+          <%= button_to "Mark all as read", mark_all_as_read_notifications_path, method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+        <% end %>
+      </div>
+
+      <% if @notifications.any? %>
+        <ul class="d-flex flex-column gap-2 list-unstyled mb-0">
+          <% @notifications.each do |notif| %>
+            <li class="smb-card p-3 d-flex justify-content-between align-items-center gap-3 <%= 'smb-card--highlight' unless notif.read? %>">
+              <div>
+                <div class="<%= notif.read? ? 'text-muted' : 'fw-semibold text-dark' %>">
+                  <% unless notif.read? %>
+                    <span class="visually-hidden">Unread notification: </span>
+                  <% end %>
+                  <%= notif.message %>
+                </div>
+                <div class="small text-muted"><%= l(notif.created_at, format: :short) %></div>
+              </div>
+              <div class="flex-shrink-0">
+                <% if notif.read? %>
+                  <%= link_to "Open", notification_target_path(notif), class: "btn btn-outline-secondary btn-sm" %>
+                <% else %>
+                  <%= button_to "Open", mark_as_read_notification_path(notif), method: :patch, class: "btn btn-primary btn-sm" %>
                 <% end %>
-              <% end %>
-            </div>
-          </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="smb-empty-state">
+          <h2 class="h5 mb-1">No notifications</h2>
+          <p class="text-muted mb-0">You will be alerted whenever an offer or tracking milestone occurs.</p>
         </div>
       <% end %>
     </div>
-  <% end %>
+  </div>
 </div>

@@ -1,50 +1,65 @@
-<% provide(:title, 'Edit user') %>
-<h1>Update your profile</h1>
+<% provide(:title, "Profile settings") %>
 
-<% bagage_count = 1 %>
-<div class="row">
-	<div class="col-md-6 col-md-offset-3">
-		<%= form_for(@user) do |f| %>
-			<%= render 'shared/error_messages', object: f.object %>
-			<%= f.label :name %>
-			<%= f.text_field :name %>
-			<%= f.label :email %>
-			<%= f.text_field :email %>
-			<%= f.label :password %>
-			<%= f.password_field :password %>
-			<%= f.label :password_confirmation, "Confirm Password" %>
-			<%= f.password_field :password_confirmation %>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="smb-card p-4 p-md-5">
+        <h1 class="h3 mb-1">Profile settings</h1>
+        <p class="text-muted mb-4">Update your public details or change your password.</p>
 
-        	<h1>Mise à jour des informations bagages</h1>
-        	<%= f.fields_for :bagages do |bagages_form| %>
-                <fieldset>
-                    <legend><%= "Bagage #{bagage_count}" %></legend>
-                        <div class="input-group">
-                          <span class="input-group-addon" id="basic-addon1">Cm</span>
-                          <%= bagages_form.text_field :longueur, placeholder: 'Longueur', class: 'form-control' %>
-                        </div><br/>
-                        <div class="input-group">
-                          <span class="input-group-addon" id="basic-addon2">Cm</span>
-                          <%= bagages_form.text_field :largeur, placeholder: 'Largeur', class: 'form-control' %>
-                        </div><br/>
-                        <div class="input-group">
-                          <span class="input-group-addon" id="basic-addon3">Cm</span>
-                          <%= bagages_form.text_field :hauteur, placeholder: 'Hauteur', class: 'form-control' %>
-                        </div><br/>
-                        <div class="input-group">
-                          <span class="input-group-addon" id="basic-addon4">Kg</span>
-                          <%= bagages_form.text_field :poids, placeholder: 'Poids', class: 'form-control' %>
-                        </div><br/>
-                    	<div class="input-group">
-                    		<span class="input-group-addon" id="basic-addon5">€</span>
-                    		<%= bagages_form.text_field :prix, placeholder: 'Prix', class: 'form-control' %>
-                    		<span class="input-group-addon">.00</span>
-                    	</div><br/>
-                    	<% bagage_count += 1 %>
-                </fieldset>
-            <% end %>
-			<%= f.submit "Save changes", class: "btn btn-large btn-primary" %>
-		<% end %>
-		<p><%= link_to 'Show', @user %> | <%= link_to 'Back', users_path %></p>	
-	</div>
+        <%= render "shared/error_messages", object: @user %>
+
+        <%= form_with model: @user, local: true do |f| %>
+          <fieldset class="border-0 p-0 mb-4">
+            <legend class="h6 fw-bold mb-3">Public profile</legend>
+
+            <div class="mb-3">
+              <%= f.label :name, class: "form-label" do %>
+                Full name <span class="smb-required" aria-hidden="true">*</span>
+              <% end %>
+              <%= f.text_field :name, { class: "form-control", autocomplete: "name" }.merge(field_a11y_attrs(@user, :name, required: true)) %>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6">
+                <%= f.label :city, "City", class: "form-label" %>
+                <%= f.text_field :city, { class: "form-control", autocomplete: "address-level2" }.merge(field_a11y_attrs(@user, :city)) %>
+              </div>
+              <div class="col-sm-6">
+                <%= f.label :country, "Country", class: "form-label" %>
+                <%= f.text_field :country, { class: "form-control", autocomplete: "country-name" }.merge(field_a11y_attrs(@user, :country)) %>
+              </div>
+            </div>
+
+            <div class="mb-0">
+              <%= f.label :bio, "About you", class: "form-label" %>
+              <%= f.text_area :bio, { class: "form-control", rows: 3, placeholder: "e.g. Frequent traveler between London and Dakar." }.merge(field_a11y_attrs(@user, :bio)) %>
+            </div>
+          </fieldset>
+
+          <hr class="my-4">
+
+          <fieldset class="border-0 p-0 mb-4">
+            <legend class="h6 fw-bold mb-3 text-muted">Change password (optional)</legend>
+
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <%= f.label :password, "New password", class: "form-label" %>
+                <%= f.password_field :password, { class: "form-control", autocomplete: "new-password" }.merge(field_a11y_attrs(@user, :password)) %>
+              </div>
+              <div class="col-sm-6">
+                <%= f.label :password_confirmation, "Confirm new password", class: "form-label" %>
+                <%= f.password_field :password_confirmation, { class: "form-control", autocomplete: "new-password" }.merge(field_a11y_attrs(@user, :password_confirmation)) %>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="d-flex gap-2">
+            <%= f.submit "Save changes", class: "btn btn-primary px-4" %>
+            <%= link_to "Cancel", user_path(@user), class: "btn btn-outline-secondary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

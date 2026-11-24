@@ -1,0 +1,71 @@
+<% provide(:title, "How it works") %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="mb-5">
+        <h1 class="mb-2">How ShareMyBag works</h1>
+        <p class="lead text-muted">
+          One transparent 5-step process designed for both parcel senders and travelers.
+        </p>
+      </div>
+
+      <ol class="d-flex flex-column gap-3 list-unstyled mb-5">
+        <li class="smb-card p-4 d-flex gap-3 align-items-start">
+          <div class="smb-step-number" aria-hidden="true">1</div>
+          <div>
+            <h2 class="h5 mb-1">Post your shipping request</h2>
+            <p class="text-muted mb-0">
+              Specify your route, parcel weight (up to 50 kg), desired date, and an optional maximum budget. Every sender must confirm that the parcel contains no prohibited or dangerous goods.
+            </p>
+          </div>
+        </li>
+
+        <li class="smb-card p-4 d-flex gap-3 align-items-start">
+          <div class="smb-step-number" aria-hidden="true">2</div>
+          <div>
+            <h2 class="h5 mb-1">Receive traveler offers (reverse auction)</h2>
+            <p class="text-muted mb-0">
+              Travelers with spare luggage space on your route propose their price per kilo, available capacity, flight date, and handover availability. Total cost is calculated automatically.
+            </p>
+          </div>
+        </li>
+
+        <li class="smb-card p-4 d-flex gap-3 align-items-start">
+          <div class="smb-step-number" aria-hidden="true">3</div>
+          <div>
+            <h2 class="h5 mb-1">Accept one offer & lock the shipment</h2>
+            <p class="text-muted mb-0">
+              Compare offers and verified profile ratings, then accept your preferred traveler. Competing pending offers are closed automatically and a dedicated secure tracking workspace is created.
+            </p>
+          </div>
+        </li>
+
+        <li class="smb-card p-4 d-flex gap-3 align-items-start">
+          <div class="smb-step-number" aria-hidden="true">4</div>
+          <div>
+            <h2 class="h5 mb-1">Verify handover & delivery with secret codes</h2>
+            <p class="text-muted mb-0">
+              The sender receives two confidential 8-character codes: a <strong>handover code</strong> (shared in person when handing over the parcel) and a <strong>delivery code</strong> (shared upon arrival to prove delivery). The traveler submits each code to advance the shipment state.
+            </p>
+          </div>
+        </li>
+
+        <li class="smb-card p-4 d-flex gap-3 align-items-start">
+          <div class="smb-step-number" aria-hidden="true">5</div>
+          <div>
+            <h2 class="h5 mb-1">Confirm receipt & exchange reviews</h2>
+            <p class="text-muted mb-0">
+              Once the sender confirms delivery, both participants can publish a single verified review (1 to 5 stars) to strengthen trust across the community.
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="d-flex flex-wrap gap-2">
+        <%= link_to "Post a shipping request", new_shipping_request_path, class: "btn btn-primary px-4" %>
+        <%= link_to "Browse open requests", shipping_requests_path, class: "btn btn-outline-secondary px-4 bg-white" %>
+      </div>
+    </div>
+  </div>
+</div>

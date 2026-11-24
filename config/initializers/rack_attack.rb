@@ -1,39 +1,39 @@
 class Rack::Attack
-  # Throttle login attempts by IP address
-  throttle('logins/ip', limit: 5, period: 300) do |req|
+  # Désactivé par défaut en environnement de test (activable explicitement dans les tests de sécurité)
+  self.enabled = !Rails.env.test?
+
+  # Anti-brute-force sur la connexion (par IP)
+  throttle('logins/ip', limit: 10, period: 5.minutes) do |req|
+    req.ip if req.path == '/sessions' && req.post?
+  end
+
+  # Anti-brute-force sur la connexion (par email normalisé)
+  throttle('logins/email', limit: 5, period: 5.minutes) do |req|
     if req.path == '/sessions' && req.post?
-      req.ip
+      req.params.dig('session', 'email').to_s.downcase.strip.presence
     end
   end
 
-  # Throttle login attempts by email
-  throttle('logins/email', limit: 5, period: 300) do |req|
-    if req.path == '/sessions' && req.post?
-      req.params.dig('session', 'email')&.downcase&.strip
-    end
+  # Limitation des créations de compte (par IP)
+  throttle('signups/ip', limit: 5, period: 1.hour) do |req|
+    req.ip if req.path == '/users' && req.post?
   end
 
-  # Throttle signup attempts by IP
-  throttle('signups/ip', limit: 3, period: 3600) do |req|
-    if req.path == '/users' && req.post?
-      req.ip
-    end
+  # Limitation des soumissions de codes remise/livraison (anti-énumération)
+  throttle('tracking_codes/ip', limit: 10, period: 5.minutes) do |req|
+    req.ip if req.post? && req.path.match?(%r{\A/shipment_trackings/\d+/(hand_over|deliver)\z})
   end
 
-  # Throttle API requests
-  throttle('api/ip', limit: 300, period: 300) do |req|
-    req.ip
+  # Limitation globale par IP
+  throttle('req/ip', limit: 300, period: 5.minutes) do |req|
+    req.ip unless req.path.start_with?('/assets')
   end
 
-  # Block suspicious requests
-  blocklist('block bad IPs') do |req|
-    Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 10, findtime: 300, bantime: 3600) do
-      req.path == '/sessions' && req.post?
-    end
-  end
-
-  # Custom throttle response
-  self.throttled_responder = lambda do |env|
-    [429, { 'Content-Type' => 'text/plain' }, ["Too many requests. Please retry later.\n"]]
+  self.throttled_responder = lambda do |_request|
+    [
+      429,
+      { 'Content-Type' => 'text/plain; charset=utf-8' },
+      ["Too many requests. Please wait a moment and try again.\n"]
+    ]
   end
 end

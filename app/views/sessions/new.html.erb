@@ -1,35 +1,51 @@
-<% provide(:title, 'Sign in') %>
+<% provide(:title, "Sign in") %>
 
-<div class="middlePage">
-	<div class="page-header">
-	  <h1 class="logo">ShareMyBag <small>Your luggage are worth gold!</small></h1>
-	</div>
-	<div class="panel panel-info">
-		<div class="panel-heading">
-			<h1 class="panel-title">Please Sign in</h1>
-		</div>
-		<div class="panel-body">
-			<div class="row"> 
-				<div class="col-xs-6" >
-					<a class="btn btn-block btn-social btn-twitter" href="/auth/twitter" >
-						<i class="fa fa-twitter"></i>Twitter
-					</a></br>
-					<a class="btn btn-block btn-social btn-facebook" href="/auth/facebook" >
-						<i class="fa fa-facebook"></i>Facebook
-					</a></br>
-					<a class="btn btn-block btn-social btn-github" href="/auth/github" >
-						<i class="fa fa-github"></i>Github
-					</a>
-				</div>
-				<div class="col-xs-6" style="border-left:1px solid #ccc;height:160px"> 
-					<%= form_for(:session, url: sessions_path) do |f| %>
-						<%= f.text_field :email, placeholder: "Saisir email" %>
-						<%= f.password_field :password, placeholder: "Saisir mot de passe" %>
-						<%= f.submit "Sign in", class: "btn btn-large btn-primary" %> 
-					<% end %></br>
-					<p>New utilisateur? <%= link_to "Sign up now!", signup_path %></p>
-				</div> 
-			</div>
-		</div>
-	</div>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-5">
+      <div class="smb-card p-4 p-md-5">
+        <div class="mb-4">
+          <h1 class="h3 mb-1">Sign in</h1>
+          <p class="text-muted mb-0">Access your shipping requests, offers, and delivery tracking.</p>
+        </div>
+
+        <p class="small text-muted mb-3">Fields marked with <span class="smb-required" aria-hidden="true">*</span><span class="visually-hidden">an asterisk</span> are required.</p>
+
+        <%= form_with scope: :session, url: sessions_path, local: true do |f| %>
+          <div class="mb-3">
+            <%= f.label :email, class: "form-label" do %>
+              Email address <span class="smb-required" aria-hidden="true">*</span>
+            <% end %>
+            <%= f.email_field :email, class: "form-control", placeholder: "you@example.com", required: true, "aria-required": "true", autocomplete: "email" %>
+          </div>
+
+          <div class="mb-4">
+            <%= f.label :password, class: "form-label" do %>
+              Password <span class="smb-required" aria-hidden="true">*</span>
+            <% end %>
+            <%= f.password_field :password, class: "form-control", required: true, "aria-required": "true", autocomplete: "current-password" %>
+          </div>
+
+          <%= f.submit "Sign in", class: "btn btn-primary w-100 py-2" %>
+        <% end %>
+
+        <hr class="my-4">
+
+        <p class="text-center text-muted small mb-0">
+          New to ShareMyBag?
+          <%= link_to "Create a free account", signup_path, class: "fw-semibold" %>
+        </p>
+      </div>
+
+      <aside class="smb-card p-3 mt-3 bg-white" aria-label="Demo accounts">
+        <h2 class="h6 fw-bold text-dark mb-2">
+          <i class="fas fa-flask text-primary me-1" aria-hidden="true"></i>Demo accounts
+        </h2>
+        <ul class="list-unstyled small text-muted mb-0">
+          <li>Sender: <code>marie@example.com</code> / <code>Marie123!</code></li>
+          <li>Traveler: <code>pierre@example.com</code> / <code>Pierre123!</code></li>
+        </ul>
+      </aside>
+    </div>
+  </div>
 </div>

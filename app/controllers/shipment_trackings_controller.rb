@@ -6,99 +6,111 @@ class ShipmentTrackingsController < ApplicationController
   before_action :authorize_sender, only: [:confirm]
 
   def show
+    @shipping_request = @tracking.shipping_request
+    @accepted_bid = @shipping_request.accepted_bid
     @timeline = @tracking.status_timeline
-    @delivery_confirmation = @tracking.delivery_confirmation
-    @dispute = @tracking.shipping_request.disputes.active.first
+    @is_sender = @tracking.sender?(current_user)
+    @is_traveler = @tracking.traveler?(current_user)
+    @already_reviewed = @shipping_request.reviews.exists?(reviewer_id: current_user.id)
+    @review = Review.new
   end
 
   def hand_over
-    if params[:code] == @tracking.handover_code
-      @tracking.hand_over!
-      Notification.notify(@tracking.shipping_request.sender, @tracking, "handed_over",
-        I18n.t('notifications.package_handed_over'))
-      flash[:success] = I18n.t('tracking.handed_over')
-    else
-      flash[:error] = I18n.t('tracking.invalid_code')
+    inspected = ActiveModel::Type::Boolean.new.cast(params[:open_inspection_confirmed])
+    unless inspected
+      flash[:error] = t('tracking.open_inspection_required')
+      redirect_to shipment_tracking_path(@tracking) and return
     end
+
+    if @tracking.verify_and_hand_over!(params[:code], open_inspection_confirmed: true)
+      Notification.notify(
+        @tracking.shipping_request.sender,
+        @tracking,
+        "handed_over",
+        t('notifications.package_handed_over')
+      )
+      flash[:success] = t('tracking.handed_over')
+    else
+      flash[:error] = t('tracking.invalid_code')
+    end
+    redirect_to shipment_tracking_path(@tracking)
+  rescue ShipmentTracking::InvalidTransitionError => e
+    flash[:error] = e.message
     redirect_to shipment_tracking_path(@tracking)
   end
 
   def mark_in_transit
     @tracking.mark_in_transit!
-    Notification.notify(@tracking.shipping_request.sender, @tracking, "in_transit",
-      I18n.t('notifications.package_in_transit'))
-    flash[:success] = I18n.t('tracking.in_transit')
+    Notification.notify(
+      @tracking.shipping_request.sender,
+      @tracking,
+      "in_transit",
+      t('notifications.package_in_transit')
+    )
+    flash[:success] = t('tracking.in_transit')
+    redirect_to shipment_tracking_path(@tracking)
+  rescue ShipmentTracking::InvalidTransitionError => e
+    flash[:error] = e.message
     redirect_to shipment_tracking_path(@tracking)
   end
 
   def deliver
-    # Use OTP-based delivery confirmation if available
-    if @tracking.otp_required? && @tracking.delivery_confirmation.present?
-      flash[:notice] = I18n.t('tracking.use_otp', default: "Please use OTP code to confirm delivery.")
-      redirect_to shipment_tracking_path(@tracking) and return
-    end
-
-    if params[:code] == @tracking.delivery_code
-      @tracking.deliver!
-      Notification.notify(@tracking.shipping_request.sender, @tracking, "delivered",
-        I18n.t('notifications.package_delivered'))
-      flash[:success] = I18n.t('tracking.delivered')
+    if @tracking.verify_and_deliver!(params[:code])
+      Notification.notify(
+        @tracking.shipping_request.sender,
+        @tracking,
+        "delivered",
+        t('notifications.package_delivered')
+      )
+      flash[:success] = t('tracking.delivered')
     else
-      flash[:error] = I18n.t('tracking.invalid_code')
+      flash[:error] = t('tracking.invalid_code')
     end
+    redirect_to shipment_tracking_path(@tracking)
+  rescue ShipmentTracking::InvalidTransitionError => e
+    flash[:error] = e.message
     redirect_to shipment_tracking_path(@tracking)
   end
 
   def confirm
     @tracking.confirm!
-    transaction = @tracking.shipping_request.transaction
-
-    # Release funds via Stripe if payment exists
-    if transaction && transaction.status == "escrow" && transaction.stripe_payment_intent_id.present?
-      begin
-        StripePaymentService.new(transaction).release_funds!
-      rescue StripePaymentService::PaymentError => e
-        Rails.logger.error("Fund release failed: #{e.message}")
-        transaction.release! # Still mark as released locally
-      end
-    elsif transaction
-      transaction.release!
-    end
-
-    @tracking.shipping_request.update!(status: "completed")
-
-    Notification.notify(@tracking.traveler, @tracking, "confirmed",
-      I18n.t('notifications.delivery_confirmed'))
-    flash[:success] = I18n.t('tracking.confirmed')
+    Notification.notify(
+      @tracking.traveler,
+      @tracking,
+      "confirmed",
+      t('notifications.delivery_confirmed')
+    )
+    flash[:success] = t('tracking.confirmed')
+    redirect_to shipment_tracking_path(@tracking)
+  rescue ShipmentTracking::InvalidTransitionError => e
+    flash[:error] = e.message
     redirect_to shipment_tracking_path(@tracking)
   end
 
   private
 
   def set_tracking
-    @tracking = ShipmentTracking.find(params[:id])
+    @tracking = ShipmentTracking.includes(shipping_request: :sender).find(params[:id])
   end
 
   def authorize_participant
-    sender_id = @tracking.shipping_request.sender_id
-    traveler_id = @tracking.traveler_id
-    unless current_user.id == sender_id || current_user.id == traveler_id
-      flash[:error] = I18n.t('common.unauthorized', default: "Unauthorized")
-      redirect_to root_url
-    end
+    return if @tracking.participant?(current_user)
+
+    flash[:error] = t('common.unauthorized')
+    redirect_to root_url
   end
 
   def authorize_traveler
-    unless current_user.id == @tracking.traveler_id
-      flash[:error] = I18n.t('common.unauthorized', default: "Unauthorized")
-      redirect_to root_url
-    end
+    return if @tracking.traveler?(current_user)
+
+    flash[:error] = t('common.unauthorized')
+    redirect_to root_url
   end
 
   def authorize_sender
-    unless current_user.id == @tracking.shipping_request.sender_id
-      flash[:error] = I18n.t('common.unauthorized', default: "Unauthorized")
-      redirect_to root_url
-    end
+    return if @tracking.sender?(current_user)
+
+    flash[:error] = t('common.unauthorized')
+    redirect_to root_url
   end
 end

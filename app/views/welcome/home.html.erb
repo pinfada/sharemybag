@@ -1,23 +1,185 @@
-<% if signed_in? %>
+<% provide(:title, "Home") %>
+
+<section class="smb-hero" aria-labelledby="hero-heading">
   <div class="container">
-    <div class="row">
-      <aside class="col-md-4">
-        <section>
-          <%= render 'shared/user_info' %>
-        </section>
-        <section>
-          <%= render 'shared/stats' %>
-        </section>
-        <section>
-          <%= render 'shared/micropost_form' %>
-        </section>
-      </aside>
-      <div class="col-md-6">
-        <h3>Micropost Feed</h3>
-        <%= render 'shared/feed' %>
+    <div class="row align-items-center gy-5">
+      <div class="col-lg-7">
+        <h1 id="hero-heading" class="smb-hero-title mb-3">
+          Send parcels with verified travelers, at a fair price.
+        </h1>
+        <p class="smb-hero-lead mb-4">
+          Post your route and parcel weight. Travelers already flying that route submit their price per kilo. Compare offers, choose your carrier, and verify every handover with confidential codes.
+        </p>
+
+        <div class="d-flex flex-wrap gap-2 mb-4">
+          <%= link_to new_shipping_request_path, class: "btn btn-primary btn-lg px-4" do %>
+            <i class="fas fa-paper-plane me-2" aria-hidden="true"></i>Post a shipping request
+          <% end %>
+          <%= link_to shipping_requests_path, class: "btn btn-outline-secondary btn-lg px-4 bg-white" do %>
+            Browse open requests
+          <% end %>
+        </div>
+
+        <ul class="list-inline d-flex flex-wrap gap-4 small text-muted pt-1 mb-0">
+          <li class="list-inline-item m-0"><strong class="text-dark"><%= @open_requests_count %></strong> open <%= "request".pluralize(@open_requests_count) %></li>
+          <li class="list-inline-item m-0"><strong class="text-dark"><%= @completed_shipments_count %></strong> confirmed <%= "delivery".pluralize(@completed_shipments_count) %></li>
+          <li class="list-inline-item m-0"><strong class="text-dark"><%= @travelers_count %></strong> registered <%= "member".pluralize(@travelers_count) %></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="smb-search-panel">
+          <h2 class="h5 mb-3">Find a parcel along your route</h2>
+          <%= form_with url: shipping_requests_path, method: :get, local: true, role: "search", aria: { label: "Search open shipping requests" } do %>
+            <div class="mb-3">
+              <%= label_tag :departure_city, "Departure city or country", class: "form-label" %>
+              <%= text_field_tag :departure_city, nil, class: "form-control", placeholder: "e.g. London, Paris, Lyon" %>
+            </div>
+            <div class="mb-3">
+              <%= label_tag :arrival_city, "Arrival city or country", class: "form-label" %>
+              <%= text_field_tag :arrival_city, nil, class: "form-control", placeholder: "e.g. Dakar, Montreal, Casablanca" %>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <%= label_tag :max_weight, "Max weight (kg)", class: "form-label" %>
+                <%= number_field_tag :max_weight, nil, class: "form-control", placeholder: "e.g. 10", min: 0.5, max: 50, step: 0.5 %>
+              </div>
+              <div class="col-6">
+                <%= label_tag :date_from, "Earliest date", class: "form-label" %>
+                <%= date_field_tag :date_from, nil, class: "form-control", min: Date.current %>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2">
+              <i class="fas fa-search me-2" aria-hidden="true"></i>View matching requests
+            </button>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
-<% else %>
-  <%= render 'hero_headers' %>
-<% end %>
+</section>
+
+<section class="py-5" aria-labelledby="how-heading">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <div>
+        <h2 id="how-heading" class="h3 mb-1">One clear model: reverse auction</h2>
+        <p class="text-muted mb-0">A single end-to-end flow designed for transparent pricing and accountable handovers.</p>
+      </div>
+      <%= link_to "Read how it works →", how_it_works_path, class: "fw-semibold" %>
+    </div>
+
+    <ol class="row g-4 list-unstyled mb-0">
+      <li class="col-md-4">
+        <div class="smb-card p-4 h-100">
+          <div class="smb-step-number mb-3" aria-hidden="true">1</div>
+          <h3 class="h5 mb-2">Describe your parcel</h3>
+          <p class="text-muted mb-0">
+            Enter your route, parcel weight, desired date, optional budget cap, and confirm the prohibited items safety pledge.
+          </p>
+        </div>
+      </li>
+      <li class="col-md-4">
+        <div class="smb-card p-4 h-100">
+          <div class="smb-step-number mb-3" aria-hidden="true">2</div>
+          <h3 class="h5 mb-2">Compare traveler offers</h3>
+          <p class="text-muted mb-0">
+            Travelers flying your route propose their price per kilo. Compare the exact total, travel date, and past reviews side by side.
+          </p>
+        </div>
+      </li>
+      <li class="col-md-4">
+        <div class="smb-card p-4 h-100">
+          <div class="smb-step-number mb-3" aria-hidden="true">3</div>
+          <h3 class="h5 mb-2">Track with secret codes</h3>
+          <p class="text-muted mb-0">
+            Two unique 8-character codes verify in-person handover and final delivery before unlocking mutual profile reviews.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="py-4" aria-labelledby="recent-heading">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <div>
+        <h2 id="recent-heading" class="h3 mb-1">Recent shipping requests</h2>
+        <p class="text-muted mb-0">Submit a price per kilo if you have spare luggage space on one of these routes.</p>
+      </div>
+      <%= link_to "View all requests →", shipping_requests_path, class: "fw-semibold" %>
+    </div>
+
+    <% if @featured_requests.any? %>
+      <div class="row g-4">
+        <% @featured_requests.each do |req| %>
+          <div class="col-md-6 col-lg-4">
+            <%= render "shipping_requests/card", shipping_request: req %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="smb-empty-state">
+        <h3 class="h5 mb-2">No active requests yet</h3>
+        <p class="text-muted mb-3">Publish the first shipping request and start receiving traveler offers.</p>
+        <%= link_to "Post a shipping request", new_shipping_request_path, class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="py-5" aria-labelledby="trust-heading">
+  <div class="container">
+    <div class="smb-card p-4 p-lg-5">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-5">
+          <h2 id="trust-heading" class="h3 mb-2">Built for trust and clarity</h2>
+          <p class="text-muted mb-0">
+            No feature bloat: every safeguard directly protects parcel handover, delivery verification, and member privacy.
+          </p>
+        </div>
+        <div class="col-lg-7">
+          <ul class="row g-3 list-unstyled mb-0">
+            <li class="col-sm-6">
+              <div class="d-flex gap-3">
+                <i class="fas fa-key text-primary mt-1" aria-hidden="true"></i>
+                <div>
+                  <h3 class="h6 mb-1">Confidential codes</h3>
+                  <p class="small text-muted mb-0">Visible only to the sender and verified in constant time on the server.</p>
+                </div>
+              </div>
+            </li>
+            <li class="col-sm-6">
+              <div class="d-flex gap-3">
+                <i class="fas fa-clipboard-check text-success mt-1" aria-hidden="true"></i>
+                <div>
+                  <h3 class="h6 mb-1">Safety pledge</h3>
+                  <p class="small text-muted mb-0">Every sender attests that their parcel contains no prohibited items.</p>
+                </div>
+              </div>
+            </li>
+            <li class="col-sm-6">
+              <div class="d-flex gap-3">
+                <i class="fas fa-comments text-primary mt-1" aria-hidden="true"></i>
+                <div>
+                  <h3 class="h6 mb-1">Direct messaging</h3>
+                  <p class="small text-muted mb-0">Coordinate pickup and delivery without exposing private email addresses.</p>
+                </div>
+              </div>
+            </li>
+            <li class="col-sm-6">
+              <div class="d-flex gap-3">
+                <i class="fas fa-star smb-star-filled mt-1" aria-hidden="true"></i>
+                <div>
+                  <h3 class="h6 mb-1">Verified reviews</h3>
+                  <p class="small text-muted mb-0">Only participants of a confirmed delivery can rate each other.</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
