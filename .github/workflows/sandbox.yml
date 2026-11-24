@@ -1,8 +1,15 @@
 # Démonstration jouable dans le navigateur, publiée sur GitHub Pages.
 #
-# Exécute la chaîne pinfada/railsbox sur `ubuntu-24.04` (le workflow réutilisable
-# amont cible `ubuntu-latest` = ubuntu-26.04, où le réseau Docker i386 échoue sur
-# la résolution rubygems.org avec la base bookworm 3.3-r2).
+# railsbox construit une VM Linux x86 émulée qui fait tourner Puma, PostgreSQL
+# et les gems natives de l'application, puis publie le tout sur la branche
+# gh-pages. Documentation : https://github.com/pinfada/railsbox
+#
+# On appelle le workflow réutilisable de railsbox sur `main` plutôt que d'en
+# garder une copie ici : la chaîne (analyse de compatibilité, construction,
+# vérification, publication) suit ainsi la dernière version de railsbox.
+#
+# La branche par défaut de ce dépôt est `master` : c'est elle qui doit figurer
+# dans le filtre ci-dessous, sans quoi rien ne se déclencherait jamais.
 name: Sandbox railsbox
 
 on:
@@ -10,130 +17,10 @@ on:
     branches: [master]
   workflow_dispatch:
 
-env:
-  CHUNK_BYTES: 4194304
-  MAX_FILE_BYTES: 99614720
-  DOCKER_BUILDKIT: 1
-
 jobs:
   sandbox:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    uses: pinfada/railsbox/.github/workflows/construire-sandbox.yml@fix/reseau-i386-docker-29-4-2
+    with:
+      railsbox-ref: fix/reseau-i386-docker-29-4-2
     permissions:
       contents: write
-    env:
-      SB_NOM: sharemybag
-      SB_VERSION_BASE: 3.3-r2
-      SB_BASE: base-3.3-r2
-      SB_ASSETS: https://pinfada.github.io/railsbox-assets
-      SB_RACINE: https://pinfada.github.io/railsbox-assets/base-3.3-r2
-      SB_PREFIXE: /sharemybag
-      IN_BASE_IMAGE: ghcr.io/pinfada/railsbox-base
-
-    steps:
-      - name: Récupération de l'application
-        uses: actions/checkout@v4
-        with:
-          path: application
-
-      - name: Récupération de railsbox
-        uses: actions/checkout@v4
-        with:
-          repository: pinfada/railsbox
-          ref: main
-          path: railsbox
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: railsbox/package-lock.json
-
-      - run: npm ci
-        working-directory: railsbox
-
-      - name: Réassemblage du rootfs de base
-        working-directory: railsbox
-        run: |
-          set -eu
-          mkdir -p public/disks
-          node tools/build-v86-image/assemble-artifact.mjs \
-            "${SB_RACINE}/${SB_BASE}.ext2.zst" --out "public/disks/${SB_BASE}.ext2"
-          curl -sSfL "${SB_RACINE}/${SB_BASE}-vmlinuz" -o "public/disks/${SB_BASE}-vmlinuz"
-          curl -sSfL "${SB_RACINE}/${SB_BASE}-initrd" -o "public/disks/${SB_BASE}-initrd"
-          curl -sSfL "${SB_RACINE}/${SB_BASE}-state.bin.gz" -o "public/disks/${SB_BASE}-state.bin.gz"
-          gunzip -kf "public/disks/${SB_BASE}-state.bin.gz"
-
-      - name: Construction du disque applicatif
-        working-directory: railsbox
-        run: |
-          set -eu
-          docker pull -q "${IN_BASE_IMAGE}:${SB_VERSION_BASE}"
-          sudo -E env "PATH=$PATH" bash tools/build-v86-image/build-app-disk.sh \
-            "${GITHUB_WORKSPACE}/application" \
-            --name "$SB_NOM" \
-            --base "${IN_BASE_IMAGE}:${SB_VERSION_BASE}" \
-            --mount-prefix "$SB_PREFIXE"
-          sudo chown -R "$USER" public/disks
-
-      - name: Capture du delta d'instantané
-        working-directory: railsbox
-        run: |
-          set -eu
-          node tools/build-v86-image/make-delta-snapshot.mjs \
-            --name "$SB_NOM" \
-            --base "$SB_BASE" \
-            --mount-path "${SB_PREFIXE}/app" \
-            --base-url "$SB_RACINE" \
-            --base-chunk-size "${CHUNK_BYTES}" \
-            --app-chunk-size "${CHUNK_BYTES}" \
-            --state-suffix ".gz"
-
-      - name: Découpage des artefacts de l'application
-        working-directory: railsbox
-        run: |
-          set -eu
-          config="public/disks/${SB_NOM}-split-config.json"
-          node tools/build-v86-image/split-artifact.mjs \
-            "public/disks/${SB_NOM}-app.ext2" --zstd \
-            --fingerprint --config "$config" --out publication/disks
-          node tools/build-v86-image/split-artifact.mjs \
-            "public/disks/${SB_NOM}-split-state.bin" --gzip \
-            --fingerprint --config "$config" \
-            --chunk-size "${CHUNK_BYTES}" --out publication/disks
-          cp "$config" publication/disks/v86-config.json
-          sudo sh tools/extract-assets.sh \
-            "public/disks/${SB_NOM}-app.ext2" publication/disks/assets ""
-          sudo chown -R "$USER" publication/disks
-
-      - name: Assemblage de la coquille
-        working-directory: railsbox
-        run: |
-          set -eu
-          rsync -a --exclude 'disks/' public/ publication/
-          touch publication/.nojekyll
-          proprietaire="$(echo "${GITHUB_REPOSITORY%%/*}" | tr '[:upper:]' '[:lower:]')"
-          node tools/build-v86-image/autoriser-origine-base.mjs \
-            publication/index.html \
-            --base-url "$SB_RACINE" \
-            --site-origin "https://${proprietaire}.github.io"
-          node tools/build-v86-image/ecrire-readme-vitrine.mjs \
-            publication/README.md \
-            --nom "$SB_NOM" \
-            --adresse "https://${proprietaire}.github.io/${GITHUB_REPOSITORY##*/}/" \
-            --depot-source "$GITHUB_REPOSITORY" \
-            --source-publiee
-
-      - name: Publication sur gh-pages
-        working-directory: railsbox/publication
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -eu
-          distant="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git init -q -b gh-pages
-          git config user.email "actions@github.com"
-          git config user.name "railsbox"
-          git add -A
-          git commit -q -m "sandbox railsbox — ${SB_NOM} (${GITHUB_SHA})"
-          git push -f "$distant" gh-pages
