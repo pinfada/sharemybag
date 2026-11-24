@@ -2,42 +2,37 @@
 
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <h1 class="mb-2">Privacy & Security</h1>
-      <p class="text-muted mb-4">The technical safeguards and usage rules that protect every member on ShareMyBag.</p>
+    <div class="col-lg-9">
+      <h1 class="h2 mb-3">Privacy &amp; Security Architecture</h1>
+      <p class="lead text-muted mb-4">
+        ShareMyBag Exchange is engineered to OWASP ASVS and enterprise aviation security standards, protecting passenger PNR privacy and order book integrity.
+      </p>
 
-      <section class="smb-card p-4 mb-4" aria-labelledby="privacy-data-heading">
-        <h2 id="privacy-data-heading" class="h5 mb-2">Personal data protection</h2>
-        <p class="text-muted mb-0">
-          Your email address is never displayed on your public profile or exposed to other users. All coordination happens safely through ShareMyBag's built-in private messaging.
-        </p>
-      </section>
+      <div class="d-grid gap-4">
+        <section class="smb-card p-4">
+          <h2 class="h5 mb-2">PNR Isolation &amp; Anti-IDOR Controls</h2>
+          <p class="text-muted small mb-0">
+            Passenger PNR references, email addresses, and voucher wallet balances are strictly scoped to the authenticated account holder. Public profiles and flight order books never expose counterparty emails or PNR codes. Every order creation and cancellation verifies ownership server-side.
+          </p>
+        </section>
 
-      <section class="smb-card p-4 mb-4" aria-labelledby="privacy-security-heading">
-        <h2 id="privacy-security-heading" class="h5 mb-2">Account and transport security</h2>
-        <ul class="text-muted mb-0 ps-3">
-          <li class="mb-1">Passwords hashed with BCrypt and strong complexity requirements.</li>
-          <li class="mb-1">Hardened authentication cookies (<code>HttpOnly</code>, <code>SameSite=Lax</code>, <code>Secure</code> in production) with session rotation on sign-in and sign-out.</li>
-          <li class="mb-1">Cryptographic 8-character handover and delivery codes visible only to the sender and verified in constant time on the server.</li>
-          <li>Brute-force rate limiting, strict Content-Security-Policy (CSP), and anti-clickjacking HTTP headers.</li>
-        </ul>
-      </section>
+        <section class="smb-card p-4">
+          <h2 class="h5 mb-2">Order Book Integrity &amp; Concurrency Safety</h2>
+          <p class="text-muted small mb-0">
+            Every trade executes inside an atomic PostgreSQL transaction with deterministic pessimistic locking (Flight → PassengerBooking → resting KiloOrders). Built-in safeguards prevent double-selling (overdrafting PNR kg), wash trading (self-matching or holding opposite orders on the same flight), and exceeding aircraft payload limits.
+          </p>
+        </section>
 
-      <section class="smb-card p-4 mb-4" aria-labelledby="privacy-aviation-heading">
-        <h2 id="privacy-aviation-heading" class="h5 mb-2">Airport security, airlines &amp; customs rules</h2>
-        <ul class="text-muted mb-0 ps-3">
-          <li class="mb-2"><strong>Airport security (ICAO / EU 300/2008 / TSA):</strong> passengers must know the exact contents of their luggage and pack it themselves. ShareMyBag enforces a mandatory <em>open visual inspection</em> attestation at handover — sealed or unknown packages are strictly forbidden.</li>
-          <li class="mb-2"><strong>Airlines (Conditions of Carriage):</strong> ShareMyBag is designed for non-commercial luggage cost-sharing of personal items (books, clothes, documents), not commercial freight resale. Travelers remain subject to their airline's baggage terms and weight/size limits.</li>
-          <li><strong>Customs responsibility:</strong> on international routes, the traveler is legally the customs declarant for everything in their luggage. Senders declare an estimated contents value, and ShareMyBag flags international parcels exceeding the standard €430 air duty-free threshold so travelers can declare them properly at arrival customs.</li>
-        </ul>
-      </section>
-
-      <section class="smb-card p-4" aria-labelledby="privacy-prohibited-heading">
-        <h2 id="privacy-prohibited-heading" class="h5 mb-2">Strictly prohibited items</h2>
-        <p class="text-muted mb-0">
-          In accordance with aviation safety regulations (IATA DGR), illegal substances, weapons, explosives, flammable liquids or gases, damaged or loose lithium batteries, toxic or corrosive goods, counterfeit products, undeclared commercial goods, and cash are strictly forbidden.
-        </p>
-      </section>
+        <section class="smb-card p-4">
+          <h2 class="h5 mb-2">Hardened Web &amp; Session Security (OWASP)</h2>
+          <ul class="text-muted small mb-0 d-grid gap-1">
+            <li>Strong password policy with BCrypt hashing and session fixation prevention (<code>reset_session</code> on sign-in).</li>
+            <li><code>HttpOnly</code>, <code>SameSite=Lax</code>, and <code>Secure</code> cookies with SHA-256 rotated remember tokens.</li>
+            <li>Strict <code>Content-Security-Policy</code> (zero inline scripts or inline styles), <code>X-Frame-Options: DENY</code>, <code>X-Content-Type-Options: nosniff</code>, and restrictive <code>Permissions-Policy</code>.</li>
+            <li><code>Rack::Attack</code> rate limiting on authentication, registration, and order book submission endpoints.</li>
+          </ul>
+        </section>
+      </div>
     </div>
   </div>
 </div>

@@ -4,12 +4,12 @@ class UsersController < ApplicationController
   before_action :correct_user, only: [:edit, :update]
 
   def show
-    @reviews = @user.reviews_received.includes(:reviewer, :shipping_request).recent.limit(10)
-    @open_requests = @user.shipping_requests.active.order(created_at: :desc).limit(5)
+    @completed_trades_count = @user.completed_trades_count
+    @booked_flights_count = @user.passenger_bookings.count
   end
 
   def new
-    redirect_to shipping_requests_path if signed_in?
+    redirect_to flights_path if signed_in?
     @user = User.new
   end
 
@@ -17,8 +17,8 @@ class UsersController < ApplicationController
     @user = User.new(user_create_params)
     if @user.save
       sign_in(@user)
-      flash[:success] = t('auth.welcome', name: @user.name)
-      redirect_to shipping_requests_path
+      flash[:success] = t("auth.welcome", name: @user.name)
+      redirect_to flights_path
     else
       render :new, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_update_params)
-      flash[:success] = t('users.profile_updated')
+      flash[:success] = t("users.profile_updated")
       redirect_to @user
     else
       render :edit, status: :unprocessable_entity
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
   def correct_user
     return if current_user?(@user)
 
-    flash[:error] = t('common.unauthorized')
+    flash[:error] = t("common.unauthorized")
     redirect_to root_url
   end
 

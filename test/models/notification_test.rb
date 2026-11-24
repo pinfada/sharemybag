@@ -1,11 +1,11 @@
-require 'test_helper'
+require "test_helper"
 
 class NotificationTest < ActiveSupport::TestCase
-  test "crée une notification non lue et la marque comme lue" do
+  test "creates an unread notification on a flight and marks it as read" do
     user = create_user
-    req = create_shipping_request(sender: user)
+    flight = create_flight
 
-    notif = Notification.notify(user, req, "new_bid", "Nouvelle offre reçue")
+    notif = Notification.notify(user, flight, "trade_executed", "8 kg matched on AF718")
     assert notif.persisted?
     assert_equal 1, user.notifications.unread.count
 

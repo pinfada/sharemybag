@@ -1,47 +1,34 @@
-# ShareMyBag
+# ShareMyBag Exchange — B2B Airline Baggage Allowance Exchange
 
 [![Try with railsbox](https://pinfada.github.io/tchopmygrinds/badge.svg)](https://pinfada.github.io/sharemybag/)
 
-**ShareMyBag** connects parcel senders with travelers who have spare luggage allowance through a single, transparent **reverse auction** workflow:
+**ShareMyBag Exchange** is a white-label **B2B flight-level baggage allowance exchange** enabling airlines to monetize unused hold baggage capacity ("Ghost Allowance") on every commercial departure:
 
-1. **Post** — The sender describes their route, parcel weight, desired date, optional budget cap, and confirms the prohibited items safety pledge.
-2. **Compare** — Travelers flying that route submit their price per kilo; total cost is calculated automatically.
-3. **Track with secret codes** — Accepting one offer locks the request and generates two confidential 8-character codes (handover and delivery), visible only to the sender and verified in constant time on the server.
-4. **Review** — Once receipt is confirmed, both participants publish a single verified review that builds lasting profile trust.
+1. **Zero Physical Parcel Handover** — Between **T-48h and T-4h**, ticketed passengers on the **same commercial flight** trade **digital PNR weight allowance** on a live Bid/Ask order book. Every passenger packs and checks only their own suitcase — eliminating airport security (DGAC/TSA/ICAO Annex 17), customs, and airline liability blockers.
+2. **Atomic Price-Time Priority Matching Engine** — `OrderBookMatchingService` matches crossing limit orders inside a locked PostgreSQL transaction with fractional fills, maker-price execution, overdraft protection, anti-wash-trading, IATA 32 kg single-bag health notice, and certified aircraft payload limits (`A350-900`, `B777-300ER`, `A330-200`, `B737-800`, `A320neo`).
+3. **Carrier-Agnostic DCS / PSS Integration Layer (`/integrations`)** — Pluggable adapters (`IataNdcAdapter` for Amadeus Altéa/Sabre ONE Order, `NavitaireRestAdapter`, `WebhookRestAdapter` with HMAC-SHA256, `SandboxAdapter`) orchestrated by `AirlineDcs::SettlementOrchestrator` with idempotent IATA EMD-A/EMD-S issuance, automatic Saga compensation (EMD-Void + PNR rollback), SSRF/TLS validation, and signed inbound webhooks (`POST /api/v1/dcs/webhooks/:airline_code`).
+4. **CFO-Ready Airline ROI & Fleet Simulator (`/airline-roi`)** — Auditable unit economics including 25% commission, 100% retained flight voucher treasury, marginal Jet-A1 fuel burn deduction (`3.5%/h × flight hours × €1.10/kg`), counter cannibalization stress-test, belly cargo yield comparison, and check-in agent hours saved.
 
-Built with **Ruby on Rails 7.0** and **PostgreSQL**, accessible to **RGAA 4.1 / WCAG 2.1 Level AA** standards, and zero ExecJS dependency (fully compatible with `railsbox`).
+Built with **Ruby on Rails 7.0** and **PostgreSQL 16**, accessible to **RGAA 4.1 / WCAG 2.1 Level AA**, hardened to **OWASP** standards (strict CSP, zero inline scripts/styles, `Rack::Attack`), and zero ExecJS dependency (fully compatible with `railsbox`).
 
 ## Live Playable Demo
 
 **→ [pinfada.github.io/sharemybag](https://pinfada.github.io/sharemybag/)**
 
-Demo accounts pre-loaded by `db/seeds.rb`:
+1-click demo personas pre-booked on **AF718 (CDG → DKR)**:
 
-| Role | Email | Password |
+| Persona | Email | Password |
 | --- | --- | --- |
-| Sender | `marie@example.com` | `Marie123!` |
-| Traveler | `pierre@example.com` | `Pierre123!` |
-| Demo | `demo@sharemybag.com` | `Demo123!` |
+| Light Traveler (Seller — ASK) | `marie@example.com` | `Marie123!` |
+| Heavy Traveler (Buyer — BID) | `pierre@example.com` | `Pierre123!` |
+| Airline Revenue VP | `vp@airfrance-demo.com` | `Airline123!` |
 
-## Local Development
-
-Requirements: Ruby ≥ 3.2.3 (`.ruby-version`: 3.3), PostgreSQL 16, `libpq-dev`.
+## Local Development & Tests
 
 ```bash
 bundle install
 bin/rails db:create db:schema:load db:seed
-bin/rails server
-```
-
-## Tests, Security & Accessibility
-
-```bash
 bin/rails zeitwerk:check
 bin/rails test
+bin/rails server
 ```
-
-The Minitest suite verifies:
-- Core model invariants and strict state-machine transitions (`test/models/`),
-- OWASP HTTP headers, strict CSP, HttpOnly/SameSite cookies, PII privacy, and anti-IDOR guards (`test/integration/security_and_auth_test.rb`, `test/integration/marketplace_authorization_test.rb`),
-- RGAA 4.1 AA structural accessibility checks (`test/integration/rgaa_accessibility_and_i18n_test.rb`),
-- End-to-end reverse auction workflow (`test/integration/end_to_end_reverse_auction_test.rb`).

@@ -571,3 +571,497 @@ code {
   border-radius: 0.3rem;
   font-size: 0.875em;
 }
+
+// =============================================================================
+// B2B Airline Baggage Allowance Exchange — Executive & Trading UI Components
+// =============================================================================
+
+.smb-b2b-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  border: 1px solid #7dd3fc;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.smb-fomo-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--smb-shadow-md);
+
+  .smb-fomo-muted {
+    color: #cbd5e1;
+  }
+
+  .smb-fomo-highlight {
+    color: #7dd3fc;
+    font-weight: 800;
+  }
+}
+
+.smb-kpi-card {
+  background: var(--smb-surface);
+  border: 1px solid var(--smb-border);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  box-shadow: var(--smb-shadow-sm);
+  height: 100%;
+
+  .smb-kpi-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--smb-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .smb-kpi-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--smb-ink);
+    line-height: 1.15;
+  }
+
+  .smb-kpi-sub {
+    font-size: 0.85rem;
+    color: var(--smb-muted);
+    margin-top: 0.35rem;
+  }
+}
+
+.smb-kpi-card--emerald {
+  border-top: 4px solid var(--smb-emerald);
+  .smb-kpi-value { color: #065f46; }
+}
+
+.smb-kpi-card--brand {
+  border-top: 4px solid var(--smb-brand);
+  .smb-kpi-value { color: #084298; }
+}
+
+.smb-kpi-card--amber {
+  border-top: 4px solid #b45309;
+  .smb-kpi-value { color: #92400e; }
+}
+
+.smb-orderbook-table {
+  margin-bottom: 0;
+  font-size: 0.92rem;
+
+  thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--smb-muted);
+    background: var(--smb-subtle);
+    border-bottom: 2px solid var(--smb-border);
+    padding: 0.65rem 0.85rem;
+    font-weight: 700;
+  }
+
+  tbody td {
+    padding: 0.7rem 0.85rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .smb-price-bid {
+    font-weight: 800;
+    color: #065f46;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .smb-price-ask {
+    font-weight: 800;
+    color: #9a3412;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .smb-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.smb-depth-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+}
+
+.smb-depth-fill--bid {
+  height: 100%;
+  background: #047857;
+}
+
+.smb-depth-fill--ask {
+  height: 100%;
+  background: #c2410c;
+}
+
+.smb-payload-meter {
+  height: 12px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+  border: 1px solid #94a3b8;
+
+  .smb-payload-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0b5ed7 0%, #047857 100%);
+  }
+}
+
+.smb-iata-notice {
+  background: #fef3c7;
+  border: 1px solid #d97706;
+  border-left: 4px solid #b45309;
+  color: #78350f;
+  border-radius: 0.625rem;
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+}
+
+.smb-formula-box {
+  background: #f8fafc;
+  border: 1px solid var(--smb-border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+.smb-flight-route-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--smb-ink);
+  letter-spacing: 0.02em;
+}
+
+.smb-airline-code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.625rem;
+  background: var(--smb-ink);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+// Progress width utility classes (0% to 100% in 5% steps) — zero inline styles (strict CSP)
+@for $i from 0 through 20 {
+  .smb-w-#{$i * 5} {
+    width: #{$i * 5}#{"%"};
+  }
+}
+
+.smb-card .table-responsive {
+  overflow-y: hidden;
+}
+
+// --- Ghost Allowance 3-Segment Aircraft Hold Visualizer ----------------------
+.smb-ghost-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid var(--smb-brand);
+  border-radius: 0.875rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--smb-shadow-sm);
+}
+
+.smb-hold-bar {
+  display: flex;
+  width: 100%;
+  height: 16px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #e2e8f0;
+  border: 1px solid #94a3b8;
+}
+
+.smb-hold-seg--used {
+  background: #334155;
+  height: 100%;
+}
+
+.smb-hold-seg--ghost {
+  background: repeating-linear-gradient(
+    -45deg,
+    #d97706,
+    #d97706 6px,
+    #f59e0b 6px,
+    #f59e0b 12px
+  );
+  height: 100%;
+}
+
+.smb-hold-seg--matched {
+  background: #047857;
+  height: 100%;
+}
+
+.smb-legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 0.35rem;
+}
+
+.smb-legend-dot--used { background: #334155; }
+.smb-legend-dot--ghost { background: #d97706; }
+.smb-legend-dot--matched { background: #047857; }
+.smb-legend-dot--headroom { background: #cbd5e1; border: 1px solid #64748b; }
+
+// --- 1-Click Demo Persona Bar ------------------------------------------------
+.smb-demo-bar {
+  background: #f1f5f9;
+  border: 1px solid var(--smb-border);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+}
+
+// --- Digital PNR Baggage Allowance Pass (DCS Receipt) ------------------------
+.smb-baggage-pass {
+  border: 1px solid var(--smb-border);
+  border-radius: 0.875rem;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: var(--smb-shadow-sm);
+}
+
+.smb-baggage-pass__top {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px dashed #475569;
+}
+
+.smb-pass-sub {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+}
+
+.smb-pass-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: #065f46;
+  color: #ecfdf5;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.smb-baggage-pass__body {
+  padding: 0.9rem 1rem;
+}
+
+.smb-airline-code--sm {
+  min-width: 2rem;
+  height: 2rem;
+  font-size: 0.75rem;
+  background: #1e3a5f;
+}
+
+.smb-pass-barcode {
+  display: inline-block;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  max-width: 100%;
+  height: auto;
+}
+
+.smb-pass-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  color: var(--smb-muted);
+  letter-spacing: 0.06em;
+  margin-top: 0.2rem;
+}
+
+// --- CFO Waterfall Table -----------------------------------------------------
+.smb-waterfall-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.smb-waterfall-row--total {
+  border-top: 2px solid var(--smb-ink);
+  border-bottom: 0;
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+  font-weight: 800;
+}
+
+// --- Live Departure Exchange Desk (Home Screen 1) ----------------------------
+.smb-desk-hero {
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  border-bottom: 1px solid var(--smb-border);
+  padding: 1.25rem 0 2.25rem;
+}
+
+.smb-departure-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 0.45rem 0.65rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.smb-departure-strip__label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #7dd3fc;
+  white-space: nowrap;
+  padding: 0 0.25rem;
+}
+
+.smb-departure-strip__items {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: nowrap;
+}
+
+.smb-flight-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  &.is-active {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #ffffff;
+    font-weight: 700;
+
+    .smb-flight-tab__route { color: #334155; }
+    .smb-flight-tab__state { color: #047857; font-weight: 700; }
+  }
+
+  &.is-cutoff .smb-flight-tab__state {
+    color: #fbbf24;
+  }
+
+  &.is-active.is-cutoff .smb-flight-tab__state {
+    color: #92400e;
+  }
+}
+
+.smb-flight-tab__code { font-weight: 800; }
+.smb-flight-tab__route { color: #cbd5e1; font-variant-numeric: tabular-nums; }
+.smb-flight-tab__state { font-size: 0.72rem; color: #86efac; }
+
+.smb-desk-title {
+  font-size: clamp(1.75rem, 3.2vw, 2.55rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  color: var(--smb-ink);
+}
+
+.smb-desk-lead {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--smb-muted);
+}
+
+@media (max-width: 575.98px) {
+  .smb-desk-title {
+    font-size: 1.55rem;
+  }
+  .smb-desk-lead {
+    font-size: 0.92rem;
+  }
+}
+
+.smb-desk-hold {
+  background: #ffffff;
+  border: 1px solid var(--smb-border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.15rem;
+  box-shadow: var(--smb-shadow-sm);
+}
+
+.smb-desk-book-header {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.smb-sim-range {
+  width: 120px;
+}
+
+.smb-mini-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--smb-muted);
+}
+
+.smb-mini-sub {
+  font-size: 0.75rem;
+  color: var(--smb-muted);
+  margin-top: 0.15rem;
+}
+
+.smb-wrap-safe {
+  overflow-wrap: anywhere;
+}
+
+
+

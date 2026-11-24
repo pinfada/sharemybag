@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : 'ShareMyBag connects parcel senders with travelers via reverse auction, with secure handover and delivery verification codes.' %>">
+  <meta name="description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : 'ShareMyBag Airline Exchange: white-label flight-level Bid/Ask marketplace for digital baggage weight allowance between passengers on the same flight.' %>">
   <title><%= full_title(yield(:title)) %></title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
-  <%= stylesheet_link_tag 'application', media: 'all' %>
-  <%= javascript_include_tag 'application', defer: true %>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application", defer: true %>
 </head>
 <body>
   <a href="#main-content" class="smb-skip-link">Skip to main content</a>
 
-  <%= render 'layouts/header' %>
+  <%= render "layouts/header" %>
 
   <main id="main-content" class="smb-main" tabindex="-1">
     <% if flash.any? %>
@@ -34,6 +34,6 @@
     <%= yield %>
   </main>
 
-  <%= render 'layouts/footer' %>
+  <%= render "layouts/footer" %>
 </body>
 </html>

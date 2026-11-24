@@ -1,0 +1,197 @@
+<% provide(:title, "Airline DCS & PSS API Integrations") %>
+
+<div class="container py-4">
+  <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+    <div>
+      <span class="smb-b2b-pill mb-2">
+        <i class="fas fa-plug" aria-hidden="true"></i>
+        <span>Carrier-Agnostic Adapter Layer · Zero Vendor Lock-In</span>
+      </span>
+      <h1 class="h2 mb-1">Airline DCS &amp; PSS API Integrations</h1>
+      <p class="text-muted mb-0">
+        Plug into Amadeus Altéa (IATA NDC / ONE Order), Navitaire New Skies REST, Sabre, or any custom carrier gateway with idempotent IATA EMD issuance and automatic Saga rollback.
+      </p>
+    </div>
+    <%= link_to flights_path, class: "btn btn-primary" do %>
+      <i class="fas fa-exchange-alt me-2" aria-hidden="true"></i>Live Flight Order Books
+    <% end %>
+  </div>
+
+  <!-- Operational Telemetry KPIs -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="smb-kpi-card">
+        <div class="smb-kpi-label">Active Connectors</div>
+        <div class="smb-kpi-value"><%= @connectors.count(&:active?) %></div>
+        <div class="smb-kpi-sub">4 pluggable protocols supported</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="smb-kpi-card smb-kpi-card--emerald">
+        <div class="smb-kpi-label">Synced DCS / EMD Ops</div>
+        <div class="smb-kpi-value"><%= @synced_count %></div>
+        <div class="smb-kpi-sub">100% idempotency-keyed</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="smb-kpi-card smb-kpi-card--brand">
+        <div class="smb-kpi-label">Avg Dispatch Latency</div>
+        <div class="smb-kpi-value"><%= @avg_latency_ms %> ms</div>
+        <div class="smb-kpi-sub">Runs outside DB row locks</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="smb-kpi-card smb-kpi-card--amber">
+        <div class="smb-kpi-label">Saga Compensations</div>
+        <div class="smb-kpi-value"><%= @compensated_count %></div>
+        <div class="smb-kpi-sub">Auto EMD-Void + PNR rollback</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Configured Partner Carrier Connectors -->
+  <section class="smb-card overflow-hidden mb-4" aria-labelledby="connectors-heading">
+    <div class="px-4 py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div>
+        <h2 id="connectors-heading" class="h5 mb-0">Configured Carrier Connectors</h2>
+        <div class="small text-muted">Each airline maps to its native PSS/DCS protocol via <code>AirlineDcs::Registry</code> — zero changes to the matching engine.</div>
+      </div>
+      <span class="smb-badge smb-badge--emerald">SSRF &amp; TLS Verified</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table smb-orderbook-table align-middle mb-0">
+        <caption class="visually-hidden">Configured airline DCS and PSS connectors</caption>
+        <thead>
+          <tr>
+            <th scope="col">Carrier</th>
+            <th scope="col">IATA Prefix</th>
+            <th scope="col">Protocol Adapter</th>
+            <th scope="col">Auth &amp; Endpoint</th>
+            <th scope="col">Mode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @connectors.each do |c| %>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="smb-airline-code smb-airline-code--sm" aria-hidden="true"><%= c.airline_code %></span>
+                  <strong><%= c.airline_name %></strong>
+                </div>
+              </td>
+              <td class="smb-tabular"><code><%= c.accounting_prefix %></code></td>
+              <td><span class="fw-semibold text-dark"><%= c.provider_label %></span></td>
+              <td class="small">
+                <div><code><%= c.auth_mode %></code></div>
+                <div class="text-muted"><%= c.api_base_url.presence || "Internal sandbox transport" %></div>
+              </td>
+              <td>
+                <span class="smb-badge <%= c.live_external? ? 'smb-badge--emerald' : 'smb-badge--sky' %>">
+                  <%= c.live_external? ? "Live Gateway" : "Sandbox Ready" %>
+                </span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Live IATA DCS / EMD Audit Ledger -->
+  <section class="smb-card overflow-hidden mb-4" aria-labelledby="ledger-heading">
+    <div class="px-4 py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div>
+        <h2 id="ledger-heading" class="h5 mb-0">Live IATA EMD &amp; DCS Sync Audit Ledger</h2>
+        <div class="small text-muted">Every matched trade dispatches Buyer EMD-A (<code>RFIC C / 0GO / XBAG</code>), Seller DCS Decrement (<code>ASVC</code>), and Voucher EMD-S (<code>RFIC D / 99I</code>).</div>
+      </div>
+      <span class="small text-muted">Latest <%= @recent_events.size %> events</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table smb-orderbook-table align-middle mb-0">
+        <caption class="visually-hidden">Recent IATA EMD and DCS synchronization events</caption>
+        <thead>
+          <tr>
+            <th scope="col">Flight &amp; PNR</th>
+            <th scope="col">Operation</th>
+            <th scope="col">IATA Codes</th>
+            <th scope="col">EMD / DCS Reference</th>
+            <th scope="col">Latency</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @recent_events.any? %>
+            <% @recent_events.each do |ev| %>
+              <tr>
+                <td>
+                  <div class="fw-bold text-dark"><%= ev.kilo_trade.flight.flight_number %></div>
+                  <div class="small text-muted">PNR <code><%= ev.pnr_code %></code></div>
+                </td>
+                <td class="small">
+                  <code><%= ev.operation %></code>
+                  <div class="text-muted"><%= ev.airline_connector.provider %></div>
+                </td>
+                <td class="small smb-tabular">
+                  <% if ev.iata_rfic.present? %>
+                    RFIC <strong><%= ev.iata_rfic %></strong> · <%= ev.iata_rfisc %> · <%= ev.ssr_code %>
+                  <% else %>
+                    <%= ev.ssr_code %>
+                  <% end %>
+                </td>
+                <td class="smb-tabular"><code><%= ev.external_reference || "—" %></code></td>
+                <td class="small smb-tabular"><%= ev.latency_ms ? "#{ev.latency_ms} ms" : "—" %></td>
+                <td>
+                  <span class="smb-badge <%= ev.status == 'synced' ? 'smb-badge--emerald' : (ev.status == 'compensated' ? 'smb-badge--amber' : 'smb-badge--muted') %>">
+                    <%= ev.status.humanize %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">No DCS sync events recorded yet.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Inspectable Live Payload + Signed Inbound Webhook Contract -->
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <section class="smb-formula-box h-100" aria-labelledby="webhook-contract-heading">
+        <h2 id="webhook-contract-heading" class="h6 mb-2">
+          <i class="fas fa-shield-alt text-primary me-2" aria-hidden="true"></i>Signed Inbound Carrier Webhook API
+        </h2>
+        <p class="small text-muted mb-2">
+          Airlines push real-time operational events to <code>POST /api/v1/dcs/webhooks/:airline_code</code> signed with <strong>HMAC-SHA256</strong> (<code>X-ShareMyBag-Timestamp</code> + <code>X-ShareMyBag-Signature</code>, ±5 min replay protection):
+        </p>
+        <ul class="small text-muted mb-0 d-grid gap-1">
+          <li><code>flight.weight_balance_locked</code> — freezes the flight order book immediately when dispatch finalizes loadsheets.</li>
+          <li><code>flight.equipment_swap</code> — updates aircraft payload envelope live (e.g. A350 → A320neo) and auto-freezes trading if booked weight exceeds the replacement aircraft cap.</li>
+          <li><code>emd.confirmed</code> — reconciles asynchronous carrier EMD confirmations via <code>idempotency_key</code>.</li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="col-lg-6">
+      <section class="smb-formula-box h-100" aria-labelledby="payload-sample-heading">
+        <h2 id="payload-sample-heading" class="h6 mb-2">
+          <i class="fas fa-code text-success me-2" aria-hidden="true"></i>Latest Dispatched Buyer EMD-A Payload
+        </h2>
+        <% if @latest_emd_event %>
+          <p class="small text-muted mb-2">
+            Idempotency-Key: <code><%= @latest_emd_event.idempotency_key %></code> · Reference: <code><%= @latest_emd_event.external_reference %></code>
+          </p>
+          <details open>
+            <summary class="small fw-semibold text-primary mb-2">Inspect JSON Request Payload</summary>
+            <pre class="bg-white border rounded p-3 small mb-0 overflow-auto"><%= JSON.pretty_generate(@latest_emd_event.request_payload) %></pre>
+          </details>
+        <% else %>
+          <p class="small text-muted mb-0">Execute any trade on a live flight to inspect the dispatched IATA EMD-A payload here.</p>
+        <% end %>
+      </section>
+    </div>
+  </div>
+</div>

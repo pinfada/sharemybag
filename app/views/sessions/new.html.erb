@@ -1,51 +1,100 @@
-<% provide(:title, "Sign in") %>
+<% provide(:title, "Sign In") %>
 
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-md-7 col-lg-5">
-      <div class="smb-card p-4 p-md-5">
-        <div class="mb-4">
-          <h1 class="h3 mb-1">Sign in</h1>
-          <p class="text-muted mb-0">Access your shipping requests, offers, and delivery tracking.</p>
+    <div class="col-md-9 col-lg-7">
+      <div class="smb-card p-4 p-md-5 mb-4">
+        <div class="text-center mb-4">
+          <div class="mb-2 d-inline-block"><%= render "shared/brand_logo", size: 38 %></div>
+          <h1 class="h3 mb-1">Sign in to ShareMyBag Exchange</h1>
+          <p class="text-muted small mb-0">Access your verified flight PNRs, live order books, and airline voucher balance.</p>
         </div>
-
-        <p class="small text-muted mb-3">Fields marked with <span class="smb-required" aria-hidden="true">*</span><span class="visually-hidden">an asterisk</span> are required.</p>
 
         <%= form_with scope: :session, url: sessions_path, local: true do |f| %>
           <div class="mb-3">
             <%= f.label :email, class: "form-label" do %>
               Email address <span class="smb-required" aria-hidden="true">*</span>
             <% end %>
-            <%= f.email_field :email, class: "form-control", placeholder: "you@example.com", required: true, "aria-required": "true", autocomplete: "email" %>
+            <%= f.email_field :email,
+                class: "form-control",
+                required: true,
+                "aria-required": "true",
+                autocomplete: "email",
+                placeholder: "you@example.com" %>
           </div>
 
           <div class="mb-4">
             <%= f.label :password, class: "form-label" do %>
               Password <span class="smb-required" aria-hidden="true">*</span>
             <% end %>
-            <%= f.password_field :password, class: "form-control", required: true, "aria-required": "true", autocomplete: "current-password" %>
+            <%= f.password_field :password,
+                class: "form-control",
+                required: true,
+                "aria-required": "true",
+                autocomplete: "current-password" %>
           </div>
 
           <%= f.submit "Sign in", class: "btn btn-primary w-100 py-2" %>
         <% end %>
 
-        <hr class="my-4">
-
-        <p class="text-center text-muted small mb-0">
-          New to ShareMyBag?
-          <%= link_to "Create a free account", signup_path, class: "fw-semibold" %>
-        </p>
+        <div class="text-center mt-4 small text-muted">
+          New passenger? <%= link_to "Create an account", signup_path, class: "fw-semibold" %>
+        </div>
       </div>
 
-      <aside class="smb-card p-3 mt-3 bg-white" aria-label="Demo accounts">
-        <h2 class="h6 fw-bold text-dark mb-2">
-          <i class="fas fa-flask text-primary me-1" aria-hidden="true"></i>Demo accounts
+      <!-- 1-Click Pre-seeded B2B Demo Accounts -->
+      <section class="smb-card p-4 bg-white" aria-labelledby="demo-accounts-heading">
+        <h2 id="demo-accounts-heading" class="h6 mb-2">
+          <i class="fas fa-bolt me-2 text-primary" aria-hidden="true"></i>1-Click Interactive Demo Personas (Pre-booked on AF718)
         </h2>
-        <ul class="list-unstyled small text-muted mb-0">
-          <li>Sender: <code>marie@example.com</code> / <code>Marie123!</code></li>
-          <li>Traveler: <code>pierre@example.com</code> / <code>Pierre123!</code></li>
-        </ul>
-      </aside>
+        <p class="small text-muted mb-3">
+          Enter any persona in 1 click to execute a live Bid/Ask match on <strong>AF718 (CDG → DKR)</strong> and watch PNR allowances, digital baggage passes, and airline net margin update immediately:
+        </p>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0 small">
+            <caption class="visually-hidden">Pre-configured demo accounts with 1-click sign-in</caption>
+            <thead>
+              <tr>
+                <th scope="col">Persona</th>
+                <th scope="col">Credentials</th>
+                <th scope="col" class="text-end"><span class="visually-hidden">Action</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Marie Laurent</strong>
+                  <div class="text-muted">Light Traveler · Sell unused kg (ASK)</div>
+                </td>
+                <td><code>marie@example.com</code> / <code>Marie123!</code></td>
+                <td class="text-end">
+                  <%= button_to "Enter as Marie", demo_session_path(persona: "light_passenger"), method: :post, class: "btn btn-sm btn-outline-primary", form_class: "m-0" %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Pierre Diallo</strong>
+                  <div class="text-muted">Heavy Traveler · Buy extra kg (BID)</div>
+                </td>
+                <td><code>pierre@example.com</code> / <code>Pierre123!</code></td>
+                <td class="text-end">
+                  <%= button_to "Enter as Pierre", demo_session_path(persona: "heavy_passenger"), method: :post, class: "btn btn-sm btn-outline-primary", form_class: "m-0" %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Claire Delacroix</strong>
+                  <div class="text-muted">Airline Revenue VP · Admin View</div>
+                </td>
+                <td><code>vp@airfrance-demo.com</code> / <code>Airline123!</code></td>
+                <td class="text-end">
+                  <%= button_to "Enter as VP", demo_session_path(persona: "airline_vp"), method: :post, class: "btn btn-sm btn-outline-secondary", form_class: "m-0" %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   </div>
 </div>

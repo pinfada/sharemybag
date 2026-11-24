@@ -2,12 +2,11 @@ en:
   activerecord:
     models:
       user: "User"
-      shipping_request: "Shipping request"
-      bid: "Offer"
-      shipment_tracking: "Shipment tracking"
-      conversation: "Conversation"
-      message: "Message"
-      review: "Review"
+      aircraft_type: "Aircraft model"
+      flight: "Flight"
+      passenger_booking: "Passenger booking (PNR)"
+      kilo_order: "Baggage kilo order"
+      kilo_trade: "Executed trade"
     attributes:
       user:
         name: "Full name"
@@ -17,84 +16,55 @@ en:
         city: "City"
         country: "Country"
         bio: "About"
-      shipping_request:
-        title: "Request title"
-        description: "Package description"
-        weight_kg: "Weight (kg)"
-        length_cm: "Length (cm)"
-        width_cm: "Width (cm)"
-        height_cm: "Height (cm)"
-        departure_city: "Departure city"
-        departure_country: "Departure country"
-        arrival_city: "Arrival city"
-        arrival_country: "Arrival country"
-        desired_date: "Desired date"
-        deadline_date: "Deadline date"
-        max_budget_cents: "Maximum budget"
-        max_budget_euros: "Maximum budget (€)"
-        item_category: "Category"
-        special_instructions: "Special instructions"
-        prohibited_items_acknowledged: "The prohibited items safety pledge"
-      bid:
-        price_per_kg_cents: "Price per kg"
-        price_per_kg_euros: "Price per kg (€)"
-        available_kg: "Available capacity (kg)"
-        travel_date: "Travel date"
+        role: "Account role"
+      flight:
         flight_number: "Flight number"
-        message: "Message"
-      review:
-        rating: "Rating"
-        comment: "Comment"
+        airline_name: "Airline"
+        base_booked_baggage_kg: "Booked baggage load (kg)"
+      passenger_booking:
+        pnr_code: "PNR reference"
+        base_allowance_kg: "Base allowance (kg)"
+        current_allowance_kg: "Current PNR allowance (kg)"
+        max_allowance_kg: "Maximum PNR allowance (kg)"
+      kilo_order:
+        side: "Order side"
+        quantity_kg: "Weight quantity (kg)"
+        price_per_kg_cents: "Limit price per kg"
+        price_per_kg_euros: "Limit price per kg (€)"
+        payout_preference: "Settlement preference"
+        passenger_booking: "PNR booking"
     errors:
       models:
         user:
           attributes:
             password:
               weak_password: "must be at least 8 characters and include an uppercase letter, a lowercase letter, and a number"
-        shipping_request:
+        flight:
           attributes:
-            desired_date:
-              in_the_past: "must be today or a future date"
-            deadline_date:
-              before_desired_date: "cannot be earlier than the desired date"
-            prohibited_items_acknowledged:
-              accepted: "must be confirmed before publishing a request"
-        bid:
+            base_booked_baggage_kg:
+              exceeds_aircraft_payload: "exceeds the certified aircraft baggage payload limit"
+        passenger_booking:
           attributes:
-            traveler_id:
-              already_bid: "has already submitted an offer on this request"
-            travel_date:
-              in_the_past: "must be today or a future date"
-            available_kg:
-              insufficient_capacity: "must be at least %{min} kg to carry this parcel"
+            user_id:
+              already_booked_on_flight: "already holds a booking on this flight"
+            current_allowance_kg:
+              exceeds_max_allowance: "exceeds the maximum allowed PNR baggage allowance (46 kg / 2 pieces)"
+        kilo_order:
+          attributes:
+            passenger_booking:
+              must_belong_to_user_and_flight: "must belong to your account on this exact flight"
+            quantity_kg:
+              exceeds_available_to_sell: "exceeds your available baggage allowance to sell (%{max} kg remaining)"
+              exceeds_available_to_buy: "exceeds your remaining PNR allowance cap (%{max} kg max)"
             base:
-              cannot_bid_own_request: "You cannot submit an offer on your own shipping request."
-              request_closed: "This shipping request is no longer accepting offers."
-        conversation:
-          attributes:
-            recipient_id:
-              cannot_message_self: "cannot be yourself"
-            base:
-              conversation_already_exists: "A conversation with this member already exists."
-        message:
-          attributes:
-            sender:
-              not_a_participant: "is not a participant in this conversation"
-        review:
-          attributes:
-            reviewer_id:
-              already_reviewed: "has already reviewed this shipment"
-            base:
-              cannot_review_self: "You cannot review yourself."
-              shipment_not_completed: "Reviews can only be submitted after delivery is confirmed."
-              no_accepted_bid: "No accepted offer was found for this request."
-              invalid_participants: "Review participants do not match this shipment."
+              flight_trading_closed: "Trading on this flight is closed (Weight & Balance cutoff is 4 hours before departure)."
+              opposite_order_already_open: "You already have an active order on the opposite side of this flight. Cancel it first to avoid wash trading."
 
   auth:
     sign_in_required: "Please sign in to continue."
     signed_in: "Welcome back, %{name}."
     signed_out: "You have been signed out."
-    welcome: "Welcome to ShareMyBag, %{name}!"
+    welcome: "Welcome to ShareMyBag Exchange, %{name}!"
     invalid_credentials: "Incorrect email address or password."
 
   common:
@@ -103,65 +73,21 @@ en:
 
   statuses:
     open: "Open"
-    bidding: "Receiving offers"
-    accepted: "Offer accepted"
-    in_progress: "In transit"
-    completed: "Delivered & confirmed"
+    partially_filled: "Partially filled"
+    filled: "Filled"
     cancelled: "Cancelled"
-    pending: "Pending"
-    rejected: "Not selected"
-    withdrawn: "Withdrawn"
+    closed: "Closed (Cutoff)"
+    departed: "Departed"
 
-  categories:
-    documents: "Documents"
-    clothing: "Clothing & textiles"
-    electronics: "Electronics"
-    books: "Books & supplies"
-    gifts: "Personal items & gifts"
-    other: "Other"
-
-  shipping_requests:
-    created: "Your shipping request is now live! Travelers on this route can submit offers."
-    updated: "Your shipping request has been updated."
-    cancelled: "Your shipping request has been cancelled."
-    cannot_edit: "A shipping request can no longer be edited after an offer is accepted."
-    cannot_cancel: "A shipping request can no longer be cancelled after an offer is accepted."
-    bid_accepted: "Offer accepted! Your secure tracking page with handover and delivery codes is ready."
-
-  bids:
-    created: "Your offer has been sent to the sender."
-    withdrawn: "Your offer has been withdrawn."
-
-  tracking:
-    statuses:
-      created: "Awaiting handover"
-      handed_over: "Handed over"
-      in_transit: "In transit"
-      delivered: "Delivered"
-      confirmed: "Confirmed"
-    handed_over: "Handover verified by code! Open visual inspection recorded and parcel is now in the traveler's care."
-    in_transit: "The parcel is now marked in transit."
-    delivered: "Delivery verified by code! Waiting for the sender's final confirmation."
-    confirmed: "Receipt confirmed! This shipment is complete — you can now leave a review."
-    invalid_code: "Invalid code. Please double-check the 8 characters provided by the sender."
-    open_inspection_required: "For airport security compliance, you must confirm that you opened, visually inspected, and packed the parcel yourself before accepting custody."
-
-  conversations:
-    cannot_message_self: "You cannot start a conversation with yourself."
+  kilo_orders:
+    created_resting: "Your %{side} order for %{qty} kg at %{price}/kg is live on the %{flight} order book."
+    created_matched: "Instant match! %{matched_qty} kg executed on %{flight}. Your PNR allowance has been updated automatically."
+    cancelled: "Your remaining order quantity has been cancelled and your PNR allowance capacity released."
+    cannot_cancel: "This order can no longer be cancelled."
+    no_booking_on_flight: "Only ticketed passengers with a confirmed PNR on this flight can place baggage allowance orders."
 
   notifications:
     all_marked_read: "All notifications have been marked as read."
-    bid_accepted: "Your offer for “%{title}” was accepted!"
-    new_bid: "%{name} submitted an offer on “%{title}”"
-    new_message: "%{name} sent you a message"
-    new_review: "%{name} left you a %{rating}/5 review"
-    package_handed_over: "The traveler verified parcel handover with your code."
-    package_in_transit: "Your parcel is now in transit."
-    package_delivered: "The traveler verified delivery with your code. Please confirm receipt."
-    delivery_confirmed: "The sender confirmed receipt of the parcel!"
-
-  reviews:
-    created: "Thank you! Your review has been published."
 
   users:
     profile_updated: "Your profile has been updated."

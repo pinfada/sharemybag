@@ -1,57 +1,73 @@
-ENV['RAILS_ENV'] ||= 'test'
-require_relative '../config/environment'
-require 'rails/test_help'
+ENV["RAILS_ENV"] ||= "test"
+require_relative "../config/environment"
+require "rails/test_help"
 
 class ActiveSupport::TestCase
-  # Helpers de création de données de test (zéro dépendance externe)
   def create_user(attrs = {})
     seq = next_seq
     defaults = {
-      name: "Utilisateur #{seq}",
-      email: "user#{seq}@example.com",
+      name: "Passenger #{seq}",
+      email: "passenger#{seq}@example.com",
       password: "Password123",
       password_confirmation: "Password123",
       city: "Paris",
       country: "France",
-      currency: "EUR"
+      currency: "EUR",
+      role: "passenger",
+      voucher_balance_cents: 0
     }
     User.create!(defaults.merge(attrs))
   end
 
-  def create_shipping_request(sender: nil, **attrs)
-    sender ||= create_user
+  def create_aircraft_type(attrs = {})
+    seq = next_seq
     defaults = {
-      sender: sender,
-      title: "Documents professionnels",
-      description: "Enveloppe sécurisée contenant des documents administratifs.",
-      weight_kg: 3.0,
-      departure_city: "Paris",
-      departure_country: "France",
-      arrival_city: "Dakar",
-      arrival_country: "Sénégal",
-      desired_date: 10.days.from_now.to_date,
-      max_budget_cents: 6000,
-      currency: "EUR",
-      item_category: "documents",
-      prohibited_items_acknowledged: true
+      code: "A350-#{seq.delete('_').last(8)}",
+      aircraft_name: "Airbus A350-900",
+      manufacturer: "Airbus",
+      seat_capacity: 324,
+      default_baggage_kg_per_pax: 23.0,
+      max_baggage_payload_kg: 7452.0,
+      fuel_burn_rate_per_kg_hour: 0.035
     }
-    ShippingRequest.create!(defaults.merge(attrs))
+    AircraftType.create!(defaults.merge(attrs))
   end
 
-  def create_bid(shipping_request: nil, traveler: nil, **attrs)
-    shipping_request ||= create_shipping_request
-    traveler ||= create_user
+  def create_flight(aircraft_type: nil, **attrs)
+    aircraft_type ||= create_aircraft_type
     defaults = {
-      shipping_request: shipping_request,
-      traveler: traveler,
-      price_per_kg_cents: 1200,
-      available_kg: 10.0,
-      currency: shipping_request.currency,
-      travel_date: shipping_request.desired_date,
       flight_number: "AF718",
-      message: "Vol direct, remise possible à l'aéroport ou en centre-ville."
+      airline_name: "Air France",
+      airline_code: "AF",
+      aircraft_type: aircraft_type,
+      departure_iata: "CDG",
+      departure_city: "Paris",
+      arrival_iata: "DKR",
+      arrival_city: "Dakar",
+      departure_at: 24.hours.from_now,
+      flight_duration_hours: 5.5,
+      airport_excess_fee_per_kg_cents: 1500,
+      airline_commission_bps: 2500,
+      base_booked_baggage_kg: 5200.0,
+      status: "open"
     }
-    Bid.create!(defaults.merge(attrs))
+    Flight.create!(defaults.merge(attrs))
+  end
+
+  def create_booking(user: nil, flight: nil, **attrs)
+    user ||= create_user
+    flight ||= create_flight
+    seq = next_seq
+    defaults = {
+      pnr_code: "P#{seq.delete('_').last(5).upcase}",
+      user: user,
+      flight: flight,
+      cabin_class: "economy",
+      base_allowance_kg: 23.0,
+      current_allowance_kg: 23.0,
+      max_allowance_kg: 46.0
+    }
+    PassengerBooking.create!(defaults.merge(attrs))
   end
 
   private
