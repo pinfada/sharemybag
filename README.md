@@ -1,53 +1,44 @@
-# ShareMyBag Exchange — B2B Airline Baggage Allowance Exchange
+﻿# ShareMyBag Exchange
 
-[![Try with railsbox](https://pinfada.github.io/tchopmygrinds/badge.svg)](https://pinfada.github.io/sharemybag/)
+**A smarter way to share baggage allowance.**
 
-**ShareMyBag Exchange** is a white-label **B2B flight-level baggage allowance exchange** enabling airlines to monetize unused hold baggage capacity ("Ghost Allowance") on every commercial departure:
+ShareMyBag Exchange helps airlines offer passengers a simple way to exchange unused checked baggage allowance with other travelers on the same flight. Passengers who need extra room can buy allowance, while those traveling light can receive a flight voucher for the allowance they share.
 
-1. **Zero Physical Parcel Handover** — Between **T-48h and T-4h**, ticketed passengers on the **same commercial flight** trade **digital PNR weight allowance** on a live Bid/Ask order book. Every passenger packs and checks only their own suitcase — avoiding physical parcel handover between passengers. Carrier approval and operational validation are required.
-2. **Atomic Price-Time Priority Matching Engine** — `OrderBookMatchingService` matches crossing limit orders inside a locked PostgreSQL transaction with fractional fills, maker-price execution, overdraft protection, anti-wash-trading, IATA 32 kg single-bag health notice, and certified aircraft payload limits (`A350-900`, `B777-300ER`, `A330-200`, `B737-800`, `A320neo`).
-3. **Carrier-Agnostic DCS / PSS Integration Layer (`/integrations`)** — Pluggable adapters (`IataNdcAdapter` for Amadeus Altéa/Sabre ONE Order, `NavitaireRestAdapter`, `WebhookRestAdapter` with HMAC-SHA256, `SandboxAdapter`) orchestrated by `AirlineDcs::SettlementOrchestrator` with idempotent IATA EMD-A/EMD-S issuance, tracked compensation (buyer EMD void and seller allowance restoration), SSRF/TLS validation, and signed inbound webhooks (`POST /api/v1/dcs/webhooks/:airline_code`).
-4. **CFO-Ready Airline ROI & Fleet Simulator (`/airline-roi`)** — Auditable unit economics including 25% commission, 100% retained flight voucher treasury, marginal Jet-A1 fuel burn deduction (`3.5%/h × flight hours × €1.10/kg`), counter cannibalization stress-test, belly cargo yield comparison, and check-in agent hours saved.
+## How it works
 
-Built with **Ruby on Rails 7.0** and **PostgreSQL 16**, accessible to **RGAA 4.1 / WCAG 2.1 Level AA**, hardened to **OWASP** standards (strict CSP, zero inline scripts/styles, `Rack::Attack`), and zero ExecJS dependency (fully compatible with `railsbox`).
+1. Passengers on the same flight offer or request baggage allowance before departure.
+2. Matching offers are brought together at an agreed price.
+3. Once the airline confirms the exchange, the passengers' allowances and any voucher balance are updated.
 
-## Live Playable Demo
+Each passenger packs and checks their own bags. No physical items change hands between travelers. Exchanges are subject to airline approval and operational requirements.
 
-**→ [pinfada.github.io/sharemybag](https://pinfada.github.io/sharemybag/)**
+## Built for airlines and travelers
 
-1-click demo personas pre-booked on **AF718 (CDG → DKR)**:
+- **For travelers:** a flexible way to find extra baggage allowance or make use of allowance they don't need.
+- **For airlines:** a white-label experience that opens a new revenue opportunity and helps make better use of existing baggage allowances.
+- **For airline teams:** a simulator to explore potential revenue and operating impacts, alongside tools for connecting to airline systems.
 
-| Persona | Email | Password |
+## Try the demo
+
+[Explore the ShareMyBag demo](https://pinfada.github.io/sharemybag/)
+
+The demo features travelers booked on flight AF718 from Paris to Dakar and an airline revenue manager.
+
+| Demo role | Email | Password |
 | --- | --- | --- |
-| Light Traveler (Seller — ASK) | `marie@example.com` | `Marie123!` |
-| Heavy Traveler (Buyer — BID) | `pierre@example.com` | `Pierre123!` |
-| Airline Revenue VP | `vp@airfrance-demo.com` | `Airline123!` |
+| Traveler offering allowance | `marie@example.com` | `Marie123!` |
+| Traveler looking for allowance | `pierre@example.com` | `Pierre123!` |
+| Airline revenue manager | `vp@airfrance-demo.com` | `Airline123!` |
 
-## Local Development & Tests
+## Run locally
+
+ShareMyBag is built with Ruby on Rails and PostgreSQL. With the required dependencies and database available, run:
 
 ```bash
 bundle install
 bin/rails db:create db:schema:load db:seed
-bin/rails zeitwerk:check
 bin/rails test
 bin/rails server
 ```
 
-
-## Carrier settlement
-
-Matched kilos are reserved locally while settlement is pending. The displayed
-allowance, voucher balance, and passenger confirmation update after the carrier
-acknowledges settlement. A definitive rejection releases the reserved quantities
-once all required reversals are acknowledged. An unknown live outcome keeps the
-reservation in place.
-
-Run `bin/rails dcs:retry_settlements FLIGHT_ID=123` to retry an affected flight.
-Without `FLIGHT_ID`, the task scans all unresolved trades. Settlement advances in
-trade order per flight. The carrier must honor the same idempotency key on retry
-and use `outcome: "REJECTED"` only for a definitive rejection with no side effect.
-The generic webhook gateway restores the seller's allowance through
-`POST allowances/restore`. Validate the endpoints, acknowledgements and replay
-behavior with the carrier before enabling a live connector. Allowance accounting
-tracks booked entitlements. Actual loaded baggage can increase when a previously
-unused entitlement is used by the buyer.
+For airline integration and settlement operations, see [Carrier settlement](docs/carrier-settlement.md).
