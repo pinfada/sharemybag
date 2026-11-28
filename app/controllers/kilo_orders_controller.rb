@@ -27,8 +27,19 @@ class KiloOrdersController < ApplicationController
       )
 
       if result.trades.any?
-        matched_qty = result.trades.sum { |tr| tr.quantity_kg.to_f }.round(1)
-        flash[:success] = t("kilo_orders.created_matched", matched_qty: matched_qty, flight: @flight.flight_number)
+        trades = KiloTrade.where(id: result.trades.map(&:id))
+        confirmed_kg = trades.confirmed.sum(:quantity_kg).to_f
+        pending_kg = trades.where(dcs_sync_status: KiloTrade::UNRESOLVED_STATUSES).sum(:quantity_kg).to_f
+
+        if confirmed_kg.positive?
+          flash[:success] = t("kilo_orders.created_matched", matched_qty: confirmed_kg, flight: @flight.flight_number)
+        end
+        if pending_kg.positive?
+          flash[:notice] = t("kilo_orders.awaiting_carrier", matched_qty: pending_kg)
+        end
+        if trades.where(dcs_sync_status: %w[failed compensated]).exists?
+          flash[:error] = t("kilo_orders.carrier_rejected")
+        end
       else
         side_label = result.order.buy? ? "BID (buy)" : "ASK (sell)"
         flash[:success] = t(
@@ -81,7 +92,7 @@ class KiloOrdersController < ApplicationController
   def load_flight_state_for_error
     @open_bids = @flight.open_bids.includes(:user)
     @open_asks = @flight.open_asks.includes(:user)
-    @recent_trades = @flight.kilo_trades.includes(:buyer, :seller).recent.limit(15)
+    @recent_trades = @flight.kilo_trades.confirmed.includes(:buyer, :seller).recent.limit(15)
     @flight_economics = AirlineEconomicsService.flight_summary(@flight)
     @flight_opportunity = AirlineEconomicsService.flight_opportunity(@flight)
     @user_orders = @flight.kilo_orders.where(user_id: current_user.id).recent

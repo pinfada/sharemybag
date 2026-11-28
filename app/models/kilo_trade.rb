@@ -1,5 +1,6 @@
 class KiloTrade < ApplicationRecord
-  DCS_SYNC_STATUSES = %w[pending synced compensated failed].freeze
+  UNRESOLVED_STATUSES = %w[pending attention_required compensating].freeze
+  DCS_SYNC_STATUSES = (UNRESOLVED_STATUSES + %w[synced compensated failed]).freeze
 
   belongs_to :flight
   belongs_to :buy_order, class_name: "KiloOrder"
@@ -17,6 +18,7 @@ class KiloTrade < ApplicationRecord
   validates :executed_at, presence: true
   validate  :distinct_counterparties
 
+  scope :confirmed, -> { where(dcs_sync_status: "synced") }
   scope :recent, -> { order(executed_at: :desc, id: :desc) }
 
   private

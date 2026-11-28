@@ -3,6 +3,7 @@ class DcsSyncEvent < ApplicationRecord
     issue_buyer_emd_a
     adjust_seller_allowance
     issue_seller_voucher_emd_s
+    restore_seller_allowance
     void_buyer_emd_a
   ].freeze
 

@@ -24,12 +24,19 @@ class PassengerBooking < ApplicationRecord
     kilo_orders.active.where(side: "buy").sum(:remaining_kg).to_f
   end
 
+  def pending_trade_kg(side)
+    order_column = side == "buy" ? :buy_order_id : :sell_order_id
+    KiloTrade.where(order_column => kilo_orders.select(:id))
+             .where(deferred_settlement: true, dcs_sync_status: KiloTrade::UNRESOLVED_STATUSES)
+             .sum(:quantity_kg)
+  end
+
   def available_to_sell_kg
-    [current_allowance_kg.to_f - committed_sell_kg, 0.0].max.round(2)
+    [current_allowance_kg.to_f - committed_sell_kg - pending_trade_kg("sell"), 0.0].max.round(2)
   end
 
   def available_to_buy_kg
-    [max_allowance_kg.to_f - current_allowance_kg.to_f - committed_buy_kg, 0.0].max.round(2)
+    [max_allowance_kg.to_f - current_allowance_kg.to_f - committed_buy_kg - pending_trade_kg("buy"), 0.0].max.round(2)
   end
 
   def net_traded_kg

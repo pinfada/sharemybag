@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_11_24_000003) do
+ActiveRecord::Schema[7.0].define(version: 2026_11_28_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -134,6 +134,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_11_24_000003) do
     t.string "buyer_emd_reference"
     t.string "seller_voucher_emd_reference"
     t.datetime "dcs_synced_at"
+    t.boolean "deferred_settlement", default: false, null: false
     t.index ["buy_order_id"], name: "index_kilo_trades_on_buy_order_id"
     t.index ["buyer_id"], name: "index_kilo_trades_on_buyer_id"
     t.index ["flight_id", "executed_at"], name: "index_kilo_trades_on_flight_id_and_executed_at"

@@ -6,9 +6,9 @@ module AirlineDcs
         recordLocator: booking.pnr_code,
         flightDesignator: trade.flight.flight_number,
         ssrCode: "XBAG",
-        weightDeltaKg: trade.quantity_kg.to_i,
+        weightDeltaKg: trade.quantity_kg.to_f,
         newAllowanceKg: booking.current_allowance_kg.to_f,
-        note: "SHAREMYBAG EXCHANGE +#{trade.quantity_kg.to_i}KG TRADE #{trade.id}"
+        note: "SHAREMYBAG EXCHANGE +#{trade.quantity_kg.to_f}KG TRADE #{trade.id}"
       }
     end
 
@@ -24,7 +24,20 @@ module AirlineDcs
         recordLocator: booking.pnr_code,
         flightDesignator: trade.flight.flight_number,
         ssrCode: "ASVC",
-        weightDeltaKg: -trade.quantity_kg.to_i,
+        weightDeltaKg: -trade.quantity_kg.to_f,
+        newAllowanceKg: booking.current_allowance_kg.to_f
+      }
+      return simulate_if_unconfigured(payload, idempotency_key, rfic: "C", rfisc: "0GO", ssr: "ASVC") unless connector.live_external?
+
+      dispatch_navitaire(path: "v2/booking/ssrs/adjust", payload: payload, idempotency_key: idempotency_key, rfic: "C", rfisc: "0GO", ssr: "ASVC")
+    end
+
+    def restore_seller_allowance(trade:, booking:, idempotency_key:)
+      payload = {
+        recordLocator: booking.pnr_code,
+        flightDesignator: trade.flight.flight_number,
+        ssrCode: "ASVC",
+        weightDeltaKg: trade.quantity_kg.to_f,
         newAllowanceKg: booking.current_allowance_kg.to_f
       }
       return simulate_if_unconfigured(payload, idempotency_key, rfic: "C", rfisc: "0GO", ssr: "ASVC") unless connector.live_external?
@@ -64,10 +77,11 @@ module AirlineDcs
         }
       )
 
-      if code.between?(200, 299)
+      reference = body["ssrReference"].presence || body["voucherCode"].presence
+      if [200, 201].include?(code) && reference.present? && body["outcome"] != "REJECTED"
         Response.new(
           success: true,
-          external_reference: body["ssrReference"] || body["voucherCode"] || generate_iata_emd_number(idempotency_key),
+          external_reference: reference,
           iata_rfic: rfic,
           iata_rfisc: rfisc,
           ssr_code: ssr,

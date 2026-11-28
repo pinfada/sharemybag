@@ -7,7 +7,7 @@ class PassengerBookingsController < ApplicationController
                             .joins(:flight)
                             .order("flights.departure_at ASC")
     @active_orders = current_user.kilo_orders.active.includes(:flight, :passenger_booking).recent
-    @recent_trades = KiloTrade.where("buyer_id = :uid OR seller_id = :uid", uid: current_user.id)
+    @recent_trades = KiloTrade.confirmed.where("buyer_id = :uid OR seller_id = :uid", uid: current_user.id)
                               .includes(:flight, :buyer, :seller)
                               .recent
                               .limit(20)

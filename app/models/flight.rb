@@ -66,7 +66,7 @@ class Flight < ApplicationRecord
   end
 
   def last_trade_price_cents
-    kilo_trades.order(executed_at: :desc, id: :desc).limit(1).pick(:execution_price_per_kg_cents)
+    kilo_trades.confirmed.order(executed_at: :desc, id: :desc).limit(1).pick(:execution_price_per_kg_cents)
   end
 
   def spot_price_cents
@@ -84,12 +84,11 @@ class Flight < ApplicationRecord
   end
 
   def total_matched_kg
-    kilo_trades.sum(:quantity_kg).to_f.round(2)
+    kilo_trades.confirmed.sum(:quantity_kg).to_f.round(2)
   end
 
   def current_total_baggage_kg
-    # Every P2P trade inside the flight transfers kg 1:1 from seller PNR to buyer PNR,
-    # keeping net baggage load strictly anchored at base_booked_baggage_kg + any net PNR delta.
+    # Tracks booked allowances. Actual baggage loaded can differ from the booked weight.
     pnr_delta = passenger_bookings.sum("current_allowance_kg - base_allowance_kg").to_f
     (base_booked_baggage_kg.to_f + pnr_delta).round(2)
   end

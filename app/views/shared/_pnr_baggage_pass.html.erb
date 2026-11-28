@@ -8,11 +8,12 @@
           <div class="smb-pass-sub">PNR <strong><%= booking.pnr_code %></strong> · <%= booking.cabin_class.humanize %></div>
         </div>
       </div>
-      <% sync_ok = (booking.dcs_sync_status == "synced") %>
+      <% pending_kg = booking.pending_trade_kg("buy") + booking.pending_trade_kg("sell") %>
+      <% sync_ok = booking.dcs_sync_status == "synced" && pending_kg.zero? %>
       <% live_dcs = AirlineConnector.find_by(airline_code: booking.flight.airline_code)&.live_external? %>
       <span class="smb-pass-pill <%= 'bg-warning text-dark' unless sync_ok %>">
         <i class="fas <%= sync_ok ? 'fa-check-circle' : 'fa-clock' %> me-1" aria-hidden="true"></i>
-        <%= sync_ok ? (live_dcs ? "DCS Synced" : "Sandbox Synced") : booking.dcs_sync_status.humanize %>
+        <%= sync_ok ? (live_dcs ? "DCS Synced" : "Sandbox Synced") : (pending_kg.positive? ? "Carrier confirmation pending" : booking.dcs_sync_status.humanize) %>
       </span>
     </div>
   </div>
@@ -20,7 +21,7 @@
   <div class="smb-baggage-pass__body">
     <div class="row g-2 align-items-center">
       <div class="col-7">
-        <div class="small text-muted">Active Check-in Allowance</div>
+        <div class="small text-muted">Confirmed Check-in Allowance</div>
         <div class="d-flex align-items-baseline gap-2">
           <span class="fs-3 fw-bold text-dark smb-tabular"><%= format_kg(booking.current_allowance_kg) %></span>
           <% delta = booking.net_traded_kg %>

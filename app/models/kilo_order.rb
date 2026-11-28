@@ -61,8 +61,12 @@ class KiloOrder < ApplicationRecord
   end
 
   def cancel!
-    return false unless active?
-    update!(status: "cancelled", remaining_kg: 0.0)
+    flight.with_lock do
+      reload
+      next false unless active?
+
+      update!(status: "cancelled", remaining_kg: 0.0)
+    end
   end
 
   private
@@ -92,7 +96,8 @@ class KiloOrder < ApplicationRecord
   def no_opposite_active_order_on_flight
     return unless user && flight && side.present?
     opposite = buy? ? "sell" : "buy"
-    if KiloOrder.active.where(user_id: user.id, flight_id: flight.id, side: opposite).exists?
+    if passenger_booking&.pending_trade_kg(opposite)&.positive? ||
+       KiloOrder.active.where(user_id: user.id, flight_id: flight.id, side: opposite).exists?
       errors.add(:base, :opposite_order_already_open)
     end
   end

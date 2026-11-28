@@ -19,6 +19,10 @@ module AirlineDcs
       raise NotImplementedError
     end
 
+    def restore_seller_allowance(trade:, booking:, idempotency_key:)
+      raise NotImplementedError
+    end
+
     def issue_seller_voucher_emd_s(trade:, booking:, idempotency_key:)
       raise NotImplementedError
     end
@@ -53,7 +57,7 @@ module AirlineDcs
       res = http.request(req)
       elapsed_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started) * 1000).round
       parsed = JSON.parse(res.body) rescue { raw: res.body.to_s.first(300) }
-      [res.code.to_i, parsed, elapsed_ms]
+      [res.code.to_i, parsed.is_a?(Hash) ? parsed : {}, elapsed_ms]
     rescue StandardError => e
       elapsed_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started) * 1000).round
       [0, { error: e.message }, elapsed_ms]

@@ -2,7 +2,7 @@ module AirlineDcs
   class SandboxAdapter < BaseAdapter
     def initialize(connector, fail_operation: nil)
       super(connector)
-      @fail_operation = fail_operation&.to_sym
+      @fail_operations = Array(fail_operation).map(&:to_sym)
     end
 
     def issue_buyer_emd_a(trade:, booking:, idempotency_key:)
@@ -21,7 +21,7 @@ module AirlineDcs
         currency: "EUR"
       }
 
-      if @fail_operation == :issue_buyer_emd_a
+      if @fail_operations.include?(:issue_buyer_emd_a)
         return failure_response(payload, "Simulated DCS timeout while issuing buyer EMD-A", rfic: "C", rfisc: "0GO", ssr: "XBAG")
       end
 
@@ -50,8 +50,37 @@ module AirlineDcs
         ssrCode: "ASVC"
       }
 
-      if @fail_operation == :adjust_seller_allowance
+      if @fail_operations.include?(:adjust_seller_allowance)
         return failure_response(payload, "Simulated DCS lock error: seller PNR already checked-in at counter", ssr: "ASVC")
+      end
+
+      ref = "DCS-#{trade.flight.airline_code}-#{Digest::SHA256.hexdigest(idempotency_key).first(10).upcase}"
+      Response.new(
+        success: true,
+        external_reference: ref,
+        iata_rfic: "C",
+        iata_rfisc: "0GO",
+        ssr_code: "ASVC",
+        request_payload: payload,
+        response_payload: { status: "UPDATED", dcsTransactionId: ref, newAllowanceKg: booking.current_allowance_kg.to_f },
+        latency_ms: 35
+      )
+    end
+
+    def restore_seller_allowance(trade:, booking:, idempotency_key:)
+      payload = {
+        protocol: "IATA_DCS_CM_SANDBOX",
+        operation: "DCS_ALLOWANCE_INCREMENT",
+        carrier: trade.flight.airline_code,
+        flightNumber: trade.flight.flight_number,
+        pnrCode: booking.pnr_code,
+        weightRestoredKg: trade.quantity_kg.to_f,
+        newTotalAllowanceKg: booking.current_allowance_kg.to_f,
+        ssrCode: "ASVC"
+      }
+
+      if @fail_operations.include?(:restore_seller_allowance)
+        return failure_response(payload, "Simulated seller allowance restoration failure", ssr: "ASVC")
       end
 
       ref = "DCS-#{trade.flight.airline_code}-#{Digest::SHA256.hexdigest(idempotency_key).first(10).upcase}"
@@ -80,7 +109,7 @@ module AirlineDcs
         validityDays: 365
       }
 
-      if @fail_operation == :issue_seller_voucher_emd_s
+      if @fail_operations.include?(:issue_seller_voucher_emd_s)
         return failure_response(payload, "Simulated voucher ledger unavailable", rfic: "D", rfisc: "99I")
       end
 
@@ -105,6 +134,10 @@ module AirlineDcs
         pnrCode: pnr_code,
         reason: "SAGA_COMPENSATION_ROLLBACK"
       }
+
+      if @fail_operations.include?(:void_emd)
+        return failure_response(payload, "Simulated buyer EMD void failure")
+      end
 
       Response.new(
         success: true,

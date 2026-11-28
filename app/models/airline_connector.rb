@@ -54,6 +54,10 @@ class AirlineConnector < ApplicationRecord
     provider != "sandbox" && api_base_url.present? && resolve_secret(credentials_ref).present?
   end
 
+  def simulated_settlement?
+    provider == "sandbox" || URI.parse(api_base_url.to_s).host.to_s.end_with?(".example")
+  end
+
   private
 
   def normalize_codes

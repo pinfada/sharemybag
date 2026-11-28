@@ -30,6 +30,17 @@ module AirlineDcs
       dispatch_signed(path: "allowances/decrement", payload: payload, idempotency_key: idempotency_key, rfic: "C", rfisc: "0GO", ssr: "ASVC")
     end
 
+    def restore_seller_allowance(trade:, booking:, idempotency_key:)
+      payload = {
+        event: "baggage.allowance.restore",
+        flightNumber: trade.flight.flight_number,
+        pnrCode: booking.pnr_code,
+        deltaKg: trade.quantity_kg.to_f,
+        newAllowanceKg: booking.current_allowance_kg.to_f
+      }
+      dispatch_signed(path: "allowances/restore", payload: payload, idempotency_key: idempotency_key, rfic: "C", rfisc: "0GO", ssr: "ASVC")
+    end
+
     def issue_seller_voucher_emd_s(trade:, booking:, idempotency_key:)
       payload = {
         event: "voucher.credit.issue",
@@ -80,10 +91,11 @@ module AirlineDcs
         }
       )
 
-      if code.between?(200, 299)
+      reference = body["reference"].presence
+      if [200, 201].include?(code) && reference.present? && body["outcome"] != "REJECTED"
         Response.new(
           success: true,
-          external_reference: body["reference"] || generate_iata_emd_number(idempotency_key),
+          external_reference: reference,
           iata_rfic: rfic,
           iata_rfisc: rfisc,
           ssr_code: ssr,

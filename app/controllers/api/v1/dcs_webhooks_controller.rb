@@ -87,14 +87,20 @@ module Api
       end
 
       def handle_emd_confirmed(payload)
-        event = DcsSyncEvent.find_by(idempotency_key: payload["idempotency_key"].to_s)
+        event = @connector.dcs_sync_events.find_by(
+          idempotency_key: payload["idempotency_key"].to_s,
+          operation: %w[issue_buyer_emd_a issue_seller_voucher_emd_s]
+        )
         return render json: { error: "Sync event not found" }, status: :not_found unless event
 
-        event.update!(
-          status: "synced",
-          external_reference: payload["emd_number"].presence || event.external_reference,
-          synced_at: Time.current
-        )
+        event.with_lock do
+          if event.status != "synced" && %w[pending attention_required].include?(event.kilo_trade.dcs_sync_status)
+            reference = payload["emd_number"].presence || event.external_reference
+            return render json: { error: "Missing EMD reference" }, status: :unprocessable_entity if reference.blank?
+
+            event.update!(status: "synced", external_reference: reference, synced_at: Time.current)
+          end
+        end
         render json: { status: "ok", idempotency_key: event.idempotency_key }, status: :ok
       end
     end

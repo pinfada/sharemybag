@@ -34,7 +34,7 @@ class FlightsController < ApplicationController
   def load_flight_exchange_state
     @open_bids = @flight.open_bids.includes(:user)
     @open_asks = @flight.open_asks.includes(:user)
-    @recent_trades = @flight.kilo_trades.includes(:buyer, :seller).recent.limit(15)
+    @recent_trades = @flight.kilo_trades.confirmed.includes(:buyer, :seller).recent.limit(15)
     @flight_economics = AirlineEconomicsService.flight_summary(@flight)
     @flight_opportunity = AirlineEconomicsService.flight_opportunity(@flight)
     @user_booking = signed_in? ? @flight.passenger_bookings.find_by(user_id: current_user.id) : nil

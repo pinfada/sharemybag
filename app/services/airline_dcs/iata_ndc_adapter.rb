@@ -52,6 +52,22 @@ module AirlineDcs
       dispatch_ndc(path: "dcs/allowances/#{booking.pnr_code}", payload: payload, idempotency_key: idempotency_key, rfic: "C", rfisc: "0GO", ssr: "ASVC")
     end
 
+    def restore_seller_allowance(trade:, booking:, idempotency_key:)
+      payload = {
+        messageType: "IATA_DCS_AllowanceAdjustRQ",
+        ndcVersion: "21.3",
+        order: { pnrCode: booking.pnr_code, flightNumber: trade.flight.flight_number },
+        allowance: {
+          action: "INCREMENT",
+          weightDeltaKg: trade.quantity_kg.to_f,
+          updatedAllowanceKg: booking.current_allowance_kg.to_f
+        }
+      }
+      return simulate_if_unconfigured(payload, idempotency_key, rfic: "C", rfisc: "0GO", ssr: "ASVC") unless connector.live_external?
+
+      dispatch_ndc(path: "dcs/allowances/#{booking.pnr_code}", payload: payload, idempotency_key: idempotency_key, rfic: "C", rfisc: "0GO", ssr: "ASVC")
+    end
+
     def issue_seller_voucher_emd_s(trade:, booking:, idempotency_key:)
       payload = {
         messageType: "IATA_EMD_StandaloneIssueRQ",
@@ -92,10 +108,11 @@ module AirlineDcs
         }
       )
 
-      if code.between?(200, 299)
+      reference = body["emdNumber"].presence || body["transactionId"].presence
+      if [200, 201].include?(code) && reference.present? && body["outcome"] != "REJECTED"
         Response.new(
           success: true,
-          external_reference: body["emdNumber"] || body["transactionId"] || generate_iata_emd_number(idempotency_key),
+          external_reference: reference,
           iata_rfic: rfic,
           iata_rfisc: rfisc,
           ssr_code: ssr,

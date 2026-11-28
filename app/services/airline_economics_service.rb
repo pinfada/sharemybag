@@ -33,7 +33,7 @@ class AirlineEconomicsService
   end
 
   def self.flight_summary(flight)
-    trades = flight.kilo_trades
+    trades = flight.kilo_trades.confirmed
     summarize_trades(trades, flights_count: 1)
   end
 
@@ -71,7 +71,7 @@ class AirlineEconomicsService
       belly_cargo_yield_per_kg_cents: BELLY_CARGO_YIELD_CENTS_PER_KG,
       exchange_gross_yield_per_kg_cents: spot_cents,
       yield_multiplier_vs_cargo: (spot_cents.to_f / BELLY_CARGO_YIELD_CENTS_PER_KG).round(1),
-      checkin_minutes_saved: (flight.kilo_trades.count * CHECKIN_MINUTES_SAVED_PER_TRADE).round,
+      checkin_minutes_saved: (flight.kilo_trades.confirmed.count * CHECKIN_MINUTES_SAVED_PER_TRADE).round,
       used_percent: used_pct,
       ghost_percent: ghost_pct,
       matched_percent: matched_pct

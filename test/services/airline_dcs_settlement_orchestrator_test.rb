@@ -113,10 +113,14 @@ class AirlineDcsSettlementOrchestratorTest < ActiveSupport::TestCase
     )
     trade = result.trades.first
 
-    # Before compensation: allowances were shifted and seller credited
-    assert_in_delta 15.0, sb.reload.current_allowance_kg.to_f, 0.01
-    assert_in_delta 31.0, bb.reload.current_allowance_kg.to_f, 0.01
-    assert_operator seller.reload.voucher_balance_cents, :>, 0
+    assert_equal "pending", trade.dcs_sync_status
+    assert_equal 23, sb.reload.current_allowance_kg
+    assert_equal 23, bb.reload.current_allowance_kg
+    assert_equal 8, sb.pending_trade_kg("sell")
+    assert_equal 8, bb.pending_trade_kg("buy")
+    assert_equal 0, seller.reload.voucher_balance_cents
+    assert_empty buyer.notifications
+    assert_empty seller.notifications
 
     AirlineDcs::SettlementOrchestrator.new(trade, adapter: failing_adapter).call!
 
@@ -130,7 +134,97 @@ class AirlineDcsSettlementOrchestratorTest < ActiveSupport::TestCase
     assert_in_delta 23.0, sb.reload.current_allowance_kg.to_f, 0.01
     assert_in_delta 23.0, bb.reload.current_allowance_kg.to_f, 0.01
     assert_equal 0, seller.reload.voucher_balance_cents
-    assert_equal "attention_required", sb.dcs_sync_status
+    assert_equal 8, trade.buy_order.reload.remaining_kg
+    assert_equal 8, trade.sell_order.reload.remaining_kg
+    assert_equal "open", trade.buy_order.status
+    assert_equal 0, sb.pending_trade_kg("sell")
+  end
+
+  test "voucher rejection restores the seller and retries an unacknowledged buyer void before releasing kilos" do
+    flight = create_flight
+    sb = create_booking(flight: flight, pnr_code: "REST1S")
+    bb = create_booking(flight: flight, pnr_code: "REST1B")
+    OrderBookMatchingService.place_and_match!(
+      flight: flight, booking: sb, user: sb.user, side: "sell",
+      quantity_kg: 10, price_per_kg_cents: 700, sync_dcs: false
+    )
+    trade = OrderBookMatchingService.place_and_match!(
+      flight: flight, booking: bb, user: bb.user, side: "buy",
+      quantity_kg: 8, price_per_kg_cents: 750, sync_dcs: false
+    ).trades.first
+    connector = AirlineDcs::Registry.connector_for(flight)
+    adapter = AirlineDcs::SandboxAdapter.new(connector, fail_operation: %i[issue_seller_voucher_emd_s void_emd])
+
+    AirlineDcs::SettlementOrchestrator.sync_trade!(trade, adapter: adapter)
+
+    assert_equal "compensating", trade.reload.dcs_sync_status
+    assert_equal 8, sb.reload.pending_trade_kg("sell")
+    assert_equal "failed", trade.dcs_sync_events.find_by!(operation: "void_buyer_emd_a").status
+    restore = trade.dcs_sync_events.find_by!(operation: "restore_seller_allowance")
+    assert_equal "compensated", restore.status
+    assert_equal 23, restore.request_payload.fetch("newTotalAllowanceKg")
+    assert trade.sell_order.cancel!
+
+    2.times { AirlineDcs::SettlementOrchestrator.sync_trade!(trade) }
+
+    assert_equal "compensated", trade.reload.dcs_sync_status
+    assert_equal 1, restore.reload.attempts
+    assert_equal 2, trade.dcs_sync_events.find_by!(operation: "void_buyer_emd_a").attempts
+    assert_equal 8, trade.buy_order.reload.remaining_kg
+    assert_equal "cancelled", trade.sell_order.reload.status
+    assert_equal 0, trade.sell_order.remaining_kg
+    assert_equal 0, sb.reload.pending_trade_kg("sell")
+    assert_equal 23, sb.current_allowance_kg
+    assert_equal 0, sb.user.reload.voucher_balance_cents
+  end
+
+  test "unknown live outcome retains the reservation and retries with the same command key" do
+    flight = create_flight
+    connector = AirlineConnector.create!(
+      airline_code: flight.airline_code,
+      airline_name: flight.airline_name,
+      provider: "webhook_rest",
+      accounting_prefix: "057",
+      api_base_url: "https://carrier.example",
+      credentials_ref: "SMB_TEST_CARRIER_TOKEN",
+      auth_mode: "hmac_bearer"
+    )
+    previous_token = ENV["SMB_TEST_CARRIER_TOKEN"]
+    ENV["SMB_TEST_CARRIER_TOKEN"] = "test-credential"
+    sb = create_booking(flight: flight, pnr_code: "TIME1S")
+    bb = create_booking(flight: flight, pnr_code: "TIME1B")
+    OrderBookMatchingService.place_and_match!(
+      flight: flight, booking: sb, user: sb.user, side: "sell",
+      quantity_kg: 5, price_per_kg_cents: 700, sync_dcs: false
+    )
+    trade = OrderBookMatchingService.place_and_match!(
+      flight: flight, booking: bb, user: bb.user, side: "buy",
+      quantity_kg: 5, price_per_kg_cents: 750, sync_dcs: false
+    ).trades.first
+
+    failing_adapter = AirlineDcs::SandboxAdapter.new(connector, fail_operation: :issue_buyer_emd_a)
+    AirlineDcs::SettlementOrchestrator.sync_trade!(trade, adapter: failing_adapter)
+
+    assert_equal "attention_required", trade.reload.dcs_sync_status
+    assert_equal 5, bb.reload.pending_trade_kg("buy")
+    assert_equal 23, bb.current_allowance_kg
+    assert_equal 0, sb.user.reload.voucher_balance_cents
+    assert_empty bb.user.notifications
+    buyer_event = trade.dcs_sync_events.sole
+
+    2.times do
+      AirlineDcs::SettlementOrchestrator.sync_trade!(trade, adapter: AirlineDcs::SandboxAdapter.new(connector))
+    end
+
+    assert_equal "synced", trade.reload.dcs_sync_status
+    assert_equal 2, buyer_event.reload.attempts
+    assert_equal 3, trade.dcs_sync_events.count
+    assert_equal 0, bb.reload.pending_trade_kg("buy")
+    assert_equal 28, bb.current_allowance_kg
+    assert_equal trade.seller_payout_cents, sb.user.reload.voucher_balance_cents
+    assert_equal 1, bb.user.notifications.count
+  ensure
+    ENV["SMB_TEST_CARRIER_TOKEN"] = previous_token
   end
 
   test "enterprise protocol adapters build standards-compliant IATA NDC, Navitaire REST, and HMAC Webhook payloads" do

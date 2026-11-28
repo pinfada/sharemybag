@@ -81,7 +81,9 @@ en:
 
   kilo_orders:
     created_resting: "Your %{side} order for %{qty} kg at %{price}/kg is live on the %{flight} order book."
-    created_matched: "Instant match! %{matched_qty} kg executed on %{flight}. Your PNR allowance has been updated automatically."
+    created_matched: "%{matched_qty} kg confirmed by the carrier on %{flight}."
+    awaiting_carrier: "%{matched_qty} kg reserved. Carrier confirmation is pending."
+    carrier_rejected: "The carrier could not confirm part or all of this exchange. Affected order quantities were released."
     cancelled: "Your remaining order quantity has been cancelled and your PNR allowance capacity released."
     cannot_cancel: "This order can no longer be cancelled."
     no_booking_on_flight: "Only ticketed passengers with a confirmed PNR on this flight can place baggage allowance orders."
