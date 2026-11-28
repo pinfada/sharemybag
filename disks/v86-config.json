@@ -1,0 +1,21 @@
+{
+  "name": "sharemybag",
+  "baseName": "base-3.3-r2",
+  "kernel": "https://pinfada.github.io/railsbox-assets/base-3.3-r2/base-3.3-r2-vmlinuz",
+  "initrd": "https://pinfada.github.io/railsbox-assets/base-3.3-r2/base-3.3-r2-initrd",
+  "disk": "https://pinfada.github.io/railsbox-assets/base-3.3-r2/base-3.3-r2.ext2.zst",
+  "diskSize": 1790967808,
+  "appDisk": "disks/sharemybag-app-97e354e0b7c5.ext2.zst",
+  "appDiskSize": 536870912,
+  "cmdline": "root=/dev/sda rw console=ttyS0 init=/opt/rib/guest-init.sh net.ifnames=0 quiet loglevel=4",
+  "memoryMb": 1024,
+  "mountPath": "/sharemybag/app",
+  "database": "postgresql",
+  "builtAt": "2026-11-28T09:07:44Z",
+  "diskChunkSize": 4194304,
+  "appDiskChunkSize": 4194304,
+  "state": "disks/sharemybag-split-state-8e3414b7c6ea.bin.gz",
+  "stateFor": "2026-11-28T09:07:44Z",
+  "stateForAppDiskSha256": "97e354e0b7c594dd0b2f0f5754083942d1120613e4dde8428ab778c6d0c46be9",
+  "appDiskSha256": "97e354e0b7c594dd0b2f0f5754083942d1120613e4dde8428ab778c6d0c46be9"
+}
